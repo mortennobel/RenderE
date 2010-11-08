@@ -14,5 +14,6 @@ The goal of the project is:
 Keep dependencies to a minimum:
  - GLEW
  - Boost
- 
+ - libPNG (optional texture loader)
+ - zlib (optional - but required for libPNG)
  
