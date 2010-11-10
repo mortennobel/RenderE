@@ -12,6 +12,7 @@
 
 #include "RenderBase.h"
 #include "math/Vector4.h"
+#include "Component.h"
 
 namespace render_e {
 
@@ -22,7 +23,7 @@ enum ClearTypes {
     STENCIL_BUFFER = 4
 };
 
-class Camera {
+class Camera : public Component{
 public:
     Camera();
     Camera(const Camera& orig);

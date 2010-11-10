@@ -54,8 +54,6 @@ int main(int argc, char **argv) {
     }
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-    testPNG();
-
     initWorld();
 
     glutDisplayFunc(display);

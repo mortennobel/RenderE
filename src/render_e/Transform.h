@@ -13,10 +13,11 @@
 #include "math/Vector3.h"
 #include "math/Quaternion.h"
 #include "math/Matrix44.h"
+#include "Component.h"
 
 namespace render_e {
     
-class Transform  {
+class Transform : public Component {
 public:
     Transform(void);
     Transform(const Transform& t);
