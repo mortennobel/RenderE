@@ -11,14 +11,9 @@
 #ifndef TEXTURE_DATA_SOURCE_H
 #define	TEXTURE_DATA_SOURCE_H
 
-namespace render_e {
+#include "TextureBase.h"
 
-enum TextureLoadStatus{
-    ERROR,
-    ERROR_READING_FILE,
-    INVALID_FORMAT,
-    OK
-};
+namespace render_e {
 
 enum TextureFormat {
     RGB,

@@ -12,11 +12,7 @@
 namespace render_e {
 
 Transform::Transform(void)
-:dirtyFlag(false), dirtyFlagInverse(false)
-{}
-Transform::Transform(const Transform& t)
-:dirtyFlag(t.dirtyFlag), dirtyFlagInverse(t.dirtyFlagInverse), rotation(t.rotation),
-        position(t.position), localTransform(t.localTransform), localTransformInverse(t.localTransformInverse)
+:Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false)
 {}
 
 Transform::~Transform(void)

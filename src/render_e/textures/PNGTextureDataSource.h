@@ -10,6 +10,7 @@
 #ifndef PNGTEXTUREDATASOURCE_H
 #define	PNGTEXTUREDATASOURCE_H
 
+#include "TextureBase.h"
 #include "TextureDataSource.h"
 
 namespace render_e {

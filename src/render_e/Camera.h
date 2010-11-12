@@ -16,7 +16,7 @@
 
 namespace render_e {
 
-enum CameraType {ORTHOGRAPHIC, PERSPECTIVE};
+enum CameraMode {ORTHOGRAPHIC, PERSPECTIVE};
 enum ClearTypes {
     COLOR_BUFFER = 1, 
     DEPTH_BUFFER = 2,
@@ -26,20 +26,19 @@ enum ClearTypes {
 class Camera : public Component{
 public:
     Camera();
-    Camera(const Camera& orig);
     virtual ~Camera();
     void SetOrthogonal();
     void SetProjection(float fieldOfView, float aspect, float nearPlane, float farPlane);
     void SetOrthographic(float left, float right, float bottom,	float top,float nearPlane, float farPlane);
-    CameraType GetCameraType(){ return cameraType; }
-    float GetFieldOfView(){ assert(cameraType==PERSPECTIVE); return fieldOfView; }
-    float GetAspect(){ assert(cameraType==PERSPECTIVE); return aspect; }
+    CameraMode GetCameraMode(){ return cameraMode; }
+    float GetFieldOfView(){ assert(cameraMode==PERSPECTIVE); return fieldOfView; }
+    float GetAspect(){ assert(cameraMode==PERSPECTIVE); return aspect; }
     float GetNearPlane(){ return nearPlane; }
     float GetFarPlane(){ return farPlane; }    
-    float GetLeft(){ assert (cameraType==ORTHOGRAPHIC); return left; }
-    float GetRight(){ assert (cameraType==ORTHOGRAPHIC); return right; }
-    float GetBottom(){ assert (cameraType==ORTHOGRAPHIC); return bottom; }
-    float GetTop(){ assert (cameraType==ORTHOGRAPHIC); return top; }
+    float GetLeft(){ assert (cameraMode==ORTHOGRAPHIC); return left; }
+    float GetRight(){ assert (cameraMode==ORTHOGRAPHIC); return right; }
+    float GetBottom(){ assert (cameraMode==ORTHOGRAPHIC); return bottom; }
+    float GetTop(){ assert (cameraMode==ORTHOGRAPHIC); return top; }
     void SetClearMask(int clearBitMask);
     int GetClearMask();
     /// Clear buffers in 
@@ -48,7 +47,7 @@ public:
     void SetClearColor(Vector4 &clearColor){ this->clearColor = clearColor; }
     Vector4 GetClearColor(){ return clearColor; }
 private:
-    CameraType cameraType;
+    CameraMode cameraMode;
     float fieldOfView;
     float aspect;
     float nearPlane;

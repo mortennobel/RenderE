@@ -21,16 +21,18 @@ class Camera;
 class SceneObject {
 public:
     SceneObject();
-    SceneObject(const SceneObject& orig);
     virtual ~SceneObject();
     void Render();
     Transform &GetTransform() { return transform; }
     Camera *GetCamera() { return camera; }
     void SetCamera(Camera *camera);
 private:
-     Transform transform;   
-     Camera *camera;
-     std::vector<Component*> components;
+    SceneObject(const SceneObject& orig); // disallow copy constructor
+    SceneObject& operator = (const SceneObject&); // disallow copy constructor
+    
+    Transform transform;   
+    Camera *camera;
+    std::vector<Component*> components;
 };
 }
 

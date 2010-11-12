@@ -12,20 +12,17 @@
 namespace render_e {
 
 Camera::Camera()
-:cameraType(ORTHOGRAPHIC),
+:Component(CameraType),cameraMode(ORTHOGRAPHIC),
         nearPlane(-1),farPlane(1),
         left(-1), right(1),
         bottom(-1),top(1), clearColor(0,0,0,1){}
-
-Camera::Camera(const Camera& orig) {
-}
 
 Camera::~Camera() {
 }
 
 void Camera::SetProjection(float fieldOfView, float aspect, float nearPlane, float farPlane){
     assert(nearPlane!=0.0f); // See http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml#notes
-    this->cameraType = PERSPECTIVE;
+    this->cameraMode = PERSPECTIVE;
     this->fieldOfView = fieldOfView;
     this->aspect = aspect;
     this->nearPlane = nearPlane;
@@ -42,7 +39,7 @@ void Camera::SetProjection(float fieldOfView, float aspect, float nearPlane, flo
 }
 
 void Camera::SetOrthographic(float left, float right, float bottom,	float top,float nearPlane, float farPlane){
-    this->cameraType = ORTHOGRAPHIC;
+    this->cameraMode = ORTHOGRAPHIC;
     this->left = left;
     this->right = right;
     this->bottom = bottom;
@@ -77,7 +74,7 @@ void Camera::Setup(){
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (cameraType==PERSPECTIVE){
+    if (cameraMode==PERSPECTIVE){
         glFrustum(left, right, bottom, top, nearPlane, farPlane);
     } else {
         glOrtho(left, right, bottom, top, nearPlane, farPlane);

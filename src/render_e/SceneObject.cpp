@@ -24,8 +24,8 @@ SceneObject::~SceneObject() {
 }
 
 void SceneObject::Render(){
-    glLoadIdentity();
-//    glMultMatrixf(transform.GetMatrix());
+    glLoadMatrixf(transform.GetLocalTransform());
+    
 }
 
 void SceneObject::SetCamera(Camera *camera){

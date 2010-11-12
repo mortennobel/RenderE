@@ -20,7 +20,7 @@ namespace render_e {
 class Transform : public Component {
 public:
     Transform(void);
-    Transform(const Transform& t);
+    
     ~Transform(void);
     
     float *GetLocalTransform();
@@ -34,6 +34,9 @@ public:
     void SetRotation(Vector3 &euler);
     void SetScale(Vector3 &scale);
 private:
+    Transform(const Transform& orig); // disallow copy constructor
+    Transform& operator = (const Transform&); // disallow copy constructor
+    
     void UpdateIfDirty();
     void UpdateInverseIfDirty();
     bool dirtyFlag;
