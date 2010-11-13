@@ -8,6 +8,9 @@
 #include "render_e/RenderBase.h"
 #include "render_e/Camera.h"
 #include "render_e/SceneObject.h"
+#include "render_e/Mesh.h"
+#include "render_e/math/Vector3.h"
+
 
 #ifndef RENDER_FPS
 #define RENDER_FPS (1000/60)
@@ -42,7 +45,7 @@ void testPNG();
 
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(700, 500);
     glutInitWindowPosition(10, 10);
     glutCreateWindow("Hello World");
@@ -66,12 +69,20 @@ int main(int argc, char **argv) {
 void initWorld() {
     Camera *camera = new Camera();
     SceneObject *cameraContainer = new SceneObject();
-    cameraContainer->SetCamera(camera);
+    camera->SetProjection(25, 1, 0.1,1000);
+    cameraContainer->AddCompnent(camera);
     renderBase->AddSceneObject(cameraContainer);
-    renderBase->DeleteSceneObject(cameraContainer);
-    renderBase->AddSceneObject(cameraContainer);
+    Vector3 v(0.0,0.0,10.0);
+    cameraContainer->GetTransform().SetPosition(v);
+    
+    Mesh *mesh = new Mesh();
+    SceneObject *sceneObject = new SceneObject();
+    renderBase->AddSceneObject(sceneObject);
+    sceneObject->AddCompnent(mesh);
+    
 }
 
+/*
 #include "render_e/textures/PNGTextureDataSource.h"
 
 void testPNG() {
@@ -90,3 +101,4 @@ void testPNG() {
         std::cout << "First pixel " << (int) data[1620 - 1] << " " << (int) data[1620 - 2] << " " << (int) data[1620 - 3] << std::endl;
     }
 }
+ * */

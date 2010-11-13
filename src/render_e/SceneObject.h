@@ -11,6 +11,7 @@
 #include <vector>
 #include "Transform.h"
 #include "Component.h"
+#include "Mesh.h"
 
 
 namespace render_e {
@@ -23,15 +24,17 @@ public:
     SceneObject();
     virtual ~SceneObject();
     void Render();
+    const std::vector<Component*> * GetComponents() const;
     Transform &GetTransform() { return transform; }
     Camera *GetCamera() { return camera; }
-    void SetCamera(Camera *camera);
+    void AddCompnent(Component* component);
 private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
     SceneObject& operator = (const SceneObject&); // disallow copy constructor
     
     Transform transform;   
     Camera *camera;
+    Mesh *mesh;
     std::vector<Component*> components;
 };
 }

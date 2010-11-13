@@ -9,6 +9,7 @@
 #define	MESH_H
 
 #include "math/Vector3.h"
+#include "math/Vector2.h"
 #include "Component.h"
 
 namespace render_e {
@@ -17,11 +18,12 @@ public:
     Mesh();
     virtual ~Mesh();
     void Render();
+    void InitMesh(Vector3 *vertices, Vector2 *textureCoords, Vector3 *normals, /*Vector3 *tangent,*/ 
+        int verticeCount);
+    void Release();
 private:
-    Vector3 *vertices;
-    Vector3 *normals;
-    Vector3 *tangent;
-    int *triangles;
+    unsigned int vboName;
+    int verticeCount;
 };
 }
 #endif	/* MESH_H */

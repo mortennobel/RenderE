@@ -16,14 +16,14 @@
 
 namespace render_e {
 
-enum CameraMode {ORTHOGRAPHIC, PERSPECTIVE};
+enum CameraMode { ORTHOGRAPHIC, PERSPECTIVE };
 enum ClearTypes {
     COLOR_BUFFER = 1, 
     DEPTH_BUFFER = 2,
     STENCIL_BUFFER = 4
 };
 
-class Camera : public Component{
+class Camera : public Component {
 public:
     Camera();
     virtual ~Camera();
