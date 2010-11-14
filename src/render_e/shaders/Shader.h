@@ -11,11 +11,18 @@
 namespace render_e {
 class Shader {
 public:
-    Shader();
-    Shader(const Shader& orig);
+    Shader(char *shaderSource);
     virtual ~Shader();
+    bool Compile();
+    bool Link();
+    
+    void Bind();
 private:
-
+    Shader(const Shader& orig); // disallow copy constructor
+    Shader& operator = (const Shader&); // disallow copy constructor
+   
+    int shaderid;
+    char *shaderSource;
 };
 }
 #endif	/* SHADER_H */

@@ -16,7 +16,7 @@
 namespace render_e {
 
 SceneObject::SceneObject()
-:camera(NULL),mesh(NULL) {
+:camera(NULL),mesh(NULL),material(NULL) {
 }
 
 SceneObject::~SceneObject() {
@@ -40,6 +40,10 @@ void SceneObject::AddCompnent(Component* component){
         case CameraType:
             assert(camera==NULL);
             camera = static_cast<Camera*>(component);
+            break;
+        case MaterialType:
+            assert(material==NULL);
+            material = static_cast<Material*>(component);
             break;
     }
     components.push_back(component);

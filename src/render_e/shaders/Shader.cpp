@@ -7,14 +7,21 @@
 
 #include "Shader.h"
 
-
 namespace render_e {
-Shader::Shader() {
-}
-
-Shader::Shader(const Shader& orig) {
+Shader::Shader(char *shaderSource)
+:shaderSource(shaderSource) {
 }
 
 Shader::~Shader() {
+}
+
+bool Shader::Compile(){
+
+}
+
+bool Shader::Link(){
+}
+    
+void Shader::Bind(){
 }
 }

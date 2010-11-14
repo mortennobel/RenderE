@@ -17,6 +17,7 @@ enum ComponentType{
     TransformType,
     MeshType,
     CameraType,
+    MaterialType,
     CustomType
 };
 

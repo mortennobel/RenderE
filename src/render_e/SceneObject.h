@@ -12,6 +12,7 @@
 #include "Transform.h"
 #include "Component.h"
 #include "Mesh.h"
+#include "Material.h"
 
 
 namespace render_e {
@@ -35,6 +36,7 @@ private:
     Transform transform;   
     Camera *camera;
     Mesh *mesh;
+    Material *material;
     std::vector<Component*> components;
 };
 }
