@@ -29,6 +29,9 @@ public:
     static TextureDataSource *GetTextureDataSource();
     static void SetTextureDataSource(TextureDataSource *textureDataSource);
 private:
+    TextureDataSource(const TextureDataSource& orig); // disallow copy constructor
+    TextureDataSource& operator = (const TextureDataSource&); // disallow copy constructor
+    
     static TextureDataSource *textureDataSource;
 };
 }

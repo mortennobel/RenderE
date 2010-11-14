@@ -1,12 +1,12 @@
 #include "TextureDataSource.h"
 
 #include <cstring>
-#include "PNGTextureDataSource.h"
+#include "PNGFileTextureDataSource.h"
 
 namespace render_e {
 
 #ifndef RENDER_E_NO_PNG
-    PNGTextureDataSource *pngInstance = PNGTextureDataSource::Instance();
+    PNGFileTextureDataSource *pngInstance = PNGFileTextureDataSource::Instance();
 #endif        
 TextureDataSource *TextureDataSource::textureDataSource = pngInstance;
     

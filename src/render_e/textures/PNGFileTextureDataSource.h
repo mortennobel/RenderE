@@ -15,21 +15,21 @@
 
 namespace render_e {
 
-class PNGTextureDataSource : public TextureDataSource {
+class PNGFileTextureDataSource : public TextureDataSource {
 public:
-    static PNGTextureDataSource* Instance() {
+    static PNGFileTextureDataSource* Instance() {
         if (!s_instance) {
-            s_instance = new PNGTextureDataSource();
+            s_instance = new PNGFileTextureDataSource();
         }
         return s_instance;
     }
     
     TextureLoadStatus LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData);
 private:
-    static PNGTextureDataSource *s_instance;
-    PNGTextureDataSource();
-    PNGTextureDataSource(const PNGTextureDataSource& orig);
-    virtual ~PNGTextureDataSource();
+    static PNGFileTextureDataSource *s_instance;
+    PNGFileTextureDataSource();
+    PNGFileTextureDataSource(const PNGFileTextureDataSource& orig);
+    virtual ~PNGFileTextureDataSource();
 };
 }
 #endif	/* PNGTEXTUREDATASOURCE_H */

@@ -5,7 +5,7 @@
  * Created on November 6, 2010, 11:07 AM
  */
 
-#include "PNGTextureDataSource.h"
+#include "PNGFileTextureDataSource.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,18 +16,18 @@
 
 namespace render_e {
 
-PNGTextureDataSource *PNGTextureDataSource::s_instance = NULL;
+PNGFileTextureDataSource *PNGFileTextureDataSource::s_instance = NULL;
 
-PNGTextureDataSource::PNGTextureDataSource() {
+PNGFileTextureDataSource::PNGFileTextureDataSource() {
 }
 
-PNGTextureDataSource::PNGTextureDataSource(const PNGTextureDataSource& orig) {
+PNGFileTextureDataSource::PNGFileTextureDataSource(const PNGFileTextureDataSource& orig) {
 }
 
-PNGTextureDataSource::~PNGTextureDataSource() {
+PNGFileTextureDataSource::~PNGFileTextureDataSource() {
 }
 
-TextureLoadStatus PNGTextureDataSource::LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) {
+TextureLoadStatus PNGFileTextureDataSource::LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) {
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
