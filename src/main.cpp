@@ -17,6 +17,7 @@
 #endif
 
 using namespace render_e;
+using namespace std;
 
 RenderBase *renderBase = RenderBase::instance();
 
@@ -42,6 +43,8 @@ void timerFunc(int value) {
 //forward declaration
 void initWorld();
 void testPNG();
+void initGL();
+void transformTest();
 
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
@@ -58,6 +61,8 @@ int main(int argc, char **argv) {
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
     initWorld();
+    initGL();
+    transformTest();
 
     glutDisplayFunc(display);
 
@@ -66,10 +71,48 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
+void initGL(){
+    glEnable(GL_DEPTH_TEST);
+
+}
+
+void printMatrix(float *m){
+    
+    for (int i=0;i<16;i++){
+        cout << m[i]<<"f, ";
+    }
+    cout << endl;
+    
+    for (int c = 0;c<4;c++){
+        for (int r=0;r<4;r++){
+            cout << m[c+r*4]<<" ";
+        }
+        cout << endl;
+    }
+}
+
+void transformTest(){
+    Transform transform;
+    Vector3 v(1,2,3);
+    transform.SetPosition(v);
+    float *localTransform = transform.GetLocalTransform();
+    float *localInverse = transform.GetLocalTransformInverse();
+    cout<<"localTranfor"<<endl;
+    printMatrix(localTransform);
+    cout<<"localInverse"<<endl;
+    printMatrix(localInverse);
+    
+    Transform transform2;
+    Matrix44 m;
+    transform2.GetRotation().GetMatrix(&m);
+    cout<<"Rotation"<<endl;
+    printMatrix(m.GetReference());
+}
+
 void initWorld() {
     Camera *camera = new Camera();
     SceneObject *cameraContainer = new SceneObject();
-    camera->SetProjection(25, 1, 0.1,1000);
+    camera->SetProjection(40, 1, 0.1,1000);
     cameraContainer->AddCompnent(camera);
     renderBase->AddSceneObject(cameraContainer);
     Vector3 v(0.0,0.0,10.0);
@@ -77,8 +120,11 @@ void initWorld() {
     
     Mesh *mesh = new Mesh();
     SceneObject *sceneObject = new SceneObject();
+    Vector3 v2(0.0,0.0,1.0);
+    sceneObject->GetTransform().SetPosition(v2);
     renderBase->AddSceneObject(sceneObject);
     sceneObject->AddCompnent(mesh);
+    
     
 }
 

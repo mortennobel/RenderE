@@ -6,6 +6,8 @@
  */
 
 #include "Camera.h"
+
+#include <iostream>
 #include "GL/glew.h"
 #include "math/Mathf.h"
 
@@ -15,7 +17,10 @@ Camera::Camera()
 :Component(CameraType),cameraMode(ORTHOGRAPHIC),
         nearPlane(-1),farPlane(1),
         left(-1), right(1),
-        bottom(-1),top(1), clearColor(0,0,0,1){}
+        bottom(-1),top(1), clearColor(0,0,0,1){
+    SetClearMask(COLOR_BUFFER|DEPTH_BUFFER);
+    SetClearColor(Vector4(0,0,0,1));
+}
 
 Camera::~Camera() {
 }
@@ -51,13 +56,13 @@ void Camera::SetOrthographic(float left, float right, float bottom,	float top,fl
 void Camera::SetClearMask(int clearBitMask){
     clearMaskNative = 0;
     if (clearBitMask&COLOR_BUFFER){
-        clearMaskNative &= GL_COLOR_BUFFER_BIT;
+        clearMaskNative |= GL_COLOR_BUFFER_BIT;
     }
     if (clearBitMask&DEPTH_BUFFER){
-        clearMaskNative &= GL_DEPTH_BUFFER_BIT;
+        clearMaskNative |= GL_DEPTH_BUFFER_BIT;
     }
     if (clearBitMask&STENCIL_BUFFER){
-        clearMaskNative &= GL_STENCIL_BUFFER_BIT;
+        clearMaskNative |= GL_STENCIL_BUFFER_BIT;
     }
     clearMask = clearBitMask;
 }
@@ -75,11 +80,18 @@ void Camera::Setup(){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (cameraMode==PERSPECTIVE){
-        glFrustum(left, right, bottom, top, nearPlane, farPlane);
+        //glFrustum(left, right, bottom, top, nearPlane, farPlane);
+        gluPerspective( /* field of view in degree */ fieldOfView,
+        /* aspect ratio */ aspect,
+        /* Z near */ nearPlane, /* Z far */ farPlane);
     } else {
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
     glMatrixMode(GL_MODELVIEW);
+}
+
+void Camera::SetClearColor(Vector4 clearColor){ 
+    this->clearColor = clearColor; 
 }
 
 }

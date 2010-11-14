@@ -14,6 +14,12 @@
 #include "RenderBase.h"
 #include "Camera.h"
 
+#ifdef _WIN32
+#include <GL/glut.h>
+#else
+#include <GLUT/glut.h>
+#endif
+
 namespace render_e {
 
 RenderBase *RenderBase::s_instance = 0;
@@ -28,13 +34,13 @@ void RenderBase::Display(){
         }
         lastCamera->GetCamera()->Clear();
         // setup camera transform
-        glLoadIdentity();
- //       glMultMatrixf(lastCamera->GetTransform().);
+        glLoadMatrixf(lastCamera->GetTransform().GetLocalTransformInverse());
         
         for (vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
             (*sIter)->Render();
         }
     }
+    glutSwapBuffers();
 }
 
 void RenderBase::AddSceneObject(SceneObject *sceneObject){

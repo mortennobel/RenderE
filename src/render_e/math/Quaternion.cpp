@@ -8,6 +8,8 @@
 #include "Quaternion.h"
 
 #include <cmath>
+#include <cstring>
+#include <iostream>
 #include "Mathf.h"
 
 #include "Vector3.h"
@@ -19,11 +21,11 @@ namespace render_e {
 // get a rotation matrix out of the quaternion
 
 void Quaternion::GetMatrix(Matrix44 *matrix) const {
-    /*float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+    float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
     // set matrix to identity
     memset(matrix, 0, sizeof (Matrix44));
-    matrix->matrix[Matrix::M44] = 1.0f;
+    (*matrix)(3,3) = 1.0f;
 
     x2 = x + x;
     y2 = y + y;
@@ -41,30 +43,29 @@ void Quaternion::GetMatrix(Matrix44 *matrix) const {
     wy = w * y2;
     wz = w * z2;
 
-    matrix->matrix[Matrix::M11] = 1.0f - (yy + zz);
-    matrix->matrix[Matrix::M12] = xy - wz;
-    matrix->matrix[Matrix::M13] = xz + wy;
+    (*matrix)(0,0) = 1.0f - (yy + zz);
+    (*matrix)(0,1) = xy - wz;
+    (*matrix)(0,2) = xz + wy;
 
-    matrix->matrix[Matrix::M21] = xy + wz;
-    matrix->matrix[Matrix::M22] = 1.0f - (xx + zz);
-    matrix->matrix[Matrix::M23] = yz - wx;
+    (*matrix)(1,0) = xy + wz;
+    (*matrix)(1,1) = 1.0f - (xx + zz);
+    (*matrix)(1,2) = yz - wx;
 
-    matrix->matrix[Matrix::M31] = xz - wy;
-    matrix->matrix[Matrix::M32] = yz + wx;
-    matrix->matrix[Matrix::M33] = 1.0f - (xx + yy);
-     * */
+    (*matrix)(2,0) = xz - wy;
+    (*matrix)(2,1) = yz + wx;
+    (*matrix)(2,2) = 1.0f - (xx + yy);
 }
 
 /*-------------------------------------------------------------------------------
  * Returns the floating-point sine and cosine of the argument
  *-------------------------------------------------------------------------------*/
-inline void SinCos(float a, float& sina, float& cosa) {
+//inline void SinCos(float a, float& sina, float& cosa) {
 //    sina = sinf(a);
 //    cosa = cosf(a);
 
-}
+//}
 
-void Quaternion::SetAngleAxis(const Vector3 &axis, float angle) {
+//void Quaternion::SetAngleAxis(const Vector3 &axis, float angle) {
     // if axis of rotation is zero vector, just set to identity quat
 //    float length = axis.LengthSquared();
 //    if (Mathf::IsZero(length)) {
@@ -84,7 +85,7 @@ void Quaternion::SetAngleAxis(const Vector3 &axis, float angle) {
 //    x = scaleFactor * axis.GetX();
 //    y = scaleFactor * axis.GetY();
 //    z = scaleFactor * axis.GetZ();
-}
+//}
 
 Vector3 Quaternion::GetEuler() {
     Vector3 res;
@@ -182,7 +183,7 @@ Quaternion Quaternion::Inverse() {
     // if we're the zero quaternion, just return
     if (Mathf::IsZero(norm))
         return *this;
-
+    std::cout<<"Quaternion::Inverse() "<<norm<<std::endl;
     float normRecip = 1.0f / norm;
     float w = normRecip * this->w;
     float x = -normRecip * this->x;

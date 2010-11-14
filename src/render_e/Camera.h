@@ -44,7 +44,7 @@ public:
     /// Clear buffers in 
     void Clear();
     void Setup();
-    void SetClearColor(Vector4 &clearColor){ this->clearColor = clearColor; }
+    void SetClearColor(Vector4 clearColor);
     Vector4 GetClearColor(){ return clearColor; }
 private:
     CameraMode cameraMode;
