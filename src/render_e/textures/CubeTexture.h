@@ -14,7 +14,7 @@
 namespace render_e {
 class CubeTexture : TextureBase{
 public:
-    CubeTexture(TextureDataSource *textureDataSource, char* left, char* right, char* top, char* bottom, char* back, char* front);
+    CubeTexture(char* left, char* right, char* top, char* bottom, char* back, char* front);
     virtual ~CubeTexture();
     virtual TextureLoadStatus Load();
 private:

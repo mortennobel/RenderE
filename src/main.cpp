@@ -20,7 +20,7 @@
 using namespace render_e;
 using namespace std;
 
-RenderBase *renderBase = RenderBase::instance();
+RenderBase *renderBase = RenderBase::Instance();
 Mesh *meshTeapot = new Mesh();
 SceneObject *cameraContainer = new SceneObject();
     

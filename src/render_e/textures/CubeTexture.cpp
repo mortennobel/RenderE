@@ -21,11 +21,12 @@ char *copy(char *s){
     return strCopy;
 }
 
-CubeTexture::CubeTexture(TextureDataSource *textureDataSource, 
+CubeTexture::CubeTexture(
         char* left, char* right, 
         char* top, char* bottom, 
         char* back, char* front)
-:TextureBase(GL_TEXTURE_CUBE_MAP), textureDataSource(textureDataSource){
+:TextureBase(GL_TEXTURE_CUBE_MAP), textureDataSource(TextureDataSource::GetTextureDataSource()){
+    assert(textureDataSource!=NULL);
     resourceNames = new char *[6];
     resourceNames[0] = copy(left);
     resourceNames[1] = copy(right);

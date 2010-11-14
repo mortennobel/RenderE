@@ -12,11 +12,11 @@
 #include <png.h>
 #include <iostream>
 
-
-#ifdef RENDER_E_PNG
-
+#ifndef RENDER_E_NO_PNG
 
 namespace render_e {
+
+PNGTextureDataSource *PNGTextureDataSource::s_instance = NULL;
 
 PNGTextureDataSource::PNGTextureDataSource() {
 }

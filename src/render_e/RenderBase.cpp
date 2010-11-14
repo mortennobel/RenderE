@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <cstring>
 #include <algorithm>
 #include <GL/glew.h>
 
@@ -16,7 +17,7 @@
 
 namespace render_e {
 
-RenderBase *RenderBase::s_instance = 0;
+RenderBase *RenderBase::s_instance = NULL;
 
 RenderBase::RenderBase():swapBuffersFunc(NULL){
 }
