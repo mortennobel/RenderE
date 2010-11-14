@@ -6,12 +6,13 @@
  */
 
 #include "Component.h"
+#include <cstring>
 
 
 namespace render_e {
 
 Component::Component(ComponentType componentType)
-:componentType(componentType) {
+:componentType(componentType),owner(NULL) {
 }
 
 Component::~Component() {

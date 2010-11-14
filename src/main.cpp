@@ -10,6 +10,7 @@
 #include "render_e/SceneObject.h"
 #include "render_e/Mesh.h"
 #include "render_e/math/Vector3.h"
+#include "render_e/math/Quaternion.h"
 
 
 #ifndef RENDER_FPS
@@ -20,7 +21,9 @@ using namespace render_e;
 using namespace std;
 
 RenderBase *renderBase = RenderBase::instance();
-
+Mesh *meshTeapot = new Mesh();
+SceneObject *cameraContainer = new SceneObject();
+    
 // The main purpose of the main is to created a windows
 // and hook up the opengl to that (using GLUT).
 // Other purposes include:
@@ -31,9 +34,37 @@ void display() {
     renderBase->Display();
 }
 
+void printMatrix(float *m){
+    
+    for (int i=0;i<16;i++){
+        cout << m[i]<<"f, ";
+    }
+    cout << endl;
+    
+    for (int c = 0;c<4;c++){
+        for (int r=0;r<4;r++){
+            cout << m[c+r*4]<<" ";
+        }
+        cout << endl;
+    }
+}
+
+
+void localUpdate(float time){
+//    static Quaternion rotation = Quaternion::MakeFromEuler(10,0,0);
+//    Quaternion q = meshTeapot->GetOwner()->GetTransform().GetRotation()*rotation/* *time*/;
+//    meshTeapot->GetOwner()->GetTransform().SetRotation(q);
+    static float totalTime =0;
+    totalTime += time;
+    Quaternion q = Quaternion::MakeFromEuler(0.0f,totalTime,0.0f);
+    meshTeapot->GetOwner()->GetTransform().SetRotation(q);
+}
+
 void timerFunc(int value) {
     static int lastUpdate = 0;
     int time = glutGet(GLUT_ELAPSED_TIME);
+    float timeSec = (time-lastUpdate)/1000.0f;
+    localUpdate(timeSec);
     lastUpdate = time;
     glutPostRedisplay();
     glutTimerFunc(RENDER_FPS, timerFunc, 0);
@@ -46,6 +77,43 @@ void testPNG();
 void initGL();
 void initRenderBase();
 void transformTest();
+
+void keyPress(unsigned char key, int x, int y){
+    Transform *t = &(meshTeapot->GetOwner()->GetTransform());
+    Vector3 position = t->GetPosition();
+    Vector3 cameraPosition = cameraContainer->GetTransform().GetPosition();
+    switch (key){
+        case 'a':
+            position[0] =position[0]+1;
+            break;
+        case 'd':
+            position[0] =position[0]-1;
+            break;
+        case 'w':
+            position[2] =position[2]+1;
+            break;
+        case 's':
+            position[2] = position[2]-1;
+            break;
+        case 'A':
+            cameraPosition[0] =cameraPosition[0]+1;
+            break;
+        case 'D':
+            cameraPosition[0] =cameraPosition[0]-1;
+            break;
+        case 'W':
+            cameraPosition[2] =cameraPosition[2]+1;
+            break;
+        case 'S':
+            cameraPosition[2] = cameraPosition[2]-1;
+            break;
+            
+    }
+    cout<<position[0]<<" "<<position[1]<<" "<<position[2]<<endl;
+    t->SetPosition(position);
+    printMatrix(t->GetLocalTransform().GetReference());
+    cameraContainer->GetTransform().SetPosition(cameraPosition);
+}
 
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
@@ -68,6 +136,7 @@ int main(int argc, char **argv) {
 
     glutDisplayFunc(display);
 
+    glutKeyboardFunc(keyPress);
     glutTimerFunc(RENDER_FPS, timerFunc, 0);
     glutMainLoop();
     return EXIT_SUCCESS;
@@ -75,34 +144,19 @@ int main(int argc, char **argv) {
 
 void initGL(){
     glEnable(GL_DEPTH_TEST);
-
+    glShadeModel(GL_SMOOTH);
 }
 
 void initRenderBase(){
-    renderBase->SetSwapBuffersFunc(glutSwapBuffers);
-}
-
-void printMatrix(float *m){
-    
-    for (int i=0;i<16;i++){
-        cout << m[i]<<"f, ";
-    }
-    cout << endl;
-    
-    for (int c = 0;c<4;c++){
-        for (int r=0;r<4;r++){
-            cout << m[c+r*4]<<" ";
-        }
-        cout << endl;
-    }
+    renderBase->Init(glutSwapBuffers);
 }
 
 void transformTest(){
     Transform transform;
     Vector3 v(1,2,3);
     transform.SetPosition(v);
-    float *localTransform = transform.GetLocalTransform();
-    float *localInverse = transform.GetLocalTransformInverse();
+    float *localTransform = transform.GetLocalTransform().GetReference();
+    float *localInverse = transform.GetLocalTransformInverse().GetReference();
     cout<<"localTranfor"<<endl;
     printMatrix(localTransform);
     cout<<"localInverse"<<endl;
@@ -117,19 +171,17 @@ void transformTest(){
 
 void initWorld() {
     Camera *camera = new Camera();
-    SceneObject *cameraContainer = new SceneObject();
     camera->SetProjection(40, 1, 0.1,1000);
     cameraContainer->AddCompnent(camera);
     renderBase->AddSceneObject(cameraContainer);
-    Vector3 v(0.0,0.0,10.0);
+    Vector3 v(0.0,0.0,15.0);
     cameraContainer->GetTransform().SetPosition(v);
     
-    Mesh *mesh = new Mesh();
-    SceneObject *sceneObject = new SceneObject();
-    Vector3 v2(0.0,0.0,1.0);
-    sceneObject->GetTransform().SetPosition(v2);
-    renderBase->AddSceneObject(sceneObject);
-    sceneObject->AddCompnent(mesh);
+    SceneObject *teapotSceneObject = new SceneObject();
+    Vector3 v2(0.0,0.0,0.0);
+    teapotSceneObject->GetTransform().SetPosition(v2);
+    renderBase->AddSceneObject(teapotSceneObject);
+    teapotSceneObject->AddCompnent(meshTeapot);
     
     
 }

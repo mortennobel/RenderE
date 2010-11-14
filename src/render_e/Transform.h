@@ -23,8 +23,8 @@ public:
     
     ~Transform(void);
     
-    float *GetLocalTransform();
-    float *GetLocalTransformInverse();
+    Matrix44 GetLocalTransform();
+    Matrix44 GetLocalTransformInverse();
 
     Vector3 GetPosition() const;
     Vector3 GetScale() const;

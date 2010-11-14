@@ -28,7 +28,7 @@ public:
     void AddSceneObject(SceneObject *sceneObject);
     void DeleteSceneObject(SceneObject *sceneObject);
     
-    void SetSwapBuffersFunc(void(*func)());
+    void Init(void(*swapBuffersFunc)());
 
     /**
      * Singleton pattern

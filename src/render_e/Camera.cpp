@@ -80,10 +80,10 @@ void Camera::Setup(){
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (cameraMode==PERSPECTIVE){
-        //glFrustum(left, right, bottom, top, nearPlane, farPlane);
-        gluPerspective( /* field of view in degree */ fieldOfView,
-        /* aspect ratio */ aspect,
-        /* Z near */ nearPlane, /* Z far */ farPlane);
+        glFrustum(left, right, bottom, top, nearPlane, farPlane);
+//        gluPerspective( /* field of view in degree */ fieldOfView,
+//        /* aspect ratio */ aspect,
+//        /* Z near */ nearPlane, /* Z far */ farPlane);
     } else {
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }

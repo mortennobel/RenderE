@@ -19,17 +19,7 @@ SceneObject::SceneObject()
 :camera(NULL),mesh(NULL) {
 }
 
-SceneObject::SceneObject(const SceneObject& orig) {
-}
-
 SceneObject::~SceneObject() {
-}
-
-void SceneObject::Render(){
-    if (mesh!=NULL){
-        glLoadMatrixf(transform.GetLocalTransform());
-        mesh->Render();
-    }
 }
 
 const std::vector<Component*> * SceneObject::GetComponents() const{
@@ -37,6 +27,7 @@ const std::vector<Component*> * SceneObject::GetComponents() const{
 }
 
 void SceneObject::AddCompnent(Component* component){
+    assert(component->GetOwner()==NULL); // Each component can only have one owner
     switch (component->GetComponentType()){
         case TransformType:
             assert(false); // cannot have multiple 
@@ -52,5 +43,6 @@ void SceneObject::AddCompnent(Component* component){
             break;
     }
     components.push_back(component);
+    component->SetOwner(this);
 }
 }

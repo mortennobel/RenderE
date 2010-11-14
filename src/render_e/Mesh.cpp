@@ -50,7 +50,6 @@ void Mesh::Render(){
     */
     glColor3f(1,0,0);
     glutSolidTeapot(1);
-    std::cout<<"Draw teapot"<<std::endl;
 }
 
 void Mesh::InitMesh(Vector3 *vertices, Vector2 *textureCoords, Vector3 *normals, /*Vector3 *tangent,*/ 

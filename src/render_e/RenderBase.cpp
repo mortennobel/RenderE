@@ -32,10 +32,19 @@ void RenderBase::Display(){
         }
         lastCamera->GetCamera()->Clear();
         // setup camera transform
-        glLoadMatrixf(lastCamera->GetTransform().GetLocalTransformInverse());
-        
+#ifdef _DEBUG // make sure that the rendering takes place in MODELVIEW mode
+        int matrixMode;
+        glGetIntegerv(GL_MATRIX_MODE,&matrixMode);
+        assert(matrixMode==GL_MODELVIEW);
+#endif //_DEBUG
+        Matrix44 cameraMatrix = lastCamera->GetTransform().GetLocalTransformInverse();
         for (vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
-            (*sIter)->Render();
+            Mesh *mesh = (*sIter)->GetMesh();
+            if (mesh!=NULL){
+                Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
+                glLoadMatrixf(modelView.GetReference());
+                mesh->Render();
+            }
         }
     }
     swapBuffersFunc();
@@ -60,8 +69,8 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     }
 }
 
-void RenderBase::SetSwapBuffersFunc(void(*func)()){
-    swapBuffersFunc = func;
+void RenderBase::Init(void(*swapBuffersFunc)()){
+    this->swapBuffersFunc = swapBuffersFunc;
 }
 
 }

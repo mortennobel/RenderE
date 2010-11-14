@@ -183,7 +183,6 @@ Quaternion Quaternion::Inverse() {
     // if we're the zero quaternion, just return
     if (Mathf::IsZero(norm))
         return *this;
-    std::cout<<"Quaternion::Inverse() "<<norm<<std::endl;
     float normRecip = 1.0f / norm;
     float w = normRecip * this->w;
     float x = -normRecip * this->x;

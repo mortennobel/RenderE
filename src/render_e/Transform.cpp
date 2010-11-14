@@ -45,7 +45,6 @@ Matrix44 Transform::GetLocalTransformInverse(){
     return localTransformInverse;
 }
 
-
 Vector3 Transform::GetPosition() const {
     return position;
 }

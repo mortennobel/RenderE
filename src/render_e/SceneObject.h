@@ -23,10 +23,10 @@ class SceneObject {
 public:
     SceneObject();
     virtual ~SceneObject();
-    void Render();
     const std::vector<Component*> * GetComponents() const;
     Transform &GetTransform() { return transform; }
     Camera *GetCamera() { return camera; }
+    Mesh *GetMesh(){ return mesh; }
     void AddCompnent(Component* component);
 private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
