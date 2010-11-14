@@ -14,17 +14,15 @@
 #include "RenderBase.h"
 #include "Camera.h"
 
-#ifdef _WIN32
-#include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
-
 namespace render_e {
 
 RenderBase *RenderBase::s_instance = 0;
 
+RenderBase::RenderBase():swapBuffersFunc(NULL){
+}
+
 void RenderBase::Display(){
+    assert(swapBuffersFunc!=NULL);
     static SceneObject *lastCamera = NULL;
     
     for (vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
@@ -40,7 +38,7 @@ void RenderBase::Display(){
             (*sIter)->Render();
         }
     }
-    glutSwapBuffers();
+    swapBuffersFunc();
 }
 
 void RenderBase::AddSceneObject(SceneObject *sceneObject){
@@ -60,6 +58,10 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     if (pos!=cameras.end()){
         cameras.erase(pos);
     }
+}
+
+void RenderBase::SetSwapBuffersFunc(void(*func)()){
+    swapBuffersFunc = func;
 }
 
 }

@@ -44,6 +44,7 @@ void timerFunc(int value) {
 void initWorld();
 void testPNG();
 void initGL();
+void initRenderBase();
 void transformTest();
 
 int main(int argc, char **argv) {
@@ -62,6 +63,7 @@ int main(int argc, char **argv) {
 
     initWorld();
     initGL();
+    initRenderBase();
     transformTest();
 
     glutDisplayFunc(display);
@@ -74,6 +76,10 @@ int main(int argc, char **argv) {
 void initGL(){
     glEnable(GL_DEPTH_TEST);
 
+}
+
+void initRenderBase(){
+    renderBase->SetSwapBuffersFunc(glutSwapBuffers);
 }
 
 void printMatrix(float *m){

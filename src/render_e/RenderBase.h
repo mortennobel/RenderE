@@ -17,14 +17,18 @@ class SceneObject;
 
 class RenderBase {
 private:
+    RenderBase();
     static RenderBase *s_instance;
     vector<SceneObject*> sceneObjects;
     vector<SceneObject*> cameras;
+    void(*swapBuffersFunc)();
 public:
     void Display();
 
     void AddSceneObject(SceneObject *sceneObject);
     void DeleteSceneObject(SceneObject *sceneObject);
+    
+    void SetSwapBuffersFunc(void(*func)());
 
     /**
      * Singleton pattern
