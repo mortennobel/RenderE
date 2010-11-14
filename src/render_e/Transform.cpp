@@ -8,6 +8,7 @@
  */
 
 #include "Transform.h"
+#include <iostream>
 
 namespace render_e {
 
@@ -34,14 +35,14 @@ void Transform::UpdateInverseIfDirty(){
     }
 }
 
-float *Transform::GetLocalTransform(){
+Matrix44 Transform::GetLocalTransform(){
     UpdateIfDirty();
-    return localTransform.GetReference();
+    return localTransform;
 }
 
-float *Transform::GetLocalTransformInverse(){
+Matrix44 Transform::GetLocalTransformInverse(){
     UpdateInverseIfDirty();
-    return localTransformInverse.GetReference();
+    return localTransformInverse;
 }
 
 
@@ -70,7 +71,7 @@ void Transform::SetRotation(Quaternion &quaternion) {
 }
 
 void Transform::SetRotation(Vector3 &euler){
-    this->rotation = Quaternion();
+    this->rotation.SetFromEuler(euler[0], euler[1], euler[2]);
     dirtyFlag = true;
     dirtyFlagInverse = true;
 }
