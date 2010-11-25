@@ -11,18 +11,22 @@
 namespace render_e {
 class Shader {
 public:
-    Shader(char *shaderSource);
+    Shader(char *vertexShaderSource, char *fragmentShaderSource);
     virtual ~Shader();
     bool Compile();
     bool Link();
-    
     void Bind();
+    void SetTexture(unsigned int index, unsigned int textureId);
+    void SetVector3(unsigned int index, float *vector);
+    void SetVector4(unsigned int index, float *vector);
+    void SetMatrix44(unsigned int index, float *mat);
 private:
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
-   
+    
     int shaderid;
-    char *shaderSource;
+    char *vertexShaderSource;
+    char *fragmentShaderSource;
 };
 }
 #endif	/* SHADER_H */

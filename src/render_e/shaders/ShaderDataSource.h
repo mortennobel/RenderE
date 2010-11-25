@@ -7,12 +7,13 @@
 
 #ifndef SHADERDATASOURCE_H
 #define	SHADERDATASOURCE_H
+#include "Shader.h"
 
 namespace render_e {
 
 enum ShaderLoadStatus {
     FILE_NOT_FOUND,
-    OK
+    SHADER_OK
 };
 
 class ShaderDataSource {
@@ -20,7 +21,11 @@ public:
     ShaderDataSource();
     virtual ~ShaderDataSource();
     
-    virtual ShaderLoadStatus LoadLinkShader(char* name, int &size, unsigned char **data) = 0;
+    Shader *LoadLinkShader(char* name, ShaderLoadStatus &outStatus);
+protected:
+    virtual ShaderLoadStatus LoadShaderSource(char* name, 
+            char **vertexShaderData,
+            char **fragmentShaderData) = 0;
 private:
     ShaderDataSource(const ShaderDataSource& orig); // disallow copy constructor
     ShaderDataSource& operator = (const ShaderDataSource&); // disallow copy constructor

@@ -11,6 +11,7 @@
 #include "render_e/Mesh.h"
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
+#include "render_e/shaders/ShaderFileDataSource.h"
 
 
 #ifndef RENDER_FPS
@@ -77,6 +78,7 @@ void testPNG();
 void initGL();
 void initRenderBase();
 void transformTest();
+void TestLoadShader();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = &(meshTeapot->GetOwner()->GetTransform());
@@ -133,6 +135,7 @@ int main(int argc, char **argv) {
     initGL();
     initRenderBase();
     transformTest();
+    TestLoadShader();
 
     glutDisplayFunc(display);
 
@@ -140,6 +143,15 @@ int main(int argc, char **argv) {
     glutTimerFunc(RENDER_FPS, timerFunc, 0);
     glutMainLoop();
     return EXIT_SUCCESS;
+}
+
+void TestLoadShader(){
+    cout<<"TestLoadShader"<<endl;
+    ShaderFileDataSource sfs;
+    char name[] = "shadertest";
+    ShaderLoadStatus status = FILE_NOT_FOUND;
+    Shader *s = sfs.LoadLinkShader(name, status);
+    cout<<"Shader status"<<status<<endl;
 }
 
 void initGL(){
@@ -182,8 +194,6 @@ void initWorld() {
     teapotSceneObject->GetTransform().SetPosition(v2);
     renderBase->AddSceneObject(teapotSceneObject);
     teapotSceneObject->AddCompnent(meshTeapot);
-    
-    
 }
 
 /*

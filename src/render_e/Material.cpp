@@ -6,14 +6,17 @@
  */
 
 #include "Material.h"
+#include <iostream>
 
 namespace render_e {
-Material::Material() {
-}
-
-Material::Material(const Material& orig) {
+Material::Material(Shader *shader)
+:Component(MaterialType), shader(shader) {
 }
 
 Material::~Material() {
+}
+
+void Material::Bind(){
+    std::cout<<"Material bind"<<std::endl;
 }
 }

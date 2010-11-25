@@ -17,7 +17,7 @@ RANLIB=ranlib
 CC=gcc
 CCC=g++
 CXX=g++
-FC=
+FC=gfortran
 AS=as
 PROC=proc
 
@@ -30,31 +30,35 @@ CND_DISTDIR=dist
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
+OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/Component.o \
 	${OBJECTDIR}/src/render_e/math/Vector4.o \
+	${OBJECTDIR}/src/render_e/shaders/Shader.o \
 	${OBJECTDIR}/src/render_e/Camera.o \
-	${OBJECTDIR}/src/render_e/math/Vector2.o \
 	${OBJECTDIR}/src/main.o \
+	${OBJECTDIR}/src/render_e/math/Vector2.o \
 	${OBJECTDIR}/src/render_e/RenderBase.o \
-	${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o \
+	${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o \
 	${OBJECTDIR}/src/render_e/Mesh.o \
 	${OBJECTDIR}/src/render_e/math/Mathf.o \
 	${OBJECTDIR}/src/render_e/SceneObject.o \
+	${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o \
 	${OBJECTDIR}/src/render_e/Transform.o \
+	${OBJECTDIR}/src/render_e/Material.o \
 	${OBJECTDIR}/src/render_e/textures/Texture2D.o \
 	${OBJECTDIR}/src/render_e/textures/CubeTexture.o \
 	${OBJECTDIR}/src/render_e/textures/TextureDataSource.o \
 	${OBJECTDIR}/src/render_e/math/Quaternion.o \
 	${OBJECTDIR}/src/render_e/math/Matrix44.o \
 	${OBJECTDIR}/src/render_e/textures/TextureBase.o \
-	${OBJECTDIR}/src/render_e/math/Vector3.o
+	${OBJECTDIR}/src/render_e/math/Vector3.o \
+	${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o
 
 # Test Directory
-TESTDIR=build/${CND_CONF}/${CND_PLATFORM}/tests
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 
 # Test Files
 TESTFILES= \
@@ -80,107 +84,127 @@ LDLIBSOPTIONS=lib/osx/libGLEW.a lib/osx/libpng12.a lib/osx/libz.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-Debug.mk dist/Debug/GNU-MacOSX/rendere
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere
 
-dist/Debug/GNU-MacOSX/rendere: lib/osx/libGLEW.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere: lib/osx/libGLEW.a
 
-dist/Debug/GNU-MacOSX/rendere: lib/osx/libpng12.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere: lib/osx/libpng12.a
 
-dist/Debug/GNU-MacOSX/rendere: lib/osx/libz.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere: lib/osx/libz.a
 
-dist/Debug/GNU-MacOSX/rendere: ${OBJECTFILES}
-	${MKDIR} -p dist/Debug/GNU-MacOSX
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere: ${OBJECTFILES}
+	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -framework GLUT -framework OPENGL -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/src/render_e/Component.o: src/render_e/Component.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp
 
 ${OBJECTDIR}/src/render_e/math/Vector4.o: src/render_e/math/Vector4.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector4.o src/render_e/math/Vector4.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector4.o src/render_e/math/Vector4.cpp
+
+${OBJECTDIR}/src/render_e/shaders/Shader.o: src/render_e/shaders/Shader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/Shader.o src/render_e/shaders/Shader.cpp
 
 ${OBJECTDIR}/src/render_e/Camera.o: src/render_e/Camera.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Camera.o src/render_e/Camera.cpp
-
-${OBJECTDIR}/src/render_e/math/Vector2.o: src/render_e/math/Vector2.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
-	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector2.o src/render_e/math/Vector2.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Camera.o src/render_e/Camera.cpp
 
 ${OBJECTDIR}/src/main.o: src/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
+
+${OBJECTDIR}/src/render_e/math/Vector2.o: src/render_e/math/Vector2.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector2.o src/render_e/math/Vector2.cpp
 
 ${OBJECTDIR}/src/render_e/RenderBase.o: src/render_e/RenderBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/RenderBase.o src/render_e/RenderBase.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/RenderBase.o src/render_e/RenderBase.cpp
 
-${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o: src/render_e/textures/PNGTextureDataSource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
+${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o: src/render_e/shaders/ShaderFileDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o src/render_e/textures/PNGTextureDataSource.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o src/render_e/shaders/ShaderFileDataSource.cpp
 
 ${OBJECTDIR}/src/render_e/Mesh.o: src/render_e/Mesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp
 
 ${OBJECTDIR}/src/render_e/math/Mathf.o: src/render_e/math/Mathf.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Mathf.o src/render_e/math/Mathf.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Mathf.o src/render_e/math/Mathf.cpp
 
 ${OBJECTDIR}/src/render_e/SceneObject.o: src/render_e/SceneObject.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject.o src/render_e/SceneObject.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject.o src/render_e/SceneObject.cpp
+
+${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o: src/render_e/textures/PNGFileTextureDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o src/render_e/textures/PNGFileTextureDataSource.cpp
 
 ${OBJECTDIR}/src/render_e/Transform.o: src/render_e/Transform.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Transform.o src/render_e/Transform.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Transform.o src/render_e/Transform.cpp
+
+${OBJECTDIR}/src/render_e/Material.o: src/render_e/Material.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Material.o src/render_e/Material.cpp
 
 ${OBJECTDIR}/src/render_e/textures/Texture2D.o: src/render_e/textures/Texture2D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/Texture2D.o src/render_e/textures/Texture2D.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/Texture2D.o src/render_e/textures/Texture2D.cpp
 
 ${OBJECTDIR}/src/render_e/textures/CubeTexture.o: src/render_e/textures/CubeTexture.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/CubeTexture.o src/render_e/textures/CubeTexture.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/CubeTexture.o src/render_e/textures/CubeTexture.cpp
 
 ${OBJECTDIR}/src/render_e/textures/TextureDataSource.o: src/render_e/textures/TextureDataSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureDataSource.o src/render_e/textures/TextureDataSource.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureDataSource.o src/render_e/textures/TextureDataSource.cpp
 
 ${OBJECTDIR}/src/render_e/math/Quaternion.o: src/render_e/math/Quaternion.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Quaternion.o src/render_e/math/Quaternion.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Quaternion.o src/render_e/math/Quaternion.cpp
 
 ${OBJECTDIR}/src/render_e/math/Matrix44.o: src/render_e/math/Matrix44.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Matrix44.o src/render_e/math/Matrix44.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Matrix44.o src/render_e/math/Matrix44.cpp
 
 ${OBJECTDIR}/src/render_e/textures/TextureBase.o: src/render_e/textures/TextureBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureBase.o src/render_e/textures/TextureBase.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureBase.o src/render_e/textures/TextureBase.cpp
 
 ${OBJECTDIR}/src/render_e/math/Vector3.o: src/render_e/math/Vector3.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3.o src/render_e/math/Vector3.cpp
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3.o src/render_e/math/Vector3.cpp
+
+${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o: src/render_e/shaders/ShaderDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o src/render_e/shaders/ShaderDataSource.cpp
 
 # Subprojects
 .build-subprojects:
@@ -203,31 +227,31 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newtestclass.o ${TESTDIR}/tests/newtes
 ${TESTDIR}/tests/newtestclass1.o: tests/newtestclass1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
 
 
 ${TESTDIR}/tests/newtestrunner1.o: tests/newtestrunner1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
 
 
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
 ${TESTDIR}/tests/newtestclass.o: tests/newtestclass.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
 
 
 ${TESTDIR}/tests/newtestrunner.o: tests/newtestrunner.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
 
 
 ${OBJECTDIR}/src/render_e/Component_nomain.o: ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp 
@@ -238,7 +262,7 @@ ${OBJECTDIR}/src/render_e/Component_nomain.o: ${OBJECTDIR}/src/render_e/Componen
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Component_nomain.o src/render_e/Component.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Component_nomain.o src/render_e/Component.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/Component.o ${OBJECTDIR}/src/render_e/Component_nomain.o;\
 	fi
@@ -251,9 +275,22 @@ ${OBJECTDIR}/src/render_e/math/Vector4_nomain.o: ${OBJECTDIR}/src/render_e/math/
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector4_nomain.o src/render_e/math/Vector4.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector4_nomain.o src/render_e/math/Vector4.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Vector4.o ${OBJECTDIR}/src/render_e/math/Vector4_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/shaders/Shader_nomain.o: ${OBJECTDIR}/src/render_e/shaders/Shader.o src/render_e/shaders/Shader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/shaders/Shader.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/Shader_nomain.o src/render_e/shaders/Shader.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/shaders/Shader.o ${OBJECTDIR}/src/render_e/shaders/Shader_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/Camera_nomain.o: ${OBJECTDIR}/src/render_e/Camera.o src/render_e/Camera.cpp 
@@ -264,22 +301,9 @@ ${OBJECTDIR}/src/render_e/Camera_nomain.o: ${OBJECTDIR}/src/render_e/Camera.o sr
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Camera_nomain.o src/render_e/Camera.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Camera_nomain.o src/render_e/Camera.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/Camera.o ${OBJECTDIR}/src/render_e/Camera_nomain.o;\
-	fi
-
-${OBJECTDIR}/src/render_e/math/Vector2_nomain.o: ${OBJECTDIR}/src/render_e/math/Vector2.o src/render_e/math/Vector2.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/math/Vector2.o`; \
-	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
-	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
-	then  \
-	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector2_nomain.o src/render_e/math/Vector2.cpp;\
-	else  \
-	    ${CP} ${OBJECTDIR}/src/render_e/math/Vector2.o ${OBJECTDIR}/src/render_e/math/Vector2_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/main_nomain.o: ${OBJECTDIR}/src/main.o src/main.cpp 
@@ -290,9 +314,22 @@ ${OBJECTDIR}/src/main_nomain.o: ${OBJECTDIR}/src/main.o src/main.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main_nomain.o src/main.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main_nomain.o src/main.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/main_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/math/Vector2_nomain.o: ${OBJECTDIR}/src/render_e/math/Vector2.o src/render_e/math/Vector2.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/math/Vector2.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector2_nomain.o src/render_e/math/Vector2.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/math/Vector2.o ${OBJECTDIR}/src/render_e/math/Vector2_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/RenderBase_nomain.o: ${OBJECTDIR}/src/render_e/RenderBase.o src/render_e/RenderBase.cpp 
@@ -303,22 +340,22 @@ ${OBJECTDIR}/src/render_e/RenderBase_nomain.o: ${OBJECTDIR}/src/render_e/RenderB
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/RenderBase_nomain.o src/render_e/RenderBase.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/RenderBase_nomain.o src/render_e/RenderBase.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/RenderBase.o ${OBJECTDIR}/src/render_e/RenderBase_nomain.o;\
 	fi
 
-${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource_nomain.o: ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o src/render_e/textures/PNGTextureDataSource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o`; \
+${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o: ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o src/render_e/shaders/ShaderFileDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource_nomain.o src/render_e/textures/PNGTextureDataSource.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o src/render_e/shaders/ShaderFileDataSource.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource.o ${OBJECTDIR}/src/render_e/textures/PNGTextureDataSource_nomain.o;\
+	    ${CP} ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/Mesh_nomain.o: ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp 
@@ -329,7 +366,7 @@ ${OBJECTDIR}/src/render_e/Mesh_nomain.o: ${OBJECTDIR}/src/render_e/Mesh.o src/re
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh_nomain.o src/render_e/Mesh.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh_nomain.o src/render_e/Mesh.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/Mesh.o ${OBJECTDIR}/src/render_e/Mesh_nomain.o;\
 	fi
@@ -342,7 +379,7 @@ ${OBJECTDIR}/src/render_e/math/Mathf_nomain.o: ${OBJECTDIR}/src/render_e/math/Ma
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Mathf_nomain.o src/render_e/math/Mathf.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Mathf_nomain.o src/render_e/math/Mathf.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Mathf.o ${OBJECTDIR}/src/render_e/math/Mathf_nomain.o;\
 	fi
@@ -355,9 +392,22 @@ ${OBJECTDIR}/src/render_e/SceneObject_nomain.o: ${OBJECTDIR}/src/render_e/SceneO
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject_nomain.o src/render_e/SceneObject.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject_nomain.o src/render_e/SceneObject.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/SceneObject.o ${OBJECTDIR}/src/render_e/SceneObject_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource_nomain.o: ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o src/render_e/textures/PNGFileTextureDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource_nomain.o src/render_e/textures/PNGFileTextureDataSource.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/Transform_nomain.o: ${OBJECTDIR}/src/render_e/Transform.o src/render_e/Transform.cpp 
@@ -368,9 +418,22 @@ ${OBJECTDIR}/src/render_e/Transform_nomain.o: ${OBJECTDIR}/src/render_e/Transfor
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Transform_nomain.o src/render_e/Transform.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Transform_nomain.o src/render_e/Transform.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/Transform.o ${OBJECTDIR}/src/render_e/Transform_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/Material_nomain.o: ${OBJECTDIR}/src/render_e/Material.o src/render_e/Material.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/Material.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Material_nomain.o src/render_e/Material.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/Material.o ${OBJECTDIR}/src/render_e/Material_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o: ${OBJECTDIR}/src/render_e/textures/Texture2D.o src/render_e/textures/Texture2D.cpp 
@@ -381,7 +444,7 @@ ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o: ${OBJECTDIR}/src/render_e
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o src/render_e/textures/Texture2D.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o src/render_e/textures/Texture2D.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/textures/Texture2D.o ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o;\
 	fi
@@ -394,7 +457,7 @@ ${OBJECTDIR}/src/render_e/textures/CubeTexture_nomain.o: ${OBJECTDIR}/src/render
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/CubeTexture_nomain.o src/render_e/textures/CubeTexture.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/CubeTexture_nomain.o src/render_e/textures/CubeTexture.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/textures/CubeTexture.o ${OBJECTDIR}/src/render_e/textures/CubeTexture_nomain.o;\
 	fi
@@ -407,7 +470,7 @@ ${OBJECTDIR}/src/render_e/textures/TextureDataSource_nomain.o: ${OBJECTDIR}/src/
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureDataSource_nomain.o src/render_e/textures/TextureDataSource.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureDataSource_nomain.o src/render_e/textures/TextureDataSource.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/textures/TextureDataSource.o ${OBJECTDIR}/src/render_e/textures/TextureDataSource_nomain.o;\
 	fi
@@ -420,7 +483,7 @@ ${OBJECTDIR}/src/render_e/math/Quaternion_nomain.o: ${OBJECTDIR}/src/render_e/ma
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Quaternion_nomain.o src/render_e/math/Quaternion.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Quaternion_nomain.o src/render_e/math/Quaternion.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Quaternion.o ${OBJECTDIR}/src/render_e/math/Quaternion_nomain.o;\
 	fi
@@ -433,7 +496,7 @@ ${OBJECTDIR}/src/render_e/math/Matrix44_nomain.o: ${OBJECTDIR}/src/render_e/math
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Matrix44_nomain.o src/render_e/math/Matrix44.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Matrix44_nomain.o src/render_e/math/Matrix44.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Matrix44.o ${OBJECTDIR}/src/render_e/math/Matrix44_nomain.o;\
 	fi
@@ -446,7 +509,7 @@ ${OBJECTDIR}/src/render_e/textures/TextureBase_nomain.o: ${OBJECTDIR}/src/render
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureBase_nomain.o src/render_e/textures/TextureBase.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/textures/TextureBase_nomain.o src/render_e/textures/TextureBase.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/textures/TextureBase.o ${OBJECTDIR}/src/render_e/textures/TextureBase_nomain.o;\
 	fi
@@ -459,9 +522,22 @@ ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o: ${OBJECTDIR}/src/render_e/math/
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -g -DRENDER_E_PNG -D_DEBUG -Ilib-include -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o src/render_e/math/Vector3.cpp;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o src/render_e/math/Vector3.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Vector3.o ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/shaders/ShaderDataSource_nomain.o: ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o src/render_e/shaders/ShaderDataSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource_nomain.o src/render_e/shaders/ShaderDataSource.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource_nomain.o;\
 	fi
 
 # Run Test Targets
@@ -477,8 +553,8 @@ ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o: ${OBJECTDIR}/src/render_e/math/
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/Debug
-	${RM} dist/Debug/GNU-MacOSX/rendere
+	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/rendere
 
 # Subprojects
 .clean-subprojects:

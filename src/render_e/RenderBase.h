@@ -8,8 +8,6 @@
 #include <vector>
 #include "SceneObject.h"
 
-using std::vector;
-
 namespace render_e {
 
 // forward declaration
@@ -36,9 +34,11 @@ public:
     }
 private:
     RenderBase();
+    void RenderScene(const Matrix44 &cameraMatrix);
     static RenderBase *s_instance;
-    vector<SceneObject*> sceneObjects;
-    vector<SceneObject*> cameras;
+    std::vector<SceneObject*> sceneObjects;
+    std::vector<SceneObject*> cameras;
+    
     void(*swapBuffersFunc)();
 };
 

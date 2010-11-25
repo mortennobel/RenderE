@@ -26,7 +26,7 @@ void RenderBase::Display(){
     assert(swapBuffersFunc!=NULL);
     static SceneObject *lastCamera = NULL;
     
-    for (vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
+    for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         if (lastCamera!=*iter){
             lastCamera = *iter;
             lastCamera->GetCamera()->Setup(); // only setup if changed
@@ -39,16 +39,30 @@ void RenderBase::Display(){
         assert(matrixMode==GL_MODELVIEW);
 #endif //_DEBUG
         Matrix44 cameraMatrix = lastCamera->GetTransform().GetLocalTransformInverse();
-        for (vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
-            Mesh *mesh = (*sIter)->GetMesh();
-            if (mesh!=NULL){
-                Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
-                glLoadMatrixf(modelView.GetReference());
-                mesh->Render();
-            }
-        }
+        RenderScene(cameraMatrix);
     }
     swapBuffersFunc();
+}
+
+void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
+    Material *lastMaterial = NULL;
+    for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
+        Mesh *mesh = (*sIter)->GetMesh();
+        Material *currentMaterial = (*sIter)->GetMaterial();
+        if (currentMaterial != lastMaterial){
+            if (currentMaterial != NULL){
+                currentMaterial->Bind();
+            }
+            lastMaterial = currentMaterial;
+            
+            
+        }
+        if (mesh!=NULL){
+            Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
+            glLoadMatrixf(modelView.GetReference());
+            mesh->Render();
+        }
+    }
 }
 
 void RenderBase::AddSceneObject(SceneObject *sceneObject){
@@ -59,7 +73,7 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
 }
 
 void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
-    vector<SceneObject*>::iterator pos = find(sceneObjects.begin(), sceneObjects.end(), sceneObject);
+    std::vector<SceneObject*>::iterator pos = find(sceneObjects.begin(), sceneObjects.end(), sceneObject);
     if (pos!=sceneObjects.end()){
         sceneObjects.erase(pos);
     }

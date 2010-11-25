@@ -16,4 +16,10 @@ ShaderFileDataSource::ShaderFileDataSource(const ShaderFileDataSource& orig) {
 
 ShaderFileDataSource::~ShaderFileDataSource() {
 }
+
+ShaderLoadStatus ShaderFileDataSource::LoadShaderSource(char* name, 
+            char **vertexShaderData,
+            char **fragmentShaderData){
+    return SHADER_OK;
+}
 }

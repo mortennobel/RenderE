@@ -22,6 +22,23 @@ SceneObject::SceneObject()
 SceneObject::~SceneObject() {
 }
 
+
+Transform &SceneObject::GetTransform() { 
+    return transform; 
+}
+
+Camera *SceneObject::GetCamera() { 
+    return camera; 
+}
+
+Mesh *SceneObject::GetMesh(){ 
+    return mesh; 
+}
+
+Material *SceneObject::GetMaterial(){
+    return material;
+}
+    
 const std::vector<Component*> * SceneObject::GetComponents() const{
     return &components;
 }

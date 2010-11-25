@@ -13,17 +13,18 @@
 #include "textures/TextureBase.h"
 #include "Component.h"
 
-using std::vector;
-
 namespace render_e {
 class Material : public Component{
 public:
     Material(Shader *shader);
-    Material(const Material& orig);
     virtual ~Material();
+    void Bind();
 private:
+    Material(const Material& orig); // disallow copy constructor
+    Material& operator = (const Material&); // disallow copy constructor
+    
     Shader *shader;
-    vector<TextureBase*> textures;
+    std::vector<TextureBase*> textures;
 };
 }
 #endif	/* MATERIAL_H */

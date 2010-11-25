@@ -8,8 +8,8 @@
 #include "Shader.h"
 
 namespace render_e {
-Shader::Shader(char *shaderSource)
-:shaderSource(shaderSource) {
+Shader::Shader(char *vertexShaderSource, char *fragmentShaderSource)
+:vertexShaderSource(vertexShaderSource),fragmentShaderSource(fragmentShaderSource) {
 }
 
 Shader::~Shader() {

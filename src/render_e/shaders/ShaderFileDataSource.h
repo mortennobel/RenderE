@@ -16,6 +16,10 @@ public:
     ShaderFileDataSource();
     ShaderFileDataSource(const ShaderFileDataSource& orig);
     virtual ~ShaderFileDataSource();
+    
+    ShaderLoadStatus LoadShaderSource(char* name, 
+            char **vertexShaderData,
+            char **fragmentShaderData);
 private:
 
 };
