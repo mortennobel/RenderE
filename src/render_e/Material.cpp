@@ -17,6 +17,6 @@ Material::~Material() {
 }
 
 void Material::Bind(){
-    std::cout<<"Material bind"<<std::endl;
+    shader->Bind();
 }
 }

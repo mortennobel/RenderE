@@ -8,6 +8,7 @@
 #include "render_e/RenderBase.h"
 #include "render_e/Camera.h"
 #include "render_e/SceneObject.h"
+#include "render_e/Material.h"
 #include "render_e/Mesh.h"
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
@@ -69,6 +70,10 @@ void timerFunc(int value) {
     lastUpdate = time;
     glutPostRedisplay();
     glutTimerFunc(RENDER_FPS, timerFunc, 0);
+}
+
+void reshape(int w, int h){
+    renderBase->Reshape(w, h);
 }
 
 
@@ -138,6 +143,7 @@ int main(int argc, char **argv) {
     TestLoadShader();
 
     glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
 
     glutKeyboardFunc(keyPress);
     glutTimerFunc(RENDER_FPS, timerFunc, 0);
@@ -211,6 +217,15 @@ void initWorld() {
     teapotSceneObject->GetTransform().SetPosition(v2);
     renderBase->AddSceneObject(teapotSceneObject);
     teapotSceneObject->AddCompnent(meshTeapot);
+    
+    ShaderFileDataSource sfs;
+    char name2[] = "diffuse";
+    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
+    Shader *b = sfs.LoadLinkShader(name2, status);
+    
+    Material *mat = new Material(b);
+    teapotSceneObject->AddCompnent(mat);
+    
 }
 
 /*

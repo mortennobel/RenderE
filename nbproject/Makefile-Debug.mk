@@ -45,6 +45,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/Mesh.o \
 	${OBJECTDIR}/src/render_e/math/Mathf.o \
 	${OBJECTDIR}/src/render_e/SceneObject.o \
+	${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o \
 	${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o \
 	${OBJECTDIR}/src/render_e/Transform.o \
 	${OBJECTDIR}/src/render_e/Material.o \
@@ -150,6 +151,11 @@ ${OBJECTDIR}/src/render_e/SceneObject.o: src/render_e/SceneObject.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
 	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject.o src/render_e/SceneObject.cpp
+
+${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o: src/render_e/shaders/DefaultShaders.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o src/render_e/shaders/DefaultShaders.cpp
 
 ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o: src/render_e/textures/PNGFileTextureDataSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
@@ -395,6 +401,19 @@ ${OBJECTDIR}/src/render_e/SceneObject_nomain.o: ${OBJECTDIR}/src/render_e/SceneO
 	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneObject_nomain.o src/render_e/SceneObject.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/SceneObject.o ${OBJECTDIR}/src/render_e/SceneObject_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/shaders/DefaultShaders_nomain.o: ${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o src/render_e/shaders/DefaultShaders.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/DefaultShaders_nomain.o src/render_e/shaders/DefaultShaders.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o ${OBJECTDIR}/src/render_e/shaders/DefaultShaders_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource_nomain.o: ${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o src/render_e/textures/PNGFileTextureDataSource.cpp 

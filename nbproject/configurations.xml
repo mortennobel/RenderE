@@ -18,6 +18,7 @@
           <itemPath>src/render_e/math/Vector4.h</itemPath>
         </logicalFolder>
         <logicalFolder name="shaders" displayName="shaders" projectFiles="true">
+          <itemPath>DefaultShaders.h</itemPath>
           <itemPath>src/render_e/shaders/Shader.h</itemPath>
           <itemPath>src/render_e/shaders/ShaderDataSource.h</itemPath>
           <itemPath>src/render_e/shaders/ShaderFileDataSource.h</itemPath>
@@ -63,6 +64,7 @@
           <itemPath>src/render_e/math/Vector4.cpp</itemPath>
         </logicalFolder>
         <logicalFolder name="shaders" displayName="shaders" projectFiles="true">
+          <itemPath>src/render_e/shaders/DefaultShaders.cpp</itemPath>
           <itemPath>src/render_e/shaders/Shader.cpp</itemPath>
           <itemPath>src/render_e/shaders/ShaderDataSource.cpp</itemPath>
           <itemPath>src/render_e/shaders/ShaderFileDataSource.cpp</itemPath>

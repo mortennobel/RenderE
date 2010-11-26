@@ -14,12 +14,26 @@
 
 #include "RenderBase.h"
 #include "Camera.h"
+#include "shaders/DefaultShaders.h"
 
 namespace render_e {
 
 RenderBase *RenderBase::s_instance = NULL;
 
-RenderBase::RenderBase():swapBuffersFunc(NULL){
+Shader *zOnlyShader = NULL;
+
+RenderBase::RenderBase():swapBuffersFunc(NULL),doubleSpeedZOnlyRendering(true){
+}
+
+void RenderBase::Reshape(int width, int height){
+    if (doubleSpeedZOnlyRendering){
+        glDepthFunc(GL_LEQUAL);
+        if (zOnlyShader == NULL){
+            zOnlyShader = DefaultShaders::Instance()->GetZOnly();
+        }
+    } else {
+        glDepthFunc(GL_LESS);
+    }
 }
 
 void RenderBase::Display(){
@@ -45,6 +59,25 @@ void RenderBase::Display(){
 }
 
 void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
+    // Main idea here is to 
+    if (doubleSpeedZOnlyRendering){
+        //Disable color writes, and use flat shading for speed
+        glShadeModel(GL_FLAT);
+        glColorMask(0, 0, 0, 0);
+        zOnlyShader->Bind();
+        for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
+           Mesh *mesh = (*sIter)->GetMesh();
+            Material *currentMaterial = (*sIter)->GetMaterial();
+            if (mesh!=NULL){
+                Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
+                glLoadMatrixf(modelView.GetReference());
+                mesh->Render();
+            }
+        }
+        glShadeModel(GL_SMOOTH);
+        glColorMask(1, 1, 1, 1);
+    }
+    
     Material *lastMaterial = NULL;
     for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
         Mesh *mesh = (*sIter)->GetMesh();
@@ -86,6 +119,14 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
 
 void RenderBase::Init(void(*swapBuffersFunc)()){
     this->swapBuffersFunc = swapBuffersFunc;
+}
+
+void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
+    this->doubleSpeedZOnlyRendering = enabled;
+}
+
+bool RenderBase::GetDoubleSpeedZOnlyRendering(){
+    return doubleSpeedZOnlyRendering;
 }
 
 }

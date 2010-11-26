@@ -104,7 +104,6 @@ ShaderLoadStatus Shader::Link(){
         return SHADER_LINK_ERROR;
     }
     
-    
     return SHADER_OK;
 }
     

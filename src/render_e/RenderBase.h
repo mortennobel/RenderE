@@ -21,6 +21,11 @@ public:
     void DeleteSceneObject(SceneObject *sceneObject);
     
     void Init(void(*swapBuffersFunc)());
+    void Reshape(int width, int height);
+    
+    
+    void SetDoubleSpeedZOnlyRendering(bool enabled);
+    bool GetDoubleSpeedZOnlyRendering();
 
     /**
      * Singleton pattern
@@ -40,6 +45,7 @@ private:
     std::vector<SceneObject*> cameras;
     
     void(*swapBuffersFunc)();
+    bool doubleSpeedZOnlyRendering;
 };
 
 }
