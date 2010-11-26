@@ -17,7 +17,7 @@
 
 namespace render_e {
 Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource)
-:vertexShaderSource(vertexShaderSource),fragmentShaderSource(fragmentShaderSource),shaderid(0),vertexShaderId(0),fragmentShaderId(0) {
+:vertexShaderSource(vertexShaderSource),fragmentShaderSource(fragmentShaderSource),shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0) {
 }
 
 Shader::~Shader() {
@@ -27,8 +27,8 @@ Shader::~Shader() {
     if (vertexShaderId != 0) {
         glDeleteShader(vertexShaderId);
     }
-    if (shaderid != 0) {
-        glDeleteProgram(shaderid);
+    if (shaderProgramId != 0) {
+        glDeleteProgram(shaderProgramId);
     }
 }
 
@@ -40,14 +40,12 @@ void checkInfoLogShader(unsigned int shaderId){
         glGetShaderInfoLog(shaderId,infologlength,&infologlength,infoLog);
         std::cout<<infoLog<<std::endl;
     }
-    
 }
 
 ShaderLoadStatus Shader::Compile(){
-    shaderid = glCreateProgram();
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    if (shaderid == 0 || vertexShaderId == 0 || fragmentShaderId == 0){
+    if (vertexShaderId == 0 || fragmentShaderId == 0){
         return SHADER_CANNOT_ALLOCATE;
     }
     
@@ -56,17 +54,20 @@ ShaderLoadStatus Shader::Compile(){
     glShaderSource(fragmentShaderId, 1, &fragmentShaderSource, NULL);
 
     // Compile the shaders
+    int compileStatus = 0;
     glCompileShader(vertexShaderId);
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileStatus);
+    if (!compileStatus){
+        return SHADER_COMPILE_ERROR_VERTEX_SHADER;
+    }
     glCompileShader(fragmentShaderId);
-    
+    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileStatus);
+    if (!compileStatus){
+        return SHADER_COMPILE_ERROR_FRAGMENT_SHADER;
+    }
     // check info log
     checkInfoLogShader(vertexShaderId);
     checkInfoLogShader(fragmentShaderId);
-    
-    // Attach the shader objects to the program object
-    glAttachShader(shaderid, vertexShaderId);
-    glAttachShader(shaderid, fragmentShaderId);
-    
     
     return SHADER_OK;
 }
@@ -83,14 +84,31 @@ void checkInfoLogProgram(unsigned int programId){
 
 
 
-bool Shader::Link(){
-    glLinkProgram(shaderid);
-    checkInfoLogProgram(shaderid);
-    Bind();
-    return true;
+ShaderLoadStatus Shader::Link(){
+    shaderProgramId = glCreateProgram();
+    
+    if (shaderProgramId == 0) {
+        return SHADER_CANNOT_ALLOCATE;
+    }
+    
+    // Attach the shader objects to the program object
+    glAttachShader(shaderProgramId, vertexShaderId);
+    glAttachShader(shaderProgramId, fragmentShaderId);
+    
+    glLinkProgram(shaderProgramId);
+    checkInfoLogProgram(shaderProgramId);
+    
+    int linkStatus = 0;
+    glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &linkStatus);
+    if (!linkStatus){
+        return SHADER_LINK_ERROR;
+    }
+    
+    
+    return SHADER_OK;
 }
     
 void Shader::Bind(){
-    glUseProgram(shaderid);
+    glUseProgram(shaderProgramId);
 }
 }

@@ -14,7 +14,8 @@ enum ShaderLoadStatus {
     SHADER_OK,
     SHADER_CANNOT_ALLOCATE,
     SHADER_FILE_NOT_FOUND,
-    SHADER_COMPILE_ERROR,
+    SHADER_COMPILE_ERROR_VERTEX_SHADER,
+    SHADER_COMPILE_ERROR_FRAGMENT_SHADER,
     SHADER_LINK_ERROR    
 };
 
@@ -23,7 +24,7 @@ public:
     Shader(const char *vertexShaderSource, const char *fragmentShaderSource);
     virtual ~Shader();
     ShaderLoadStatus Compile();
-    bool Link();
+    ShaderLoadStatus Link();
     void Bind();
     void SetTexture(unsigned int index, unsigned int textureId);
     void SetVector3(unsigned int index, float *vector);
@@ -33,7 +34,7 @@ private:
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
     
-    unsigned int shaderid;
+    unsigned int shaderProgramId;
     unsigned int vertexShaderId;
     unsigned int fragmentShaderId;
     const char *vertexShaderSource;

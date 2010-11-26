@@ -41,6 +41,7 @@ ShaderLoadStatus ShaderFileDataSource::LoadShaderSource(char* name,
         
         if (input.fail()) {
             // file did not exist or error during read
+            std::cout<<"Cannot load "<<filename<<std::endl;
             return SHADER_FILE_NOT_FOUND;
         }
     }

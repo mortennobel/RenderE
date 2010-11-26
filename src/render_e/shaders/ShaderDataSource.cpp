@@ -29,11 +29,12 @@ Shader *ShaderDataSource::LoadLinkShader(char* name, ShaderLoadStatus &outStatus
     Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str());
     outStatus = shader->Compile();
     if (outStatus != SHADER_OK){
+        delete shader;
         return NULL;
     }
-    bool linkOK = shader->Link();
-    if (!linkOK){
-        outStatus = SHADER_LINK_ERROR;
+    outStatus = shader->Link();
+    if (outStatus != SHADER_OK){
+        delete shader;
         return NULL;
     }
     return shader;

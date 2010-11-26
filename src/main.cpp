@@ -152,6 +152,18 @@ void TestLoadShader(){
     ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
     Shader *s = sfs.LoadLinkShader(name, status);
     assert(status == SHADER_FILE_NOT_FOUND);
+
+    char nameLinkBuggy[] = "linkbug";
+    Shader *linkBug = sfs.LoadLinkShader(nameLinkBuggy, status);
+    assert (linkBug == NULL);
+    cout<<status<<endl;
+    assert (status == SHADER_LINK_ERROR);
+
+    char nameBuggy[] = "buggy";
+    Shader *bug = sfs.LoadLinkShader(nameBuggy, status);
+    assert (bug == NULL);
+    assert (status == SHADER_COMPILE_ERROR_VERTEX_SHADER);
+
     
     char name2[] = "diffuse";
     Shader *b = sfs.LoadLinkShader(name2, status);
