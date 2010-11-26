@@ -149,9 +149,14 @@ void TestLoadShader(){
     cout<<"TestLoadShader"<<endl;
     ShaderFileDataSource sfs;
     char name[] = "shadertest";
-    ShaderLoadStatus status = FILE_NOT_FOUND;
+    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
     Shader *s = sfs.LoadLinkShader(name, status);
-    cout<<"Shader status"<<status<<endl;
+    assert(status == SHADER_FILE_NOT_FOUND);
+    
+    char name2[] = "diffuse";
+    Shader *b = sfs.LoadLinkShader(name2, status);
+    assert (b!= NULL);
+    assert (status == SHADER_OK);
 }
 
 void initGL(){

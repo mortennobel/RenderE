@@ -19,16 +19,23 @@ ShaderDataSource::~ShaderDataSource() {
 }
 
 Shader *ShaderDataSource::LoadLinkShader(char* name, ShaderLoadStatus &outStatus){
-    char *vertexData;
-    char *fragmentData;
-    ShaderLoadStatus status = LoadShaderSource(name, &vertexData, &fragmentData);
-    if (status != SHADER_OK){
-        outStatus = status;
+    using std::string;
+    string vertexData;
+    string fragmentData;
+    outStatus = LoadShaderSource(name, vertexData, fragmentData);
+    if (outStatus != SHADER_OK){
         return NULL;
     }
-    Shader* shader = new Shader(vertexData, fragmentData);
-    shader->Compile();
-    shader->Link();
+    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str());
+    outStatus = shader->Compile();
+    if (outStatus != SHADER_OK){
+        return NULL;
+    }
+    bool linkOK = shader->Link();
+    if (!linkOK){
+        outStatus = SHADER_LINK_ERROR;
+        return NULL;
+    }
     return shader;
 }
 }

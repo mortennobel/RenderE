@@ -9,11 +9,20 @@
 #define	SHADER_H
 
 namespace render_e {
+
+enum ShaderLoadStatus {
+    SHADER_OK,
+    SHADER_CANNOT_ALLOCATE,
+    SHADER_FILE_NOT_FOUND,
+    SHADER_COMPILE_ERROR,
+    SHADER_LINK_ERROR    
+};
+
 class Shader {
 public:
-    Shader(char *vertexShaderSource, char *fragmentShaderSource);
+    Shader(const char *vertexShaderSource, const char *fragmentShaderSource);
     virtual ~Shader();
-    bool Compile();
+    ShaderLoadStatus Compile();
     bool Link();
     void Bind();
     void SetTexture(unsigned int index, unsigned int textureId);
@@ -24,9 +33,11 @@ private:
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
     
-    int shaderid;
-    char *vertexShaderSource;
-    char *fragmentShaderSource;
+    unsigned int shaderid;
+    unsigned int vertexShaderId;
+    unsigned int fragmentShaderId;
+    const char *vertexShaderSource;
+    const char *fragmentShaderSource;
 };
 }
 #endif	/* SHADER_H */
