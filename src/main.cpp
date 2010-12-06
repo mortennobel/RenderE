@@ -10,6 +10,8 @@
 #include "render_e/SceneObject.h"
 #include "render_e/Material.h"
 #include "render_e/MeshComponent.h"
+#include "render_e/MeshFactory.h"
+#include "render_e/Mesh.h"
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
@@ -221,6 +223,7 @@ void initWorld() {
     Vector3 v2(0.0,0.0,0.0);
     teapotSceneObject->GetTransform().SetPosition(v2);
     renderBase->AddSceneObject(teapotSceneObject);
+    meshTeapot->SetMesh(MeshFactory::Tetrahedron());
     teapotSceneObject->AddCompnent(meshTeapot);
     
     ShaderFileDataSource sfs;

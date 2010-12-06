@@ -23,7 +23,7 @@
 
 namespace render_e {
 MeshComponent::MeshComponent()
-:Component(MeshType), vboName(0){
+:Component(MeshType), vboName(0),triangles(NULL){
 }
 
 MeshComponent::~MeshComponent() {
@@ -45,29 +45,37 @@ void MeshComponent::Render(){
             glTexCoordPointer(2, GL_FLOAT, 0, (GLubyte*)texture1Offset);
         }
         
+        glDrawArrays(GL_TRIANGLES, triangles[0], triangleCount);
     } else {
         std::cout << "Mesh not initialized" << std::endl;
     }
-
 }
 
-void MeshComponent::InitMesh(Vector3 *vertices, Vector3 *normals, Vector3 *tangent,
-        Vector2 *textureCoords, Vector2 *textureCoords2, int verticeCount, 
-        int *triangles, int triangleCount){
+void MeshComponent::SetMesh(Mesh *mesh){
+    this->mesh = mesh;
+    Vector3 *vertices = mesh->GetVertices();
+    Vector3 *normals = mesh->GetNormals();
+    Vector3 *tangent = mesh->GetTangents();
+    Vector2 *textureCoords = mesh->GetTextureCoords1();
+    Vector2 *textureCoords2 = mesh->GetTextureCoords2();
+    int primitiveCount = mesh->GetPrimitiveCount();
+    triangles = mesh->GetTriangles();
+    triangleCount = mesh->GetTriangleCount();
     if (vboName!=0){
         Release();
     }
-    this->verticeCount = verticeCount;
-    unsigned int buffersize = sizeof(float)*(3+3+2)*verticeCount;
+    this->verticeCount = primitiveCount;
+    unsigned int buffersize = sizeof(float)*(3+3+2)*primitiveCount;
     // create temp buffer
 	float *buffer = new float[buffersize];
     // copy data to tmp buffer
 	// data is organized [vertices, normals, texCoords, textCoords2]
-	memcpy(buffer,vertices,sizeof(float)*3*verticeCount);
-	memcpy(buffer+3*verticeCount,normals,sizeof(float)*3*verticeCount);
-	memcpy(buffer+2*3*verticeCount,textureCoords,sizeof(float)*2*verticeCount);
+	memcpy(buffer,vertices,sizeof(float)*3*primitiveCount);
+	memcpy(buffer+3*primitiveCount,normals,sizeof(float)*3*primitiveCount);
+	memcpy(buffer+2*3*primitiveCount,textureCoords,sizeof(float)*2*primitiveCount);
     
-    unsigned int vertexBufferSize = sizeof(float)*3*verticeCount;
+    unsigned int vertexBufferSize = sizeof(float)*3*primitiveCount;
+    
     
     glGenBuffers(1,&vboName);
     // Bind buffer (set buffer active)

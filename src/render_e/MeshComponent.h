@@ -11,6 +11,7 @@
 #include "math/Vector3.h"
 #include "math/Vector2.h"
 #include "Component.h"
+#include "Mesh.h"
 
 namespace render_e {
 class MeshComponent : public Component {
@@ -18,13 +19,14 @@ public:
     MeshComponent();
     virtual ~MeshComponent();
     void Render();
-    void InitMesh(Vector3 *vertices, Vector3 *normals, Vector3 *tangent,
-        Vector2 *textureCoords, Vector2 *textureCoords2, int verticeCount,
-        int *triangles, int triangleCount);
+    void SetMesh(Mesh *mesh);
     void Release();
 private:
+    Mesh *mesh;
     unsigned int vboName;
     int verticeCount;
+    int *triangles;
+    int triangleCount;
 
     int normalOffset;
     int tangentOffset;

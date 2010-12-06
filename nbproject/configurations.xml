@@ -36,7 +36,9 @@
         <itemPath>src/render_e/Camera.h</itemPath>
         <itemPath>src/render_e/Component.h</itemPath>
         <itemPath>src/render_e/Material.h</itemPath>
+        <itemPath>src/render_e/Mesh.h</itemPath>
         <itemPath>src/render_e/MeshComponent.h</itemPath>
+        <itemPath>src/render_e/MeshFactory.h</itemPath>
         <itemPath>src/render_e/RenderBase.h</itemPath>
         <itemPath>src/render_e/SceneObject.h</itemPath>
         <itemPath>src/render_e/Transform.h</itemPath>
@@ -82,7 +84,9 @@
         <itemPath>src/render_e/Camera.cpp</itemPath>
         <itemPath>src/render_e/Component.cpp</itemPath>
         <itemPath>src/render_e/Material.cpp</itemPath>
+        <itemPath>src/render_e/Mesh.cpp</itemPath>
         <itemPath>src/render_e/MeshComponent.cpp</itemPath>
+        <itemPath>src/render_e/MeshFactory.cpp</itemPath>
         <itemPath>src/render_e/RenderBase.cpp</itemPath>
         <itemPath>src/render_e/SceneObject.cpp</itemPath>
         <itemPath>src/render_e/Transform.cpp</itemPath>
@@ -180,6 +184,7 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>lib-include</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -187,6 +192,7 @@
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -224,10 +230,12 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -258,10 +266,12 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -346,10 +356,12 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -395,10 +407,12 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -442,10 +456,12 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>

@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/math/Vector2.o \
 	${OBJECTDIR}/src/render_e/RenderBase.o \
 	${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o \
+	${OBJECTDIR}/src/render_e/Mesh.o \
 	${OBJECTDIR}/src/render_e/MeshComponent.o \
 	${OBJECTDIR}/src/render_e/math/Mathf.o \
 	${OBJECTDIR}/src/render_e/SceneObject.o \
@@ -56,6 +57,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/math/Matrix44.o \
 	${OBJECTDIR}/src/render_e/textures/TextureBase.o \
 	${OBJECTDIR}/src/render_e/math/Vector3.o \
+	${OBJECTDIR}/src/render_e/MeshFactory.o \
 	${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o
 
 # Test Directory
@@ -137,6 +139,11 @@ ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o: src/render_e/shaders/S
 	${RM} $@.d
 	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o src/render_e/shaders/ShaderFileDataSource.cpp
 
+${OBJECTDIR}/src/render_e/Mesh.o: src/render_e/Mesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp
+
 ${OBJECTDIR}/src/render_e/MeshComponent.o: src/render_e/MeshComponent.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
@@ -207,6 +214,11 @@ ${OBJECTDIR}/src/render_e/math/Vector3.o: src/render_e/math/Vector3.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3.o src/render_e/math/Vector3.cpp
 
+${OBJECTDIR}/src/render_e/MeshFactory.o: src/render_e/MeshFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	${RM} $@.d
+	$(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/MeshFactory.o src/render_e/MeshFactory.cpp
+
 ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o: src/render_e/shaders/ShaderDataSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/shaders
 	${RM} $@.d
@@ -233,31 +245,31 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newtestclass.o ${TESTDIR}/tests/newtes
 ${TESTDIR}/tests/newtestclass1.o: tests/newtestclass1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
 
 
 ${TESTDIR}/tests/newtestrunner1.o: tests/newtestrunner1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
 
 
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
 ${TESTDIR}/tests/newtestclass.o: tests/newtestclass.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
 
 
 ${TESTDIR}/tests/newtestrunner.o: tests/newtestrunner.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -Ilib-include -I. -I. -Ilib-include -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
 
 
 ${OBJECTDIR}/src/render_e/Component_nomain.o: ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp 
@@ -362,6 +374,19 @@ ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o: ${OBJECTDIR}/sr
 	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o src/render_e/shaders/ShaderFileDataSource.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/Mesh_nomain.o: ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/Mesh.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh_nomain.o src/render_e/Mesh.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/Mesh.o ${OBJECTDIR}/src/render_e/Mesh_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/MeshComponent_nomain.o: ${OBJECTDIR}/src/render_e/MeshComponent.o src/render_e/MeshComponent.cpp 
@@ -544,6 +569,19 @@ ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o: ${OBJECTDIR}/src/render_e/math/
 	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o src/render_e/math/Vector3.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/math/Vector3.o ${OBJECTDIR}/src/render_e/math/Vector3_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/MeshFactory_nomain.o: ${OBJECTDIR}/src/render_e/MeshFactory.o src/render_e/MeshFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/MeshFactory.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -g -D_DEBUG -Ilib-include -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/MeshFactory_nomain.o src/render_e/MeshFactory.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/MeshFactory.o ${OBJECTDIR}/src/render_e/MeshFactory_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource_nomain.o: ${OBJECTDIR}/src/render_e/shaders/ShaderDataSource.o src/render_e/shaders/ShaderDataSource.cpp 
