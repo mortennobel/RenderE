@@ -25,11 +25,15 @@ public:
     }
     
     Shader *GetZOnly();
+    Shader *GetDiffuseColor();
+    Shader *GetDiffuseTexture();
 private:
     static DefaultShaders *s_instance;
     DefaultShaders();
     DefaultShaders(const DefaultShaders& orig);
     Shader *zOnly;
+    Shader *diffuseColor;
+    Shader *diffuseTexture;
 };
 }
 #endif	/* DEFAULTSHADERS_H */

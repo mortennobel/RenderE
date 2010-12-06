@@ -31,7 +31,7 @@ Camera *SceneObject::GetCamera() {
     return camera; 
 }
 
-Mesh *SceneObject::GetMesh(){ 
+MeshComponent *SceneObject::GetMesh(){ 
     return mesh; 
 }
 
@@ -52,7 +52,7 @@ void SceneObject::AddCompnent(Component* component){
             break;
         case MeshType:
             assert(mesh==NULL);
-            mesh = static_cast<Mesh*>(component);
+            mesh = static_cast<MeshComponent*>(component);
             break;
         case CameraType:
             assert(camera==NULL);

@@ -27,7 +27,7 @@ public:
     const std::vector<Component*> * GetComponents() const;
     Transform &GetTransform();
     Camera *GetCamera();
-    Mesh *GetMesh();
+    MeshComponent *GetMesh();
     void AddCompnent(Component* component);
     Material *GetMaterial();
 private:
@@ -36,7 +36,7 @@ private:
     
     Transform transform;   
     Camera *camera;
-    Mesh *mesh;
+    MeshComponent *mesh;
     Material *material;
     std::vector<Component*> components;
 };

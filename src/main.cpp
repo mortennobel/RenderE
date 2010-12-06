@@ -13,6 +13,7 @@
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
+#include "render_e/shaders/DefaultShaders.h"
 
 
 #ifndef RENDER_FPS
@@ -23,7 +24,7 @@ using namespace render_e;
 using namespace std;
 
 RenderBase *renderBase = RenderBase::Instance();
-Mesh *meshTeapot = new Mesh();
+MeshComponent *meshTeapot = new MeshComponent();
 SceneObject *cameraContainer = new SceneObject();
     
 // The main purpose of the main is to created a windows
@@ -175,6 +176,10 @@ void TestLoadShader(){
     Shader *b = sfs.LoadLinkShader(name2, status);
     assert (b!= NULL);
     assert (status == SHADER_OK);
+    
+    DefaultShaders *df = DefaultShaders::Instance();
+    Shader *diffuseColor = df->GetDiffuseColor();
+    assert(diffuseColor!=NULL);
 }
 
 void initGL(){

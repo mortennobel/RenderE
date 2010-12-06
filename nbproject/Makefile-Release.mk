@@ -42,7 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/math/Vector2.o \
 	${OBJECTDIR}/src/render_e/RenderBase.o \
 	${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o \
-	${OBJECTDIR}/src/render_e/Mesh.o \
+	${OBJECTDIR}/src/render_e/MeshComponent.o \
 	${OBJECTDIR}/src/render_e/math/Mathf.o \
 	${OBJECTDIR}/src/render_e/SceneObject.o \
 	${OBJECTDIR}/src/render_e/shaders/DefaultShaders.o \
@@ -132,10 +132,10 @@ ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o: src/render_e/shaders/S
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o src/render_e/shaders/ShaderFileDataSource.cpp
 
-${OBJECTDIR}/src/render_e/Mesh.o: src/render_e/Mesh.cpp 
+${OBJECTDIR}/src/render_e/MeshComponent.o: src/render_e/MeshComponent.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/MeshComponent.o src/render_e/MeshComponent.cpp
 
 ${OBJECTDIR}/src/render_e/math/Mathf.o: src/render_e/math/Mathf.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/math
@@ -233,31 +233,31 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newtestclass.o ${TESTDIR}/tests/newtes
 ${TESTDIR}/tests/newtestclass1.o: tests/newtestclass1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
 
 
 ${TESTDIR}/tests/newtestrunner1.o: tests/newtestrunner1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
 
 
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
 ${TESTDIR}/tests/newtestclass.o: tests/newtestclass.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
 
 
 ${TESTDIR}/tests/newtestrunner.o: tests/newtestrunner.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
 
 
 ${OBJECTDIR}/src/render_e/Component_nomain.o: ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp 
@@ -364,17 +364,17 @@ ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o: ${OBJECTDIR}/sr
 	    ${CP} ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource.o ${OBJECTDIR}/src/render_e/shaders/ShaderFileDataSource_nomain.o;\
 	fi
 
-${OBJECTDIR}/src/render_e/Mesh_nomain.o: ${OBJECTDIR}/src/render_e/Mesh.o src/render_e/Mesh.cpp 
+${OBJECTDIR}/src/render_e/MeshComponent_nomain.o: ${OBJECTDIR}/src/render_e/MeshComponent.o src/render_e/MeshComponent.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
-	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/Mesh.o`; \
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/MeshComponent.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} $@.d;\
-	    $(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Mesh_nomain.o src/render_e/Mesh.cpp;\
+	    $(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/MeshComponent_nomain.o src/render_e/MeshComponent.cpp;\
 	else  \
-	    ${CP} ${OBJECTDIR}/src/render_e/Mesh.o ${OBJECTDIR}/src/render_e/Mesh_nomain.o;\
+	    ${CP} ${OBJECTDIR}/src/render_e/MeshComponent.o ${OBJECTDIR}/src/render_e/MeshComponent_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/math/Mathf_nomain.o: ${OBJECTDIR}/src/render_e/math/Mathf.o src/render_e/math/Mathf.cpp 

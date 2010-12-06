@@ -13,13 +13,13 @@
 #include "Component.h"
 
 namespace render_e {
-class Mesh : public Component {
+class MeshComponent : public Component {
 public:
-    Mesh();
-    virtual ~Mesh();
+    MeshComponent();
+    virtual ~MeshComponent();
     void Render();
-    void InitMesh(Vector3 *vertices, Vector2 *textureCoords, Vector3 *normals, /*Vector3 *tangent,*/ 
-        int verticeCount);
+    void InitMesh(Vector3 *vertices, Vector3 *normals, Vector3 *tangent,
+        Vector2 *textureCoords, Vector2 *textureCoords2, int verticeCount);
     void Release();
 private:
     unsigned int vboName;

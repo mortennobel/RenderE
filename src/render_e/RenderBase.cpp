@@ -66,7 +66,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
         glColorMask(0, 0, 0, 0);
         zOnlyShader->Bind();
         for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
-           Mesh *mesh = (*sIter)->GetMesh();
+           MeshComponent *mesh = (*sIter)->GetMesh();
             Material *currentMaterial = (*sIter)->GetMaterial();
             if (mesh!=NULL){
                 Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
@@ -80,7 +80,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
     
     Material *lastMaterial = NULL;
     for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
-        Mesh *mesh = (*sIter)->GetMesh();
+        MeshComponent *mesh = (*sIter)->GetMesh();
         Material *currentMaterial = (*sIter)->GetMaterial();
         if (currentMaterial != lastMaterial){
             if (currentMaterial != NULL){

@@ -16,7 +16,6 @@ DefaultShaders *DefaultShaders::s_instance = NULL;
 DefaultShaders::DefaultShaders():zOnly(NULL) {
 }
 
-
 DefaultShaders::~DefaultShaders() {
 }
 
@@ -27,5 +26,24 @@ Shader *DefaultShaders::GetZOnly(){
         zOnly = sfd.LoadLinkShader("zonly", status);
     }
     return zOnly;
+}
+
+
+Shader *DefaultShaders::GetDiffuseColor(){
+    if (diffuseColor == NULL){
+        ShaderFileDataSource sfd;
+        ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
+        diffuseColor = sfd.LoadLinkShader("diffuse-color", status);
+    }
+    return diffuseColor;
+}
+
+Shader *DefaultShaders::GetDiffuseTexture(){
+    if (diffuseTexture == NULL){
+        ShaderFileDataSource sfd;
+        ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
+        diffuseTexture = sfd.LoadLinkShader("diffuse-texture", status);
+    }
+    return diffuseTexture;
 }
 }
