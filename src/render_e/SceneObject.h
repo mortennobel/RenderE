@@ -11,7 +11,7 @@
 #include <vector>
 #include "Transform.h"
 #include "Component.h"
-#include "Mesh.h"
+#include "MeshComponent.h"
 #include "Material.h"
 
 

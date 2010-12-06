@@ -9,7 +9,7 @@
 #include "render_e/Camera.h"
 #include "render_e/SceneObject.h"
 #include "render_e/Material.h"
-#include "render_e/Mesh.h"
+#include "render_e/MeshComponent.h"
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
