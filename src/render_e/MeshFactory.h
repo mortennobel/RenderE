@@ -14,7 +14,8 @@ namespace render_e {
 class MeshFactory {
 public:
     // static Mesh *CreateCube(float size);
-    static Mesh *Tetrahedron();
+    static Mesh *CreateTetrahedron();
+    static Mesh *CreateCube();
 private:
     MeshFactory();
 

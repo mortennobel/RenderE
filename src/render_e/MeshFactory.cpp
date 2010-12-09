@@ -29,9 +29,9 @@ Mesh *MeshFactory::CreateTetrahedron(){
         p0,p3,p1
     };
     
-    vector<unsigned short> triangles;
+    vector<unsigned short> indices;
     for (unsigned short i=0;i<12;i++){
-        triangles.push_back(i);
+        indices.push_back(i);
     }
     
     Vector2 uv0(0,0);
@@ -49,7 +49,7 @@ Mesh *MeshFactory::CreateTetrahedron(){
     Mesh *m = new Mesh();
     m->SetVertices(vertices,12);
     m->SetTextureCoords1(uv,12);
-    m->SetTriangles(triangles);
+    m->SetIndices(indices);
     m->ComputeNormals();
     return m;
 }
@@ -94,17 +94,25 @@ Mesh *MeshFactory::CreateCube(){
     // same order of vertex array without hopping, because of different normals at
     // a shared vertex. For this case, glDrawArrays() and glDrawElements() have no
     // difference.
-    unsigned short indices[] = {0,1,2,3,
-                         4,5,6,7,
-                         8,9,10,11,
-                         12,13,14,15,
-                         16,17,18,19,
-                         20,21,22,23};
-    
+    unsigned short indices[] = {
+        0,1,2,
+        0,2,3,
+        4,5,6,
+        4,6,7,
+        8,9,10,
+        8,10,11,
+        12,13,14,
+        12,14,15,
+        16,17,18,
+        16,18,19,
+        20,21,22,
+        20,22,23
+        };
+
     Mesh *m = new Mesh();
     m->SetVertices(vertices,4*6);
     m->SetNormals(normals,4*6);
-    m->SetTriangles(indices,4*6);
+    m->SetIndices(indices,3*2*6);
 
     return m;
 }

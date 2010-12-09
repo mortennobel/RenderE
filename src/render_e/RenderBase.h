@@ -13,6 +13,12 @@ namespace render_e {
 // forward declaration
 class SceneObject;
 
+enum RenderMode {
+    RENDER_MODE_FILL,
+    RENDER_MODE_LINE,
+    RENDER_MODE_POINT
+};
+
 class RenderBase {
 public:
     void Display();
@@ -26,6 +32,9 @@ public:
     
     void SetDoubleSpeedZOnlyRendering(bool enabled);
     bool GetDoubleSpeedZOnlyRendering();
+    
+    void SetRenderMode(RenderMode renderMode);
+    void SetBackfaceCulling(bool enabled);
 
     /**
      * Singleton pattern

@@ -22,16 +22,20 @@ public:
     void SetMesh(Mesh *mesh);
     void Release();
 private:
-    Mesh *mesh;
     unsigned int vboName;
-    int verticeCount;
-    int *triangles;
-    int triangleCount;
+    unsigned int vboElements;
+    int indicesCount;
 
     int normalOffset;
     int tangentOffset;
+    int colorOffset;
     int texture1Offset;
     int texture2Offset;
+    int triangleOffset;
+#ifdef RENDER_E_NO_VBO  
+    unsigned short *indices;
+    unsigned char *buffer;
+#endif
 };
 }
 #endif	/* MESH_COMPONENT_H */

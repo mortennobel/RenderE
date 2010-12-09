@@ -25,25 +25,45 @@ public:
     Vector3 *GetVertices();
     Vector3 *GetNormals();
     Vector3 *GetTangents();
+    Vector3 *GetColors();
     Vector2 *GetTextureCoords1();
     Vector2 *GetTextureCoords2();
-    int GetPrimitiveCount();
-    int *GetTriangles();
-    int GetTriangleCount();
+    unsigned short GetPrimitiveCount();
+    unsigned short *GetIndices();
+    int GetIndicesCount();
     
     void SetVertices(std::vector<Vector3> vertices){ this->vertices = vertices;}
     void SetNormals(std::vector<Vector3> normals){ this->normals = normals;}
     void SetTangents(std::vector<Vector3> tangents){ this->tangents = tangents;}
+    void SetColors(std::vector<Vector3> colors){ this->colors = colors; }
     void SetTextureCoords1(std::vector<Vector2> textureCoords1){ this->textureCoords1 = textureCoords1;}
     void SetTextureCoords2(std::vector<Vector2> textureCoords2){ this->textureCoords2 = textureCoords2;}
-    void SetTriangles(std::vector<int> triangles){this->triangles = triangles;}
+    void SetIndices(std::vector<unsigned short> indices){this->indices = indices;}
+    
+    // setters using pointers
+    void SetVertices(Vector3 *vertices, int length);
+    void SetNormals(Vector3 *normals, int length);
+    void SetTangents(Vector3 *tangents, int length);
+    void SetColors(Vector3 *tangents, int length);
+    void SetTextureCoords1(Vector2 *textureCoords1, int length);
+    void SetTextureCoords2(Vector2 *textureCoords2, int length);
+    void SetIndices(unsigned short *indices, int length);
+    
+    /**
+     * Validates mesh:
+     * Check size of primitives
+     * Check bounds of indices
+     * @return true if valid
+     */
+    bool IsValid();
 private:
     std::vector<Vector3> vertices;
     std::vector<Vector3> normals;
     std::vector<Vector3> tangents;
+    std::vector<Vector3> colors;
     std::vector<Vector2> textureCoords1;
     std::vector<Vector2> textureCoords2;
-    std::vector<int>     triangles;
+    std::vector<unsigned short>     indices;
     
 };
 }

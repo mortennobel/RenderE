@@ -117,8 +117,31 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     }
 }
 
+void RenderBase::SetRenderMode(RenderMode renderMode){
+    GLenum renderModeValue;
+    switch (renderMode){
+        
+        case RENDER_MODE_LINE:
+            renderModeValue = GL_LINE;
+            break;
+        case RENDER_MODE_POINT:
+            renderModeValue = GL_POINT;
+            break;
+        case RENDER_MODE_FILL:
+        default:
+            renderModeValue = GL_FILL;
+            break;
+    }
+    glPolygonMode(GL_FRONT_AND_BACK, renderModeValue);
+}
+
 void RenderBase::Init(void(*swapBuffersFunc)()){
     this->swapBuffersFunc = swapBuffersFunc;
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    // glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glCullFace(GL_BACK);
 }
 
 void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
@@ -128,5 +151,4 @@ void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
 bool RenderBase::GetDoubleSpeedZOnlyRendering(){
     return doubleSpeedZOnlyRendering;
 }
-
 }

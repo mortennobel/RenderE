@@ -172,7 +172,6 @@ void TestLoadShader(){
     Shader *bug = sfs.LoadLinkShader(nameBuggy, status);
     assert (bug == NULL);
     assert (status == SHADER_COMPILE_ERROR_VERTEX_SHADER);
-
     
     char name2[] = "diffuse";
     Shader *b = sfs.LoadLinkShader(name2, status);
@@ -223,7 +222,7 @@ void initWorld() {
     Vector3 v2(0.0,0.0,0.0);
     teapotSceneObject->GetTransform().SetPosition(v2);
     renderBase->AddSceneObject(teapotSceneObject);
-    meshTeapot->SetMesh(MeshFactory::Tetrahedron());
+    meshTeapot->SetMesh(MeshFactory::CreateCube());
     teapotSceneObject->AddCompnent(meshTeapot);
     
     ShaderFileDataSource sfs;
