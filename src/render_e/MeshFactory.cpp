@@ -82,12 +82,12 @@ Mesh *MeshFactory::CreateCube(){
                          Vector3(0,0,-1),  Vector3(0,0,-1),  Vector3(0,0,-1),  Vector3(0,0,-1)};        // v4-v7-v6-v5
 
     // color array
-    float colors[] = {1,1,1,  1,1,0,  1,0,0,  1,0,1,              // v0-v1-v2-v3
-                        1,1,1,  1,0,1,  0,0,1,  0,1,1,              // v0-v3-v4-v5
-                        1,1,1,  0,1,1,  0,1,0,  1,1,0,              // v0-v5-v6-v1
-                        1,1,0,  0,1,0,  0,0,0,  1,0,0,              // v1-v6-v7-v2
-                        0,0,0,  0,0,1,  1,0,1,  1,0,0,              // v7-v4-v3-v2
-                        0,0,1,  0,0,0,  0,1,0,  0,1,1};             // v4-v7-v6-v5
+    Vector3 colors[] = {Vector3(1,1,1),  Vector3(1,1,0),  Vector3(1,0,0),  Vector3(1,0,1),              // v0-v1-v2-v3
+                        Vector3(1,1,1),  Vector3(1,0,1),  Vector3(0,0,1),  Vector3(0,1,1),              // v0-v3-v4-v5
+                        Vector3(1,1,1),  Vector3(0,1,1),  Vector3(0,1,0),  Vector3(1,1,0),              // v0-v5-v6-v1
+                        Vector3(1,1,0),  Vector3(0,1,0),  Vector3(0,0,0),  Vector3(1,0,0),              // v1-v6-v7-v2
+                        Vector3(0,0,0),  Vector3(0,0,1),  Vector3(1,0,1),  Vector3(1,0,0),              // v7-v4-v3-v2
+                        Vector3(0,0,1),  Vector3(0,0,0),  Vector3(0,1,0),  Vector3(0,1,1)};             // v4-v7-v6-v5
 
     // index array of vertex array for glDrawElements()
     // Notice the indices are listed straight from beginning to end as exactly
@@ -112,6 +112,7 @@ Mesh *MeshFactory::CreateCube(){
     Mesh *m = new Mesh();
     m->SetVertices(vertices,4*6);
     m->SetNormals(normals,4*6);
+    m->SetColors(colors,4*6);
     m->SetIndices(indices,3*2*6);
 
     return m;

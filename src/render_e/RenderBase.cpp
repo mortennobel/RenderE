@@ -139,7 +139,8 @@ void RenderBase::Init(void(*swapBuffersFunc)()){
     this->swapBuffersFunc = swapBuffersFunc;
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
-    // glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glCullFace(GL_BACK);
 }

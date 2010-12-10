@@ -40,9 +40,17 @@ void MeshComponent::Render(){
         std::cout << "Mesh not initialized" << std::endl;
     }
 #ifdef RENDER_E_NO_VBO
-    glNormalPointer(GL_FLOAT, 0, buffer+normalOffset);
+    
     glVertexPointer(3, GL_FLOAT, 0, buffer);
-   
+    if (normalOffset != -1){
+        glNormalPointer(GL_FLOAT, 0, buffer+normalOffset);
+    }
+    if (texture1Offset != -1){
+        glTexCoordPointer(2, GL_FLOAT, 0, buffer+texture1Offset);
+    }
+    if (colorOffset != -1){
+        glColorPointer(3, GL_FLOAT, 0, buffer+colorOffset);
+    }
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, indices);
 #else 
     if (vboName != 0){
@@ -63,7 +71,7 @@ void MeshComponent::Render(){
         }
         
         if (colorOffset != -1){
-        
+            glColorPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(colorOffset));
         }
         
         glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, 0 );

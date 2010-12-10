@@ -35,6 +35,7 @@
         </logicalFolder>
         <itemPath>src/render_e/Camera.h</itemPath>
         <itemPath>src/render_e/Component.h</itemPath>
+        <itemPath>src/render_e/FBXLoader.h</itemPath>
         <itemPath>src/render_e/Material.h</itemPath>
         <itemPath>src/render_e/Mesh.h</itemPath>
         <itemPath>src/render_e/MeshComponent.h</itemPath>
@@ -48,6 +49,18 @@
                    displayName="Resource Files"
                    projectFiles="true"
                    kind="SOURCE_LOGICAL_FOLDER">
+      <itemPath>shader-src/buggy.fs</itemPath>
+      <itemPath>shader-src/buggy.vs</itemPath>
+      <itemPath>shader-src/diffuse-color.fs</itemPath>
+      <itemPath>shader-src/diffuse-color.vs</itemPath>
+      <itemPath>shader-src/diffuse-texture.fs</itemPath>
+      <itemPath>shader-src/diffuse-texture.vs</itemPath>
+      <itemPath>shader-src/diffuse.fs</itemPath>
+      <itemPath>shader-src/diffuse.vs</itemPath>
+      <itemPath>shader-src/linkbug.fs</itemPath>
+      <itemPath>shader-src/linkbug.vs</itemPath>
+      <itemPath>shader-src/zonly.fs</itemPath>
+      <itemPath>shader-src/zonly.vs</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -83,6 +96,7 @@
         </logicalFolder>
         <itemPath>src/render_e/Camera.cpp</itemPath>
         <itemPath>src/render_e/Component.cpp</itemPath>
+        <itemPath>src/render_e/FBXLoader.cpp</itemPath>
         <itemPath>src/render_e/Material.cpp</itemPath>
         <itemPath>src/render_e/Mesh.cpp</itemPath>
         <itemPath>src/render_e/MeshComponent.cpp</itemPath>
@@ -144,9 +158,11 @@
           </incDir>
         </cTool>
         <ccTool>
+          <architecture>2</architecture>
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>lib-include</pElem>
+            <pElem>/Applications/Autodesk/FBXSDK20113_1/include/</pElem>
             <pElem>.</pElem>
           </incDir>
           <commandLine>-arch x86_64 -arch x86_64</commandLine>
@@ -159,13 +175,17 @@
             <linkerLibFileItem>lib/osx/libGLEW.a</linkerLibFileItem>
             <linkerLibFileItem>lib/osx/libpng12.a</linkerLibFileItem>
             <linkerLibFileItem>lib/osx/libz.a</linkerLibFileItem>
+            <linkerLibFileItem>/Applications/Autodesk/FBXSDK20113_1/lib/libfbxsdk_gcc4_ubd.a</linkerLibFileItem>
           </linkerLibItems>
-          <commandLine>-framework GLUT -framework OPENGL</commandLine>
+          <commandLine>-framework GLUT -framework OPENGL -lm -lstdc++ -liconv -fexceptions -lz -framework Carbon -framework SystemConfiguration</commandLine>
         </linkerTool>
       </compileType>
       <folder path="TestFiles/f1">
         <cTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -196,6 +216,9 @@
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -243,10 +266,16 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -287,10 +316,16 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -385,10 +420,16 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -444,10 +485,16 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -501,10 +548,16 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>

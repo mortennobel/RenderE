@@ -11,6 +11,7 @@
 #include "render_e/Material.h"
 #include "render_e/MeshComponent.h"
 #include "render_e/MeshFactory.h"
+#include "render_e/FBXLoader.h"
 #include "render_e/Mesh.h"
 #include "render_e/math/Vector3.h"
 #include "render_e/math/Quaternion.h"
@@ -87,6 +88,7 @@ void initGL();
 void initRenderBase();
 void transformTest();
 void TestLoadShader();
+void fbxTest();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = &(meshTeapot->GetOwner()->GetTransform());
@@ -142,9 +144,13 @@ int main(int argc, char **argv) {
     initWorld();
     initGL();
     initRenderBase();
+    
+    // debug start
     transformTest();
     TestLoadShader();
-
+    fbxTest();
+    // endif
+    
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
@@ -232,6 +238,11 @@ void initWorld() {
     
     Material *mat = new Material(b);
     teapotSceneObject->AddCompnent(mat);
+    
+}
+
+void fbxTest(){
+    FBXLoader loader;
     
 }
 
