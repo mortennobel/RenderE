@@ -32,6 +32,7 @@ private:
     int texture1Offset;
     int texture2Offset;
     int triangleOffset;
+    int stride;
 #ifdef RENDER_E_NO_VBO  
     unsigned short *indices;
     unsigned char *buffer;

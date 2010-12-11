@@ -39,17 +39,16 @@ void MeshComponent::Render(){
         return;
         std::cout << "Mesh not initialized" << std::endl;
     }
-#ifdef RENDER_E_NO_VBO
-    
-    glVertexPointer(3, GL_FLOAT, 0, buffer);
+#ifdef RENDER_E_NO_VBO    
+    glVertexPointer(3, GL_FLOAT, stride, buffer);
     if (normalOffset != -1){
-        glNormalPointer(GL_FLOAT, 0, buffer+normalOffset);
+        glNormalPointer(GL_FLOAT, stride, buffer+normalOffset);
     }
     if (texture1Offset != -1){
-        glTexCoordPointer(2, GL_FLOAT, 0, buffer+texture1Offset);
+        glTexCoordPointer(2, GL_FLOAT, stride, buffer+texture1Offset);
     }
     if (colorOffset != -1){
-        glColorPointer(3, GL_FLOAT, 0, buffer+colorOffset);
+        glColorPointer(3, GL_FLOAT, stride, buffer+colorOffset);
     }
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, indices);
 #else 
@@ -60,18 +59,18 @@ void MeshComponent::Render(){
         // bind buffer (set active)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements);
         // vertex pointer to buffer
-        glVertexPointer(3, GL_FLOAT, 0,BUFFER_OFFSET(0));
+        glVertexPointer(3, GL_FLOAT, stride,BUFFER_OFFSET(0));
         if (normalOffset != -1){
             // normal pointer to buffer
-            glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(normalOffset));
+            glNormalPointer(GL_FLOAT, stride, BUFFER_OFFSET(normalOffset));
         }
         if (texture1Offset != -1){
             // texcoord pointer to buffer
-            glTexCoordPointer(2, GL_FLOAT, 0, BUFFER_OFFSET(texture1Offset));
+            glTexCoordPointer(2, GL_FLOAT, stride, BUFFER_OFFSET(texture1Offset));
         }
         
         if (colorOffset != -1){
-            glColorPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(colorOffset));
+            glColorPointer(3, GL_FLOAT, stride, BUFFER_OFFSET(colorOffset));
         }
         
         glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, 0 );
@@ -89,18 +88,18 @@ void MeshComponent::SetMesh(Mesh *mesh){
     Vector2 *textureCoords = mesh->GetTextureCoords1();
     Vector2 *textureCoords2 = mesh->GetTextureCoords2();
     int primitiveCount = mesh->GetPrimitiveCount();
-    unsigned short *triangles = mesh->GetIndices();
+    unsigned short *indices = mesh->GetIndices(); // todo rename
     indicesCount = mesh->GetIndicesCount();
-    if (vboName!=0){
-        Release();
-    }
+    Release();
     
     // Calculate size of data
-    int sizePrimitives = sizeof(float)*3*primitiveCount;
+    stride = 0;
+    int sizePrimitives = sizeof(float)*3;
     int offset = sizePrimitives; // vertices
     if (normals != NULL){
         normalOffset = offset;
         offset += sizePrimitives;
+        stride += sizeof(float)*3;
     } else {
         normalOffset = -1;
     }
@@ -108,6 +107,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
     if (tangents != NULL){
         tangentOffset = offset;
         offset += sizePrimitives;
+        stride += sizeof(float)*3;
     } else {
         tangentOffset = -1;
     }
@@ -115,47 +115,60 @@ void MeshComponent::SetMesh(Mesh *mesh){
     if (colors != NULL){
         colorOffset = offset;
         offset += sizePrimitives;
+        stride += sizeof(float)*3;
     } else {
         colorOffset = -1;
     }
-    int sizeTexCoords = sizeof(float)*2*primitiveCount;
+    int sizeTexCoords = sizeof(float)*2;
     if (textureCoords != NULL) {
         texture1Offset = offset;
         offset += sizeTexCoords;
+        stride += sizeof(float)*2;
     } else {
         texture1Offset = -1;
     }
     if (textureCoords2 != NULL) {
         texture2Offset = offset;
         offset += sizeTexCoords;
+        stride += sizeof(float)*2;
     } else {
         texture2Offset = -1;
     }
     
     // create temp buffer
-    unsigned int buffersize = offset;
+    unsigned int buffersize = offset*primitiveCount;
 #ifndef RENDER_E_NO_VBO    
 	unsigned char *buffer;
 #else
-    if (buffer!=NULL){
-        delete []buffer;
-    }
-    this->indices = triangles;
+    this->indices = new unsigned short[indicesCount];
+    memcpy(this->indices, indices, indicesCount*sizeof(unsigned short));
 #endif
     buffer = new unsigned char[buffersize];
+    float *bufferAsFloat = (float *)buffer;
     
-    memcpy(buffer,vertices,sizePrimitives);
-    if (normals != NULL){
-        memcpy(buffer+normalOffset,normals,sizePrimitives);
-    } 
-    if (tangents != NULL){
-        memcpy(buffer+tangentOffset,tangents,sizePrimitives);
-    }
-    if (textureCoords != NULL) {
-        memcpy(buffer+texture1Offset,textureCoords,sizeTexCoords);
-    }
-    if (textureCoords2 != NULL) {
-        memcpy(buffer+texture2Offset,textureCoords2,sizeTexCoords);
+    // Memory layout: Vertex0, Normal0, ..., Vertex1, Normal1, ...
+    // This layout gives a better performance, since the data that belongs
+    // together are located close to each other
+    int destIndex = 0;
+    for (int i=0;i<primitiveCount;i++){
+        memcpy(&bufferAsFloat[destIndex], &vertices[i], sizePrimitives);
+        destIndex += 3;
+        if (normals != NULL){
+            memcpy(&bufferAsFloat[destIndex], &normals[i], sizePrimitives);
+            destIndex += 3;
+        }
+        if (tangents != NULL){
+            memcpy(&bufferAsFloat[destIndex], &tangents[i], sizePrimitives);
+            destIndex += 3;
+        }
+        if (textureCoords != NULL){
+            memcpy(&bufferAsFloat[destIndex], &textureCoords[i], sizeTexCoords);
+            destIndex += 2;
+        }
+        if (textureCoords2 != NULL){
+            memcpy(&bufferAsFloat[destIndex], &textureCoords2[i], sizeTexCoords);
+            destIndex += 2;
+        }
     }
 #ifndef RENDER_E_NO_VBO
     unsigned int buffernames[2];
@@ -171,7 +184,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // Bind buffer (set buffer active)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements); // bind
     // copy data to buffer
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*sizeof(unsigned short), triangles,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*sizeof(unsigned short), indices,GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // bind
 #endif
     
@@ -181,6 +194,9 @@ void MeshComponent::Release(){
 #ifdef RENDER_E_NO_VBO    
 	if (buffer != NULL){
         delete []buffer;
+        delete []indices;
+        buffer = NULL;
+        indices = NULL;
     }
 #else
     if (vboName != 0){
