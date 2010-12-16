@@ -10,6 +10,7 @@
 #include "Transform.h"
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 
 namespace render_e {
 
@@ -35,7 +36,9 @@ bool Transform::RemoveChild(Transform *transform){
         // erase the 6th element
         children.erase (index);
         transform->parent = NULL;
+		return true;
     }
+	return false;
 }
 
 void Transform::UpdateIfDirty(){

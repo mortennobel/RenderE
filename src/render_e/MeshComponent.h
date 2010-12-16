@@ -13,8 +13,8 @@
 #include "Component.h"
 #include "Mesh.h"
 
-// define RENDER_E_NO_VBO
-//define RENDER_INTERMEDIATE_MODE
+#define RENDER_E_NO_VBO 
+#define RENDER_INTERMEDIATE_MODE
 
 namespace render_e {
 class MeshComponent : public Component {

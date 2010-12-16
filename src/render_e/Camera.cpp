@@ -36,7 +36,7 @@ void Camera::SetProjection(float fieldOfView, float aspect, float nearPlane, flo
     // inspired by
     // Source code from
     // http://gpwiki.org/index.php/OpenGL_Tutorial_Framework:First_Polygon
-    top = nearPlane * tan(fieldOfView * Mathf::PI / 360.0);
+    top = nearPlane * tan(fieldOfView * Mathf::PI / 360.0f);
     bottom = -top;
     left = bottom * aspect;
     right = top * aspect;

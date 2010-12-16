@@ -99,6 +99,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
 }
 
 void RenderBase::AddSceneObject(SceneObject *sceneObject){
+	assert(sceneObject != NULL);
     sceneObjects.push_back(sceneObject);
     if (sceneObject->GetCamera() != NULL){
         cameras.push_back(sceneObject);
@@ -141,7 +142,7 @@ void RenderBase::SetRenderMode(RenderMode renderMode){
     glPolygonMode(GL_FRONT_AND_BACK, renderModeValue);
 }
 
-void RenderBase::Init(void(*swapBuffersFunc)()){
+void RenderBase::Init(void (*swapBuffersFunc)()){
     this->swapBuffersFunc = swapBuffersFunc;
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);

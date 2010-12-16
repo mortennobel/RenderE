@@ -67,7 +67,7 @@ TextureLoadStatus CubeTexture::Load(){
         }
         
         if (data!=NULL){
-           free(data);
+           delete []data;
         }
         if (res!=OK){
             return res;

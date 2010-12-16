@@ -7,8 +7,11 @@ namespace render_e {
 
 #ifndef RENDER_E_NO_PNG
     PNGFileTextureDataSource *pngInstance = PNGFileTextureDataSource::Instance();
+    TextureDataSource *TextureDataSource::textureDataSource = pngInstance;
+#else
+    TextureDataSource *TextureDataSource::textureDataSource = NULL;
+
 #endif        
-TextureDataSource *TextureDataSource::textureDataSource = pngInstance;
     
 TextureDataSource::TextureDataSource(){
 }

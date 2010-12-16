@@ -26,7 +26,7 @@ public:
     void AddSceneObject(SceneObject *sceneObject);
     void DeleteSceneObject(SceneObject *sceneObject);
     
-    void Init(void(*swapBuffersFunc)());
+    void Init(void (*swapBuffersFunc)());
     void Reshape(int width, int height);
     
     
@@ -53,7 +53,7 @@ private:
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;
     
-    void(*swapBuffersFunc)();
+    void (*swapBuffersFunc)();
     bool doubleSpeedZOnlyRendering;
 };
 

@@ -7,12 +7,14 @@
 
 #include "PNGFileTextureDataSource.h"
 
+
+
+#ifndef RENDER_E_NO_PNG
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
 #include <iostream>
-
-#ifndef RENDER_E_NO_PNG
 
 namespace render_e {
 

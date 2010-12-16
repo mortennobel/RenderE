@@ -36,9 +36,10 @@ void checkInfoLogShader(unsigned int shaderId){
     int infologlength;
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infologlength);
     if (infologlength>0){
-        char infoLog[infologlength+1];
+        char *infoLog = new char[infologlength+1];
         glGetShaderInfoLog(shaderId,infologlength,&infologlength,infoLog);
         std::cout<<infoLog<<std::endl;
+		delete []infoLog;
     }
 }
 
@@ -76,9 +77,10 @@ void checkInfoLogProgram(unsigned int programId){
     int infologlength;
     glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infologlength);
     if (infologlength>0){
-        char infoLog[infologlength+1];
+        char *infoLog = new char[infologlength+1];
         glGetProgramInfoLog(programId,infologlength,&infologlength,infoLog);
         std::cout<<infoLog<<std::endl;
+		delete [] infoLog;
     }
 }
 

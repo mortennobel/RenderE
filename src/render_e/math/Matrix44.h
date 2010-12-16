@@ -39,7 +39,7 @@ public:
         Matrix44 m;
 		m.SetIdentity();
         for (int i=0;i<3;i++){
-			m(i,i) = 1.0/t[i];
+			m(i,i) = 1.0f/t[i];
 		}
 		return m;
     }

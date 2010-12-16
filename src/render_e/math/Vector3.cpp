@@ -64,7 +64,7 @@ void Vector3::NormalizeExact(){
 
 void Vector3::Normalize(){
     float lengthSqr = LengthSqr();
-    if (Mathf::Abs(lengthSqr-1.0)>Mathf::EPSILON){
+    if (Mathf::Abs(lengthSqr-1.0f)>Mathf::EPSILON){
         float lFactor = 1/Mathf::Sqrt(lengthSqr);
         if (lFactor!=1){
             x *= lFactor;
