@@ -9,15 +9,34 @@
 
 #include "Transform.h"
 #include <iostream>
+#include <cassert>
 
 namespace render_e {
 
-Transform::Transform(void)
-:Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false), scale(1,1,1)
+Transform::Transform(SceneObject *sceneObject)
+:Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false), 
+        scale(1,1,1),parent(NULL),sceneObject(sceneObject)
 {}
 
 Transform::~Transform(void)
 {}
+
+void Transform::AddChild(Transform *transform){
+    assert (transform->parent == NULL);
+    transform->parent = this;
+    children.push_back(transform);
+}
+
+bool Transform::RemoveChild(Transform *transform){
+    using namespace std;
+    assert(transform->parent == this);
+    vector<Transform *>::iterator index = find (children.begin(), children.end(), transform);
+    if (index != children.end()){
+        // erase the 6th element
+        children.erase (index);
+        transform->parent = NULL;
+    }
+}
 
 void Transform::UpdateIfDirty(){
     if (dirtyFlag){

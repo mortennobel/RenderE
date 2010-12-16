@@ -41,6 +41,7 @@ public:
 	const Vector4 operator*(const float &other) const;
 	float& operator[] (const int nIndex);
 	float operator[]  (const int nIndex) const;
+    float *Get(){return &x;}
 private:
 	float x;
 	float y;

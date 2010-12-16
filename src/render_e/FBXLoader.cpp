@@ -7,12 +7,13 @@
 
 #include "FBXLoader.h"
 #include <cassert>
+
+#include <iostream>
 #include "math/Vector3.h"
 #include "math/Vector2.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
 
-#include <iostream>
 
 using namespace std;
 
@@ -33,18 +34,23 @@ FBXLoader::~FBXLoader() {
     manager->Destroy();
 }
 
-Vector3 toVector(KFbxVector4 &v){
-    return Vector3(v.GetAt(0), v.GetAt(1), v.GetAt(2));
+Vector3 toVector(const KFbxVector4 &v){
+    return Vector3(v[0], v[1], v[2]);
 }
 
-MeshComponent* parseNode(KFbxNode *node, int level = 0) {
+Vector3 toVector(const fbxDouble3 &v){
+    return Vector3(v[0], v[1], v[2]);
+}
+
+
+SceneObject* parseNode(KFbxNode *node, int level = 0) {
     KString s = node->GetName();
     KFbxNodeAttribute::EAttributeType attributeType;
 
     for (int i=0;i<level;i++){
         cout<<"   ";
     }
-
+    SceneObject* sceneObject = NULL;
     MeshComponent* ga = NULL;
     
     if (node->GetNodeAttribute() == NULL){
@@ -71,46 +77,80 @@ MeshComponent* parseNode(KFbxNode *node, int level = 0) {
                 KFbxLayer *normalLayer = fbxMesh->GetLayer(0, KFbxLayerElement::eNORMAL);
                 KFbxLayerElementNormal *normalElement = normalLayer->GetNormals();
                 KFbxLayerElementArrayTemplate<KFbxVector4> *normalArray = &(normalElement->GetDirectArray());
+                
+                
                 int normalCount = normalArray->GetCount();
-                /*cout<<s<<" size "<<normalCount<<endl;
+                vector<int> indices;
+                
+                assert(fbxMesh->GetControlPointsCount() <= USHRT_MAX);
+                for (int i=0;i<fbxMesh->GetControlPointsCount();i++){
+                    Vector3 v = toVector(controlPoints[i]);
+                    cout<<v[0]<<" "<<v[1]<<" "<<v[2]<<endl;
+                    vertices.push_back(v);
+                    v = toVector(normalArray->GetAt(i));
+                    cout<<"\t\t"<<v[0]<<" "<<v[1]<<" "<<v[2]<<endl;
+                    normals.push_back(v);
+                }
+                
+                
                 for (int i=0;i<polygonCount;i++){
-                    int polygonSize = mesh->GetPolygonSize(i);
+                    int polygonSize = fbxMesh->GetPolygonSize(i);
                     polycount.push_back(polygonSize);
                     for (int j=0;j<polygonSize;j++){
-                        int polygonIndex = mesh->GetPolygonVertex(i,j);
-                        KFbxVector4 vectorSrc = controlPoints[polygonIndex];
+                        if (j>2){
+                            // if polygon size > 2 then add first and last index
+                            // this triangulates the mesh
+                            int first = fbxMesh->GetPolygonVertex(i,0);
+                            int last = fbxMesh->GetPolygonVertex(i,j-1);
+                            indices.push_back(first);
+                            indices.push_back(last);
+                            cout<<first<<endl;
+                            cout<<last<<endl;
+                        }
+                        int polygonIndex = fbxMesh->GetPolygonVertex(i,j);
+                        indices.push_back(polygonIndex);
+                        cout << polygonIndex<<endl;
+                        /*KFbxVector4 vectorSrc = controlPoints[polygonIndex];
                         Vector3 vectorDst = toVector(vectorSrc);
                         vertices.push_back(vectorDst);
                         texCords.push_back(Vector2(0,0)); 
                         KFbxVector4 normalSrc = normalArray->GetAt(polygonIndex);
                         Vector3 normalDst = toVector(normalSrc);
-                        normals.push_back(normalDst);
+                        normals.push_back(normalDst);*/
                     }
-                }*/
+                }
                 
                 Mesh mesh;
+                cout<<"Creating mesh: vertices "<<vertices.size()<<" normals "<<normals.size()<<" indices "<<indices.size()<<endl;
+                mesh.SetVertices(vertices);
+                mesh.SetNormals(normals);
+                mesh.SetIndices(indices);
+                sceneObject = new SceneObject();
                 
                 ga = new MeshComponent();
                 ga->SetMesh(&mesh);
-                // set translate
-                /*KFbxVector4 v4;
-                node->GetDefaultT(v4);
-                Vector3f translate = toVector(v4);
-                ga->GetTransform()->SetTranslate(&translate);
-                node->GetDefaultR(v4);
-                Vector3f rotation = toVector(v4);
-                if (rotation.LengthSquared()!=0){
-                    ga->GetTransform()->SetRotateX(rotation.x);
-                    ga->GetTransform()->SetRotateY(rotation.y);
-                    ga->GetTransform()->SetRotateZ(rotation.z);
+                sceneObject->AddCompnent(ga);
+                
+                // Set translate
+                fbxDouble3 v3 = node->LclTranslation.Get();
+                Vector3 translate = toVector(v3);
+                sceneObject->GetTransform().SetPosition(translate);
+                
+                cout<<"Set translate "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
+                // Set rotation
+                v3 = node->LclRotation.Get();
+                Vector3 rotation = toVector(v3);
+                if (rotation.LengthSqr()!=0){
+                    sceneObject->GetTransform().SetRotation(rotation);
+                    cout<<"Set rotation "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
                 }
-                node->GetDefaultS(v4);
-                Vector3f scale = toVector(v4);
-                if (rotation.LengthSquared()!=0){
-                    ga->GetTransform()->SetScaleX(scale.x);
-                    ga->GetTransform()->SetScaleY(scale.y);
-                    ga->GetTransform()->SetScaleZ(scale.z);
-                }*/
+                // Set scale
+                v3 = node->LclScaling.Get();
+                Vector3 scale = toVector(v3);
+                if (rotation.LengthSqr()!=0){
+                    sceneObject->GetTransform().SetScale(scale);
+                    cout<<"Set scale "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
+                }
                 }
                 break;
             case KFbxNodeAttribute::eCAMERA:
@@ -126,27 +166,23 @@ MeshComponent* parseNode(KFbxNode *node, int level = 0) {
                 cout<<s<<endl;
         }
     }
-    /*
+    
     if (node->GetChildCount()>0){
-        GameObjectParent *parent = new GameObjectParent();
-        if (ga != NULL) {
-            parent->AddGameObject(ga);
-        }
         for (int i=0;i<node->GetChildCount();i++){
-            GameObject *res = parseNode(node->GetChild(i),level+1);
+            SceneObject *res = parseNode(node->GetChild(i),level+1);
             if (res!=NULL){
-                parent->AddGameObject(res);
+                if (sceneObject == NULL){
+                    sceneObject = new SceneObject();
+                }
+                sceneObject->AddChild(res);
             }
         }
-
-        ga = parent;
     }
-    */
-    return ga;
+    return sceneObject;
 }
 
-MeshComponent *FBXLoader::Load(const char *filename){
-    MeshComponent *ga = NULL;
+SceneObject *FBXLoader::Load(const char *filename){
+    SceneObject *so = NULL;
     KFbxScene *scene = KFbxScene::Create(manager, "");
     KFbxImporter *importer = KFbxImporter::Create(manager, "");
     int fileFormat = -1;
@@ -159,7 +195,7 @@ MeshComponent *FBXLoader::Load(const char *filename){
             bool importSuccess = importer->Import(scene);   
             if (importSuccess) {
                 KFbxNode *node = scene->GetRootNode();
-                ga = parseNode(node);
+                so = parseNode(node);
             } else {
                 cerr<<"ModelLoad import error "<<importer->GetLastErrorString()<<endl;
             }
@@ -169,7 +205,7 @@ MeshComponent *FBXLoader::Load(const char *filename){
     }
     importer->Destroy();
     scene->Destroy();
-    return ga;
+    return so;
 }
 }
 #endif /* NO_FBX_LOADER */

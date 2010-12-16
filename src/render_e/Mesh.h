@@ -28,8 +28,8 @@ public:
     Vector3 *GetColors();
     Vector2 *GetTextureCoords1();
     Vector2 *GetTextureCoords2();
-    unsigned short GetPrimitiveCount();
-    unsigned short *GetIndices();
+    int GetPrimitiveCount();
+    int *GetIndices();
     int GetIndicesCount();
     
     void SetVertices(std::vector<Vector3> vertices){ this->vertices = vertices;}
@@ -38,7 +38,7 @@ public:
     void SetColors(std::vector<Vector3> colors){ this->colors = colors; }
     void SetTextureCoords1(std::vector<Vector2> textureCoords1){ this->textureCoords1 = textureCoords1;}
     void SetTextureCoords2(std::vector<Vector2> textureCoords2){ this->textureCoords2 = textureCoords2;}
-    void SetIndices(std::vector<unsigned short> indices){this->indices = indices;}
+    void SetIndices(std::vector<int> indices){this->indices = indices;}
     
     // setters using pointers
     void SetVertices(Vector3 *vertices, int length);
@@ -47,7 +47,7 @@ public:
     void SetColors(Vector3 *tangents, int length);
     void SetTextureCoords1(Vector2 *textureCoords1, int length);
     void SetTextureCoords2(Vector2 *textureCoords2, int length);
-    void SetIndices(unsigned short *indices, int length);
+    void SetIndices(int *indices, int length);
     
     /**
      * Validates mesh:
@@ -63,7 +63,7 @@ private:
     std::vector<Vector3> colors;
     std::vector<Vector2> textureCoords1;
     std::vector<Vector2> textureCoords2;
-    std::vector<unsigned short>     indices;
+    std::vector<int>     indices;
     
 };
 }

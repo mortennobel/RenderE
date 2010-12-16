@@ -13,6 +13,9 @@
 #include "Component.h"
 #include "Mesh.h"
 
+// define RENDER_E_NO_VBO
+//define RENDER_INTERMEDIATE_MODE
+
 namespace render_e {
 class MeshComponent : public Component {
 public:
@@ -33,8 +36,10 @@ private:
     int texture2Offset;
     int triangleOffset;
     int stride;
+    unsigned short indexType;
 #ifdef RENDER_E_NO_VBO  
-    unsigned short *indices;
+    void DebugRendering();
+    void *indices;
     unsigned char *buffer;
 #endif
 };

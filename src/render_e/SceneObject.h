@@ -5,8 +5,8 @@
  * Created on October 31, 2010, 2:42 PM
  */
 
-#ifndef RENDEROBJECT_H
-#define	RENDEROBJECT_H
+#ifndef SCENE_OBJECT_H
+#define	SCENE_OBJECT_H
 
 #include <vector>
 #include "Transform.h"
@@ -30,6 +30,9 @@ public:
     MeshComponent *GetMesh();
     void AddCompnent(Component* component);
     Material *GetMaterial();
+    
+    // Delegate call to transform object
+    void AddChild(SceneObject *sceneObject);
 private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
     SceneObject& operator = (const SceneObject&); // disallow copy constructor

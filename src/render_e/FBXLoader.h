@@ -8,6 +8,7 @@
 #ifndef FBXLOADER_H
 #define	FBXLOADER_H
 #include "MeshComponent.h"
+#include "SceneObject.h"
 #define KFBX_NODLL
 #include <fbxsdk.h>
 
@@ -24,7 +25,7 @@ public:
     FBXLoader();
     FBXLoader(const FBXLoader& orig);
     virtual ~FBXLoader();
-    MeshComponent *Load(const char *filename);
+    SceneObject *Load(const char *filename);
 private:
     KFbxSdkManager *manager;
 };

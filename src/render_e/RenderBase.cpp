@@ -103,6 +103,12 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     if (sceneObject->GetCamera() != NULL){
         cameras.push_back(sceneObject);
     }
+    using std::vector;
+    vector<Transform*> *children = sceneObject->GetTransform().GetChildren();
+    for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
+        std::cout<<"Children"<<std::endl;
+        AddSceneObject((*iter)->GetSceneObject());
+    }
 }
 
 void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
@@ -140,7 +146,6 @@ void RenderBase::Init(void(*swapBuffersFunc)()){
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_ELEMENT_ARRAY_BUFFER);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glCullFace(GL_BACK);
 }

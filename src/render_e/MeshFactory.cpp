@@ -29,8 +29,8 @@ Mesh *MeshFactory::CreateTetrahedron(){
         p0,p3,p1
     };
     
-    vector<unsigned short> indices;
-    for (unsigned short i=0;i<12;i++){
+    vector<int> indices;
+    for (int i=0;i<12;i++){
         indices.push_back(i);
     }
     
@@ -94,7 +94,7 @@ Mesh *MeshFactory::CreateCube(){
     // same order of vertex array without hopping, because of different normals at
     // a shared vertex. For this case, glDrawArrays() and glDrawElements() have no
     // difference.
-    unsigned short indices[] = {
+    int indices[] = {
         0,1,2,
         0,2,3,
         4,5,6,

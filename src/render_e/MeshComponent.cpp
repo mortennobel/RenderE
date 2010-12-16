@@ -11,7 +11,7 @@
 #include <cstring>
 #include <GL/glew.h>
 
-// todo - remove this - for debugging purpose only
+// todo - remove this - for debugging purpose only 
 #include <iostream>
 #ifdef _WIN32
 #include <GL/glut.h>
@@ -34,12 +34,67 @@ MeshComponent::~MeshComponent() {
     Release();
 }
 
+#ifdef RENDER_E_NO_VBO
+void  MeshComponent::DebugRendering(){
+    static int c = 0;
+    if (c++>0){
+        return;
+    }
+    using namespace std;
+    cout<<"Print rendering start"<<endl;
+    for (int i=0;i<indicesCount;i++){
+        int index = ((unsigned char*)indices)[i];
+        Vector3 *vv = (Vector3*)(&(buffer[index*stride]));
+        Vector3 v = vv[0];
+        cout<<index<<"\t"<<v[0]<<","<<v[1]<<","<<v[2]<<endl;
+        if (normalOffset!=-1){
+            Vector3 n = vv[1];
+            cout<<index<<"\t\t"<<n[0]<<","<<n[1]<<","<<n[2]<<endl;
+        }
+    }
+    cout<<"Print rendering start"<<endl;
+}
+#endif RENDER_E_NO_VBO
+
 void MeshComponent::Render(){
     if (indicesCount==0){
         return;
         std::cout << "Mesh not initialized" << std::endl;
     }
-#ifdef RENDER_E_NO_VBO    
+#ifdef RENDER_E_NO_VBO 
+#ifdef RENDER_INTERMEDIATE_MODE
+    glBegin(GL_TRIANGLES);
+    static int c = 0;
+    
+    for (int i=0;i<indicesCount;i++){
+        
+        int index;
+        switch (indexType){
+            case GL_UNSIGNED_BYTE:
+                index = (static_cast<GLubyte*>(indices))[i];
+                break;
+            case GL_UNSIGNED_SHORT:
+                index = (static_cast<GLushort*>(indices))[i];
+                break;
+            case GL_UNSIGNED_INT:
+                index = (static_cast<GLuint*>(indices))[i];
+                break;
+        }
+        
+        Vector3 *vv = (Vector3*)(&(buffer[index*(stride)]));
+        glNormal3fv(vv[1].Get());
+        glVertex3fv(vv[0].Get());
+        // debug
+        
+        if (c==0){
+            using namespace std;
+            cout<<vv[0][0]<<", "<<vv[0][1]<<", "<<vv[0][2]<<", ";
+            cout<<vv[1][0]<<", "<<vv[1][1]<<", "<<vv[1][2]<<endl;
+        }
+    }
+    c++;
+    glEnd();
+#else
     glVertexPointer(3, GL_FLOAT, stride, buffer);
     if (normalOffset != -1){
         glNormalPointer(GL_FLOAT, stride, buffer+normalOffset);
@@ -50,14 +105,12 @@ void MeshComponent::Render(){
     if (colorOffset != -1){
         glColorPointer(3, GL_FLOAT, stride, buffer+colorOffset);
     }
-    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, indices);
+    glDrawElements(GL_TRIANGLES, indicesCount, indexType, indices);
+#endif /* RENDER_INTERMEDIATE_MODE */
 #else 
     if (vboName != 0){
         // bind buffer (set active)
         glBindBuffer(GL_ARRAY_BUFFER, vboName);
-        
-        // bind buffer (set active)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements);
         // vertex pointer to buffer
         glVertexPointer(3, GL_FLOAT, stride,BUFFER_OFFSET(0));
         if (normalOffset != -1){
@@ -72,8 +125,10 @@ void MeshComponent::Render(){
         if (colorOffset != -1){
             glColorPointer(3, GL_FLOAT, stride, BUFFER_OFFSET(colorOffset));
         }
+        // bind buffer (set active)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements);
+        glDrawElements(GL_TRIANGLES, indicesCount, indexType, BUFFER_OFFSET(0) );
         
-        glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_SHORT, 0 );
     }
 #endif //RENDER_E_NO_VBO
 }
@@ -88,18 +143,17 @@ void MeshComponent::SetMesh(Mesh *mesh){
     Vector2 *textureCoords = mesh->GetTextureCoords1();
     Vector2 *textureCoords2 = mesh->GetTextureCoords2();
     int primitiveCount = mesh->GetPrimitiveCount();
-    unsigned short *indices = mesh->GetIndices(); // todo rename
+    int *indices = mesh->GetIndices(); // todo rename
     indicesCount = mesh->GetIndicesCount();
     Release();
     
     // Calculate size of data
-    stride = 0;
-    int sizePrimitives = sizeof(float)*3;
+    
+    int sizePrimitives = sizeof(Vector3);
     int offset = sizePrimitives; // vertices
     if (normals != NULL){
         normalOffset = offset;
         offset += sizePrimitives;
-        stride += sizeof(float)*3;
     } else {
         normalOffset = -1;
     }
@@ -107,7 +161,6 @@ void MeshComponent::SetMesh(Mesh *mesh){
     if (tangents != NULL){
         tangentOffset = offset;
         offset += sizePrimitives;
-        stride += sizeof(float)*3;
     } else {
         tangentOffset = -1;
     }
@@ -115,33 +168,57 @@ void MeshComponent::SetMesh(Mesh *mesh){
     if (colors != NULL){
         colorOffset = offset;
         offset += sizePrimitives;
-        stride += sizeof(float)*3;
     } else {
         colorOffset = -1;
     }
-    int sizeTexCoords = sizeof(float)*2;
+    int sizeTexCoords = sizeof(Vector2);
     if (textureCoords != NULL) {
         texture1Offset = offset;
         offset += sizeTexCoords;
-        stride += sizeof(float)*2;
     } else {
         texture1Offset = -1;
     }
     if (textureCoords2 != NULL) {
         texture2Offset = offset;
         offset += sizeTexCoords;
-        stride += sizeof(float)*2;
     } else {
         texture2Offset = -1;
     }
+    stride = offset;
     
     // create temp buffer
     unsigned int buffersize = offset*primitiveCount;
+    
+    void *indicesDest;
+    int indicesSize;
+    if (primitiveCount < 0xff){
+        indicesSize = sizeof(char);
+        indexType = GL_UNSIGNED_BYTE;
+        GLubyte *byteBuffer = new GLubyte[indicesCount];
+        for (int i=0;i<indicesCount;i++){
+            byteBuffer[i] = indices[i];
+        }
+        indicesDest = byteBuffer;
+    } else if (primitiveCount < 0xffff){
+        indicesSize = sizeof(short);
+        indexType = GL_UNSIGNED_SHORT;
+        GLushort *shortBuffer = new GLushort[indicesCount];
+        for (int i=0;i<indicesCount;i++){
+            shortBuffer[i] = indices[i];
+        }
+        indicesDest = shortBuffer;
+    } else {
+        indicesSize = sizeof(int);
+        indexType = GL_UNSIGNED_INT;
+        GLuint *intBuffer = new GLuint[indicesCount];
+        memcpy(intBuffer, indices, indicesCount*indicesSize);
+        indicesDest = intBuffer;
+    }
+        
 #ifndef RENDER_E_NO_VBO    
 	unsigned char *buffer;
 #else
-    this->indices = new unsigned short[indicesCount];
-    memcpy(this->indices, indices, indicesCount*sizeof(unsigned short));
+    this->indices = indicesDest;
 #endif
     buffer = new unsigned char[buffersize];
     float *bufferAsFloat = (float *)buffer;
@@ -151,25 +228,38 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // together are located close to each other
     int destIndex = 0;
     for (int i=0;i<primitiveCount;i++){
-        memcpy(&bufferAsFloat[destIndex], &vertices[i], sizePrimitives);
+        memcpy(&bufferAsFloat[destIndex], vertices[i].Get(), sizePrimitives);
         destIndex += 3;
         if (normals != NULL){
-            memcpy(&bufferAsFloat[destIndex], &normals[i], sizePrimitives);
+            memcpy(&bufferAsFloat[destIndex], normals[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (tangents != NULL){
-            memcpy(&bufferAsFloat[destIndex], &tangents[i], sizePrimitives);
+            memcpy(&bufferAsFloat[destIndex], tangents[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (textureCoords != NULL){
-            memcpy(&bufferAsFloat[destIndex], &textureCoords[i], sizeTexCoords);
+            memcpy(&bufferAsFloat[destIndex], textureCoords[i].Get(), sizeTexCoords);
             destIndex += 2;
         }
         if (textureCoords2 != NULL){
-            memcpy(&bufferAsFloat[destIndex], &textureCoords2[i], sizeTexCoords);
+            memcpy(&bufferAsFloat[destIndex], textureCoords2[i].Get(), sizeTexCoords);
             destIndex += 2;
         }
     }
+    
+    // print buffer
+    /*
+    using namespace std;
+    cout<<"Memory dump start"<<endl;
+    for (int i=0;i<primitiveCount*(offset/sizeof(float));i++){
+        if (i%(offset/sizeof(float))==0){
+            cout << endl;
+        }
+        cout<<bufferAsFloat[i]<<", ";
+    }
+    cout<<endl<<"Memory dump end"<<endl;
+    */
 #ifndef RENDER_E_NO_VBO
     unsigned int buffernames[2];
     glGenBuffers(2,buffernames);
@@ -184,23 +274,35 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // Bind buffer (set buffer active)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements); // bind
     // copy data to buffer
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*sizeof(unsigned short), indices,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*indicesSize, indices,GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // bind
-#endif
     
+    switch (indexType){
+        case GL_UNSIGNED_BYTE:
+            delete []static_cast<GLubyte*>(indicesDest);
+            break;
+        case GL_UNSIGNED_SHORT:
+            delete []static_cast<GLushort*>(indicesDest);
+            break;
+        case GL_UNSIGNED_INT:
+            delete []static_cast<int*>(indicesDest);
+            break;
+    }
+#endif
 }
 
 void MeshComponent::Release(){
 #ifdef RENDER_E_NO_VBO    
 	if (buffer != NULL){
         delete []buffer;
-        delete []indices;
+        delete [] ((unsigned char*)indices);
         buffer = NULL;
         indices = NULL;
     }
 #else
     if (vboName != 0){
         glDeleteBuffers(1, &vboName);
+        glDeleteBuffers(1, &vboElements);
         vboName = 0;
     }
 #endif

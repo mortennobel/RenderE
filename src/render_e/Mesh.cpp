@@ -64,11 +64,11 @@ Vector2 *Mesh::GetTextureCoords2(){
     return &textureCoords2[0];
 }
 
-unsigned short Mesh::GetPrimitiveCount(){
+int Mesh::GetPrimitiveCount(){
     return vertices.size();
 }
 
-unsigned short *Mesh::GetIndices(){
+int *Mesh::GetIndices(){
     if (indices.size()==0){
         return NULL;
     }
@@ -153,7 +153,7 @@ void Mesh::SetTextureCoords2(Vector2 *textureCoords2, int length){
         textureCoords2++;
     }
 }
-void Mesh::SetIndices(unsigned short *indices, int length){
+void Mesh::SetIndices(int *indices, int length){
     this->indices.clear();
     for (;length>0;length--){
         this->indices.push_back(*indices);
@@ -187,12 +187,8 @@ bool Mesh::IsValid(){
         return false;
     }
     
-    if (verticesSize>USHRT_MAX){
-        std::cerr<<"Invalid mesh size "<<verticesSize<<". Max supported size is:: "<<USHRT_MAX<<std::endl;
-        return false;
-    }
-    for (vector<unsigned short>::iterator iter = indices.begin(); iter != indices.end();iter++){
-        unsigned short val = *iter;
+    for (vector<int>::iterator iter = indices.begin(); iter != indices.end();iter++){
+        int val = *iter;
         if (val>=verticesSize){
             std::cerr<<"Invalid mesh index "<<val<<". Number of vertices defined: "<<verticesSize<<std::endl;
             return false;

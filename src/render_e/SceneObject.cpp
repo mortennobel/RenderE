@@ -16,7 +16,7 @@
 namespace render_e {
 
 SceneObject::SceneObject()
-:camera(NULL),mesh(NULL),material(NULL) {
+:camera(NULL),mesh(NULL),material(NULL),transform(this) {
 }
 
 SceneObject::~SceneObject() {
@@ -65,5 +65,9 @@ void SceneObject::AddCompnent(Component* component){
     }
     components.push_back(component);
     component->SetOwner(this);
+}
+
+void SceneObject::AddChild(SceneObject *sceneObject){
+    this->transform.AddChild(&(sceneObject->transform));
 }
 }

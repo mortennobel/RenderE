@@ -28,6 +28,7 @@ using namespace std;
 
 RenderBase *renderBase = RenderBase::Instance();
 MeshComponent *meshTeapot = new MeshComponent();
+SceneObject *meshTeapotContainer = new SceneObject();
 SceneObject *cameraContainer = new SceneObject();
     
 // The main purpose of the main is to created a windows
@@ -62,8 +63,8 @@ void localUpdate(float time){
 //    meshTeapot->GetOwner()->GetTransform().SetRotation(q);
     static float totalTime =0;
     totalTime += time;
-    Quaternion q = Quaternion::MakeFromEuler(0.0f,totalTime,0.0f);
-    meshTeapot->GetOwner()->GetTransform().SetRotation(q);
+//    Quaternion q = Quaternion::MakeFromEuler(0.0f,totalTime,0.0f);
+//    meshTeapotContainer->GetTransform().SetRotation(q);
 }
 
 void timerFunc(int value) {
@@ -83,6 +84,7 @@ void reshape(int w, int h){
 
 //forward declaration
 void initWorld();
+void initWorld2();
 void testPNG();
 void initGL();
 void initRenderBase();
@@ -91,7 +93,7 @@ void TestLoadShader();
 void fbxTest();
 
 void keyPress(unsigned char key, int x, int y){
-    Transform *t = &(meshTeapot->GetOwner()->GetTransform());
+    Transform *t = &(meshTeapotContainer->GetTransform());
     Vector3 position = t->GetPosition();
     Vector3 cameraPosition = cameraContainer->GetTransform().GetPosition();
     switch (key){
@@ -119,6 +121,10 @@ void keyPress(unsigned char key, int x, int y){
         case 'S':
             cameraPosition[2] = cameraPosition[2]-1;
             break;
+        case 'z':
+            static bool renderMode = false;
+            renderMode = !renderMode;
+            renderBase->SetRenderMode(renderMode?RENDER_MODE_LINE:RENDER_MODE_FILL);
             
     }
     cout<<position[0]<<" "<<position[1]<<" "<<position[2]<<endl;
@@ -141,7 +147,10 @@ int main(int argc, char **argv) {
     }
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-    initWorld();
+    if (!GLEW_ARB_vertex_array_object){
+        cout<<"vertex_array_object not supported"<<endl;
+    }
+    initWorld2();
     initGL();
     initRenderBase();
     
@@ -199,7 +208,7 @@ void initRenderBase(){
 }
 
 void transformTest(){
-    Transform transform;
+    Transform transform(NULL);
     Vector3 v(1,2,3);
     transform.SetPosition(v);
     float *localTransform = transform.GetLocalTransform().GetReference();
@@ -209,7 +218,7 @@ void transformTest(){
     cout<<"localInverse"<<endl;
     printMatrix(localInverse);
     
-    Transform transform2;
+    Transform transform2(NULL);
     Matrix44 m;
     transform2.GetRotation().GetMatrix(&m);
     cout<<"Rotation"<<endl;
@@ -224,12 +233,12 @@ void initWorld() {
     Vector3 v(0.0,0.0,15.0);
     cameraContainer->GetTransform().SetPosition(v);
     
-    SceneObject *teapotSceneObject = new SceneObject();
+    
     Vector3 v2(0.0,0.0,0.0);
-    teapotSceneObject->GetTransform().SetPosition(v2);
-    renderBase->AddSceneObject(teapotSceneObject);
+    meshTeapotContainer->GetTransform().SetPosition(v2);
+    renderBase->AddSceneObject(meshTeapotContainer);
     meshTeapot->SetMesh(MeshFactory::CreateCube());
-    teapotSceneObject->AddCompnent(meshTeapot);
+    meshTeapotContainer->AddCompnent(meshTeapot);
     
     ShaderFileDataSource sfs;
     char name2[] = "diffuse";
@@ -237,9 +246,54 @@ void initWorld() {
     Shader *b = sfs.LoadLinkShader(name2, status);
     
     Material *mat = new Material(b);
-    teapotSceneObject->AddCompnent(mat);
-    
+    meshTeapotContainer->AddCompnent(mat);   
 }
+
+void setMatrial (Shader *shader, SceneObject *so){
+    Material *mat = new Material(shader);
+    so->AddCompnent(mat);   
+    
+    vector<Transform *> *trans = so->GetTransform().GetChildren();
+    for (vector<Transform*>::iterator iter = trans->begin();iter != trans->end();iter++){
+        so = (*iter)->GetSceneObject();
+        setMatrial(shader, so);
+    }
+}
+
+void initWorld2() {
+    Camera *camera = new Camera();
+    camera->SetProjection(40, 1, 0.1,1000);
+    cameraContainer->AddCompnent(camera);
+    renderBase->AddSceneObject(cameraContainer);
+    Vector3 v(0.0,0.0,15.0);
+    cameraContainer->GetTransform().SetPosition(v);
+    
+    FBXLoader loader;
+    
+    
+    SceneObject *sceneObject = loader.Load("/Users/morten/Programmering/cpp/RenderE/testdata/cube.fbx");
+//    SceneObject *sceneObject = loader.Load("/Users/morten/Programmering/cpp/RenderE/testdata/two_triangles.fbx");
+    
+    /*/while (sceneObject->GetTransform().GetChildren()->size()!=0){
+        sceneObject = sceneObject->GetTransform().GetChildren()->at(0)->GetSceneObject();
+    }*/
+    meshTeapotContainer = sceneObject;
+    // Vector3 rotation(-90.,0.,0.);
+    // meshTeapotContainer->GetTransform().SetRotation(rotation);
+//    meshTeapotContainer->AddChild(loader.Load("/Users/morten/Programmering/cpp/RenderE/testdata/cube.fbx"));
+//    meshTeapotContainer->AddChild(loader.Load("/Users/morten/Downloads/Cottage.3DS"));
+    
+//    meshTeapotContainer->AddCompnent(meshTeapot);
+    renderBase->AddSceneObject(meshTeapotContainer);
+    
+    ShaderFileDataSource sfs;
+    char name2[] = "diffuse";
+    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
+    Shader *b = sfs.LoadLinkShader(name2, status);
+    
+    setMatrial (b, meshTeapotContainer);
+}
+
 
 void fbxTest(){
     FBXLoader loader;
