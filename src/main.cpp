@@ -94,31 +94,18 @@ void fbxTest();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = &(meshTeapotContainer->GetTransform());
-    Vector3 position = t->GetPosition();
     Vector3 cameraPosition = cameraContainer->GetTransform().GetPosition();
     switch (key){
-        case 'a':
-            position[0] =position[0]+1;
-            break;
         case 'd':
-            position[0] =position[0]-1;
-            break;
-        case 'w':
-            position[2] =position[2]+1;
-            break;
-        case 's':
-            position[2] = position[2]-1;
-            break;
-        case 'A':
             cameraPosition[0] =cameraPosition[0]+1;
             break;
-        case 'D':
+        case 'a':
             cameraPosition[0] =cameraPosition[0]-1;
             break;
-        case 'W':
+        case 's':
             cameraPosition[2] =cameraPosition[2]+1;
             break;
-        case 'S':
+        case 'w':
             cameraPosition[2] = cameraPosition[2]-1;
             break;
         case 'z':
@@ -127,8 +114,6 @@ void keyPress(unsigned char key, int x, int y){
             renderBase->SetRenderMode(renderMode?RENDER_MODE_LINE:RENDER_MODE_FILL);
             
     }
-    cout<<position[0]<<" "<<position[1]<<" "<<position[2]<<endl;
-    t->SetPosition(position);
     printMatrix(t->GetLocalTransform().GetReference());
     cameraContainer->GetTransform().SetPosition(cameraPosition);
 }
@@ -274,8 +259,8 @@ void initWorld2() {
     FBXLoader loader;
     
     
-    SceneObject *sceneObject = loader.Load("testdata/cube.fbx");
-//    SceneObject *sceneObject = loader.Load("testdata/two_triangles.fbx");
+//    SceneObject *sceneObject = loader.Load("testdata/cube.fbx");
+    SceneObject *sceneObject = loader.Load("testdata/two_triangles.fbx");
     
     /*/while (sceneObject->GetTransform().GetChildren()->size()!=0){
         sceneObject = sceneObject->GetTransform().GetChildren()->at(0)->GetSceneObject();
