@@ -18,7 +18,6 @@
 
 namespace render_e {
 
-PNGFileTextureDataSource *PNGFileTextureDataSource::s_instance = NULL;
 
 PNGFileTextureDataSource::PNGFileTextureDataSource() {
 }

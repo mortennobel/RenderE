@@ -15,9 +15,9 @@
 
 namespace render_e {
 
-class Texture2D : TextureBase {
+class Texture2D : public TextureBase {
 public:
-    Texture2D(char *resourceName);
+    Texture2D(const char *resourceName);
     virtual ~Texture2D();
     virtual TextureLoadStatus Load();
 private:

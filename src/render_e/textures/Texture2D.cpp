@@ -19,13 +19,13 @@
 
 namespace render_e {
 
-Texture2D::Texture2D(char *resourceName)
+Texture2D::Texture2D(const char *resourceName)
 :TextureBase(GL_TEXTURE_2D),textureDataSource(TextureDataSource::GetTextureDataSource()), interpolationLinear(true), clamp(false)
 {
     assert(textureDataSource!=NULL);
     int length = strlen(resourceName);
     this->resourceName = new char[length];
-    memcpy(resourceName,resourceName, length);
+    memcpy(this->resourceName,resourceName, length);
 }
 
 Texture2D::~Texture2D(){

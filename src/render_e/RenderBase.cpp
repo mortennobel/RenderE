@@ -104,6 +104,11 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     if (sceneObject->GetCamera() != NULL){
         cameras.push_back(sceneObject);
     }
+    
+    if (sceneObject->GetLight() != NULL){
+        lights.push_back(sceneObject);
+    }
+    
     using std::vector;
     vector<Transform*> *children = sceneObject->GetTransform().GetChildren();
     for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
@@ -121,6 +126,11 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     pos = find(cameras.begin(), cameras.end(), sceneObject);
     if (pos!=cameras.end()){
         cameras.erase(pos);
+    }
+    
+    pos = find(lights.begin(), lights.end(), sceneObject);
+    if (pos!=cameras.end()){
+        lights.erase(pos);
     }
 }
 

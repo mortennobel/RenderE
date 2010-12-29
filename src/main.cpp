@@ -286,6 +286,8 @@ void initWorld2() {
 void fbxTest(){
     FBXLoader loader;
     SceneXMLParser sceneParser;
+    SceneObject *o = sceneParser.LoadScene("testdata/scene.xml");
+
 }
 
 /*

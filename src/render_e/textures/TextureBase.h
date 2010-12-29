@@ -8,6 +8,7 @@
 #ifndef TEXTUREBASE_H
 #define	TEXTUREBASE_H
 
+#include <string>
 
 namespace render_e {
 
@@ -28,10 +29,13 @@ public:
     void Bind();
     void Unbind();
     void Unload();
+    void SetName(std::string name) { this->name = name;}
+    std::string GetName() {return name; }
 protected:
     unsigned short textureType;
     unsigned int textureId;
     bool mipmapping;
+    std::string name;
 private:
     TextureBase(const TextureBase& orig); // disallow copy constructor
     TextureBase& operator = (const TextureBase&); // disallow copy constructor

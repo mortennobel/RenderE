@@ -1,10 +1,3 @@
-/* 
- * File:   RenderObject.h
- * Author: morten
- *
- * Created on October 31, 2010, 2:42 PM
- */
-
 #ifndef SCENE_OBJECT_H
 #define	SCENE_OBJECT_H
 
@@ -13,6 +6,7 @@
 #include "Component.h"
 #include "MeshComponent.h"
 #include "Material.h"
+#include "Light.h"
 
 
 namespace render_e {
@@ -30,6 +24,7 @@ public:
     MeshComponent *GetMesh();
     void AddCompnent(Component* component);
     Material *GetMaterial();
+    Light *GetLight();
     
     // Delegate call to transform object
     void AddChild(SceneObject *sceneObject);
@@ -41,6 +36,7 @@ private:
     Camera *camera;
     MeshComponent *mesh;
     Material *material;
+    Light *light;
     std::vector<Component*> components;
 };
 }

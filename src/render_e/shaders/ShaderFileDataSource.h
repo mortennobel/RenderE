@@ -16,8 +16,8 @@ public:
     ShaderFileDataSource();
     ShaderFileDataSource(const ShaderFileDataSource& orig);
     virtual ~ShaderFileDataSource();
-    
-    ShaderLoadStatus LoadShaderSource(char* name, 
+     
+    ShaderLoadStatus LoadShaderSource(const char* name, 
             std::string &vertexShaderData,
             std::string &fragmentShaderData);
 private:

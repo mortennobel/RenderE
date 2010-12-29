@@ -16,7 +16,7 @@
 namespace render_e {
 
 SceneObject::SceneObject()
-:camera(NULL),mesh(NULL),material(NULL),transform(this) {
+:camera(NULL),mesh(NULL),material(NULL),transform(this),light(NULL) {
 }
 
 SceneObject::~SceneObject() {
@@ -37,6 +37,10 @@ MeshComponent *SceneObject::GetMesh(){
 
 Material *SceneObject::GetMaterial(){
     return material;
+}
+
+Light *SceneObject::GetLight(){
+    return light;
 }
     
 const std::vector<Component*> * SceneObject::GetComponents() const{
@@ -61,6 +65,10 @@ void SceneObject::AddCompnent(Component* component){
         case MaterialType:
             assert(material==NULL);
             material = static_cast<Material*>(component);
+            break;
+        case LightComponentType:
+            assert(light==NULL);
+            light = static_cast<Light*>(component);
             break;
     }
     components.push_back(component);

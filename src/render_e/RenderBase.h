@@ -52,7 +52,7 @@ private:
     static RenderBase *s_instance;
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;
-    
+    std::vector<SceneObject*> lights;
     void (*swapBuffersFunc)();
     bool doubleSpeedZOnlyRendering;
 };

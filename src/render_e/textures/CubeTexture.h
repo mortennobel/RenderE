@@ -12,9 +12,9 @@
 #include "TextureDataSource.h"
 
 namespace render_e {
-class CubeTexture : TextureBase{
+class CubeTexture : public TextureBase{
 public:
-    CubeTexture(char* left, char* right, char* top, char* bottom, char* back, char* front);
+    CubeTexture(const char* left, const char* right, const char* top, const char* bottom, const char* back, const char* front);
     virtual ~CubeTexture();
     virtual TextureLoadStatus Load();
 private:

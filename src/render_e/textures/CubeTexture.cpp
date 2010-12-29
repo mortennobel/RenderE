@@ -13,7 +13,7 @@
 
 namespace render_e {
 
-char *copy(char *s){
+char *copy(const char *s){
     assert(s!=NULL);
     int length = strlen(s);
     char *strCopy = new char[length];
@@ -22,9 +22,9 @@ char *copy(char *s){
 }
 
 CubeTexture::CubeTexture(
-        char* left, char* right, 
-        char* top, char* bottom, 
-        char* back, char* front)
+        const char* left, const char* right, 
+        const char* top, const char* bottom, 
+        const char* back, const char* front)
 :TextureBase(GL_TEXTURE_CUBE_MAP), textureDataSource(TextureDataSource::GetTextureDataSource()){
     assert(textureDataSource!=NULL);
     resourceNames = new char *[6];

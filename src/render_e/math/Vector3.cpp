@@ -99,6 +99,22 @@ const Vector3 Vector3::operator-(const Vector3 &other) const{
 	return Vector3(x-other.x,y-other.y,z-other.z);
 }
 
+const Vector3 Vector3::operator*(const Vector3 &other) const{
+	return Vector3(x*other.x,y*other.y,z*other.z);
+}
+
+const bool Vector3::operator==(const Vector3 &other) const{
+	return x==other.x &&
+            y==other.y &&
+            z==other.z;
+}
+
+const bool Vector3::operator!=(const Vector3 &other) const{
+	return x!=other.x ||
+            y!=other.y ||
+            z!=other.z;
+}
+
 const Vector3 Vector3::operator*(const float &other) const{
 	return Vector3(x*other,y*other,z*other);
 }

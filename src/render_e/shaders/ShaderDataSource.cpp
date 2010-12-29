@@ -18,7 +18,7 @@ ShaderDataSource::ShaderDataSource(const ShaderDataSource& orig) {
 ShaderDataSource::~ShaderDataSource() {
 }
 
-Shader *ShaderDataSource::LoadLinkShader(char* name, ShaderLoadStatus &outStatus){
+Shader *ShaderDataSource::LoadLinkShader(const char* name, ShaderLoadStatus &outStatus){
     using std::string;
     string vertexData;
     string fragmentData;

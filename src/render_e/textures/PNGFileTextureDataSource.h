@@ -17,19 +17,13 @@ namespace render_e {
 
 class PNGFileTextureDataSource : public TextureDataSource {
 public:
-    static PNGFileTextureDataSource* Instance() {
-        if (!s_instance) {
-            s_instance = new PNGFileTextureDataSource();
-        }
-        return s_instance;
-    }
-    
-    TextureLoadStatus LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData);
-private:
-    static PNGFileTextureDataSource *s_instance;
     PNGFileTextureDataSource();
+    ~PNGFileTextureDataSource();
+    TextureLoadStatus LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData);
+    
+private:
     PNGFileTextureDataSource(const PNGFileTextureDataSource& orig);
-    virtual ~PNGFileTextureDataSource();
+    
 };
 }
 #endif	/* PNGTEXTUREDATASOURCE_H */

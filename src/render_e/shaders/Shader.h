@@ -8,6 +8,8 @@
 #ifndef SHADER_H
 #define	SHADER_H
 
+#include <string>
+
 namespace render_e {
 
 enum ShaderLoadStatus {
@@ -30,6 +32,8 @@ public:
     void SetVector3(unsigned int index, float *vector);
     void SetVector4(unsigned int index, float *vector);
     void SetMatrix44(unsigned int index, float *mat);
+    void SetName(std::string name) { this->name = name;}
+    std::string GetName() {return name; }
 private:
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
@@ -39,6 +43,7 @@ private:
     unsigned int fragmentShaderId;
     const char *vertexShaderSource;
     const char *fragmentShaderSource;
+    std::string name;
 };
 }
 #endif	/* SHADER_H */

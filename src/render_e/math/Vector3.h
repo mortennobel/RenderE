@@ -51,9 +51,14 @@ public:
 	const Vector3 operator-(const Vector3 &other) const;
 	const Vector3 operator-() const;
 	const Vector3 operator*(const float &other) const;
+	const Vector3 operator*(const Vector3 &other) const;
+	const bool operator==(const Vector3 &other) const;
+	const bool operator!=(const Vector3 &other) const;
 	float& operator[] (const int nIndex);
 	float operator[]  (const int nIndex) const;
     float *Get(){return &x;}
+    
+    static Vector3 Zero(){ return Vector3(0.0f,0.0f,0.0f); }
 private:
 	float x;
 	float y;

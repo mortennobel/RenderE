@@ -19,13 +19,13 @@ public:
     ShaderDataSource();
     virtual ~ShaderDataSource();
     
-    Shader *LoadLinkShader(char* name, ShaderLoadStatus &outStatus);
+    Shader *LoadLinkShader(const char* name, ShaderLoadStatus &outStatus);
 protected:
-    virtual ShaderLoadStatus LoadShaderSource(char* name, 
+    virtual ShaderLoadStatus LoadShaderSource(const char* name, 
             std::string &vertexShaderData,
             std::string &fragmentShaderData) = 0;
 private:
-    ShaderDataSource(const ShaderDataSource& orig); // disallow copy constructor
+    ShaderDataSource(const ShaderDataSource& orig);  // disallow copy constructor
     ShaderDataSource& operator = (const ShaderDataSource&); // disallow copy constructor
     
 };

@@ -21,7 +21,7 @@ ShaderFileDataSource::ShaderFileDataSource(const ShaderFileDataSource& orig) {
 ShaderFileDataSource::~ShaderFileDataSource() {
 }
 
-ShaderLoadStatus ShaderFileDataSource::LoadShaderSource(char* name, 
+ShaderLoadStatus ShaderFileDataSource::LoadShaderSource(const char* name, 
             std::string &vertexShaderData,
             std::string &fragmentShaderData){
     using namespace std;

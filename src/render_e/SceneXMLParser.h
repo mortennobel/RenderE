@@ -8,16 +8,19 @@
 #ifndef SCENEXMLPARSER_H
 #define	SCENEXMLPARSER_H
 
+#include "SceneObject.h"
 
 namespace render_e {
 
 class SceneXMLParser {
 public:
     SceneXMLParser();
-    SceneXMLParser(const SceneXMLParser& orig);
+    
     virtual ~SceneXMLParser();
+    
+    SceneObject *LoadScene(const char* filename);
 private:
-
+    SceneXMLParser(const SceneXMLParser& orig); // not allowed (no implementation)
 };
 
 }

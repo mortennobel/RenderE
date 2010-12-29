@@ -1,10 +1,5 @@
 /*
- *  TextureDataSource.h
- *  RenderE
- *
- *  Created by morten on 10/30/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
+ *  Abstract class for texture builders
  */
 
 
