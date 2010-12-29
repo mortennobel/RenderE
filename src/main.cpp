@@ -17,6 +17,7 @@
 #include "render_e/math/Quaternion.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
 #include "render_e/shaders/DefaultShaders.h"
+#include "render_e/SceneXMLParser.h"
 
 
 #ifndef RENDER_FPS
@@ -258,9 +259,8 @@ void initWorld2() {
     
     FBXLoader loader;
     
-    
-//    SceneObject *sceneObject = loader.Load("testdata/cube.fbx");
-    SceneObject *sceneObject = loader.Load("testdata/two_triangles.fbx");
+    SceneObject *sceneObject = loader.Load("testdata/cube.fbx");
+//    SceneObject *sceneObject = loader.Load("testdata/two_triangles.fbx");
     
     /*/while (sceneObject->GetTransform().GetChildren()->size()!=0){
         sceneObject = sceneObject->GetTransform().GetChildren()->at(0)->GetSceneObject();
@@ -285,7 +285,7 @@ void initWorld2() {
 
 void fbxTest(){
     FBXLoader loader;
-    
+    SceneXMLParser sceneParser;
 }
 
 /*

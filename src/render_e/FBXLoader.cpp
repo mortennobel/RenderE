@@ -11,6 +11,7 @@
 #include <iostream>
 #include "math/Vector3.h"
 #include "math/Vector2.h"
+#include "math/Mathf.h"
 #include "MeshComponent.h"
 #include "Mesh.h"
 
@@ -78,7 +79,6 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 KFbxLayerElementNormal *normalElement = normalLayer->GetNormals();
                 KFbxLayerElementArrayTemplate<KFbxVector4> *normalArray = &(normalElement->GetDirectArray());
                 
-                
                 int normalCount = normalArray->GetCount();
                 vector<int> indices;
                 
@@ -136,21 +136,15 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 Vector3 translate = toVector(v3);
                 sceneObject->GetTransform().SetPosition(translate);
                 
-                cout<<"Set translate "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
                 // Set rotation
                 v3 = node->LclRotation.Get();
-                Vector3 rotation = toVector(v3);
-                if (rotation.LengthSqr()!=0){
-                    sceneObject->GetTransform().SetRotation(rotation);
-                    cout<<"Set rotation "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
-                }
+                Vector3 rotation = toVector(v3)*Mathf::DEGREE_TO_RADIAN;
+                sceneObject->GetTransform().SetRotation(rotation);
+
                 // Set scale
                 v3 = node->LclScaling.Get();
                 Vector3 scale = toVector(v3);
-                if (rotation.LengthSqr()!=0){
-                    sceneObject->GetTransform().SetScale(scale);
-                    cout<<"Set scale "<<v3[0]<<", "<<v3[1]<<", "<<v3[2]<<endl;
-                }
+                sceneObject->GetTransform().SetScale(scale);
                 }
                 break;
             case KFbxNodeAttribute::eCAMERA:
