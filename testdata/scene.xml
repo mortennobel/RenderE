@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <shaders>
+        <shader name="diffuse-texture" file="diffuse-texture"/>
+        <shader name="diffuse-color" file="diffuse-color"/>
+    </shaders>
+    <textures>
+        <texture2d name="" file=""/>
+        <cubetexture name="" left="" right="" top="" bottom="" back="" front=""/>
+    </textures>
+    <materials>
+        <material name="" shader="">
+            <parameter name="" vector2=""/>
+            <parameter name="" texture=""/>
+            <parameter name="" float=""/>
+        </material>
+    </materials>
+    <scenegraph>
+        <camera name="" position="" rotation=""/>
+        <mesh name="" position="" rotation="" scale="" material="" fbxfile="">
+            <mesh name="" position="" rotation="" scale="" material="" fbxfile=""/>
+            <cube name="" position="" rotation="" scale="" material=""/>
+        </mesh>
+        <light name="" type="point" position="" ambient="" diffuse="" specular="" constantAttenuation="" linearAttenuation="" quadraticAttenuation=""/>
+        <group name="" position="" rotation="" scale=""/>
+    </scenegraph>
+</scene>
