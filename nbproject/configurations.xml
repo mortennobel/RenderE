@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="73">
-  <logicalFolder name="root" displayName="root" projectFiles="true">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
-                   projectFiles="true"
-                   kind="SOURCE_LOGICAL_FOLDER">
+                   projectFiles="true">
       <logicalFolder name="render_e" displayName="render_e" projectFiles="true">
-        <logicalFolder name="math"
-                       displayName="math"
-                       projectFiles="true"
-                       kind="SOURCE_LOGICAL_FOLDER">
+        <logicalFolder name="math" displayName="math" projectFiles="true">
           <itemPath>src/render_e/math/Mathf.h</itemPath>
           <itemPath>src/render_e/math/Matrix44.h</itemPath>
           <itemPath>src/render_e/math/Quaternion.h</itemPath>
@@ -23,10 +19,7 @@
           <itemPath>src/render_e/shaders/ShaderDataSource.h</itemPath>
           <itemPath>src/render_e/shaders/ShaderFileDataSource.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="textures"
-                       displayName="textures"
-                       projectFiles="true"
-                       kind="SOURCE_LOGICAL_FOLDER">
+        <logicalFolder name="textures" displayName="textures" projectFiles="true">
           <itemPath>src/render_e/textures/CubeTexture.h</itemPath>
           <itemPath>src/render_e/textures/PNGFileTextureDataSource.h</itemPath>
           <itemPath>src/render_e/textures/Texture2D.h</itemPath>
@@ -36,19 +29,20 @@
         <itemPath>src/render_e/Camera.h</itemPath>
         <itemPath>src/render_e/Component.h</itemPath>
         <itemPath>src/render_e/FBXLoader.h</itemPath>
+        <itemPath>src/render_e/Light.h</itemPath>
         <itemPath>src/render_e/Material.h</itemPath>
         <itemPath>src/render_e/Mesh.h</itemPath>
         <itemPath>src/render_e/MeshComponent.h</itemPath>
         <itemPath>src/render_e/MeshFactory.h</itemPath>
         <itemPath>src/render_e/RenderBase.h</itemPath>
         <itemPath>src/render_e/SceneObject.h</itemPath>
+        <itemPath>src/render_e/SceneXMLParser.h</itemPath>
         <itemPath>src/render_e/Transform.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
-                   projectFiles="true"
-                   kind="SOURCE_LOGICAL_FOLDER">
+                   projectFiles="true">
       <itemPath>shader-src/buggy.fs</itemPath>
       <itemPath>shader-src/buggy.vs</itemPath>
       <itemPath>shader-src/diffuse-color.fs</itemPath>
@@ -64,13 +58,9 @@
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
-                   projectFiles="true"
-                   kind="SOURCE_LOGICAL_FOLDER">
+                   projectFiles="true">
       <logicalFolder name="render_e" displayName="render_e" projectFiles="true">
-        <logicalFolder name="math"
-                       displayName="math"
-                       projectFiles="true"
-                       kind="SOURCE_LOGICAL_FOLDER">
+        <logicalFolder name="math" displayName="math" projectFiles="true">
           <itemPath>src/render_e/math/Mathf.cpp</itemPath>
           <itemPath>src/render_e/math/Matrix44.cpp</itemPath>
           <itemPath>src/render_e/math/Quaternion.cpp</itemPath>
@@ -84,10 +74,7 @@
           <itemPath>src/render_e/shaders/ShaderDataSource.cpp</itemPath>
           <itemPath>src/render_e/shaders/ShaderFileDataSource.cpp</itemPath>
         </logicalFolder>
-        <logicalFolder name="textures"
-                       displayName="textures"
-                       projectFiles="true"
-                       kind="SOURCE_LOGICAL_FOLDER">
+        <logicalFolder name="textures" displayName="textures" projectFiles="true">
           <itemPath>src/render_e/textures/CubeTexture.cpp</itemPath>
           <itemPath>src/render_e/textures/PNGFileTextureDataSource.cpp</itemPath>
           <itemPath>src/render_e/textures/Texture2D.cpp</itemPath>
@@ -97,12 +84,14 @@
         <itemPath>src/render_e/Camera.cpp</itemPath>
         <itemPath>src/render_e/Component.cpp</itemPath>
         <itemPath>src/render_e/FBXLoader.cpp</itemPath>
+        <itemPath>src/render_e/Light.cpp</itemPath>
         <itemPath>src/render_e/Material.cpp</itemPath>
         <itemPath>src/render_e/Mesh.cpp</itemPath>
         <itemPath>src/render_e/MeshComponent.cpp</itemPath>
         <itemPath>src/render_e/MeshFactory.cpp</itemPath>
         <itemPath>src/render_e/RenderBase.cpp</itemPath>
         <itemPath>src/render_e/SceneObject.cpp</itemPath>
+        <itemPath>src/render_e/SceneXMLParser.cpp</itemPath>
         <itemPath>src/render_e/Transform.cpp</itemPath>
       </logicalFolder>
       <itemPath>src/main.cpp</itemPath>
@@ -161,11 +150,10 @@
           <architecture>2</architecture>
           <commandlineTool>g++</commandlineTool>
           <incDir>
-            <pElem>lib-include</pElem>
+            <pElem>lib-include/osx</pElem>
             <pElem>/Applications/Autodesk/FBXSDK20113_1/include/</pElem>
             <pElem>.</pElem>
           </incDir>
-          <commandLine>-arch x86_64 -arch x86_64</commandLine>
           <preprocessorList>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
@@ -176,6 +164,7 @@
             <linkerLibFileItem>lib/osx/libpng12.a</linkerLibFileItem>
             <linkerLibFileItem>lib/osx/libz.a</linkerLibFileItem>
             <linkerLibFileItem>/Applications/Autodesk/FBXSDK20113_1/lib/libfbxsdk_gcc4_ubd.a</linkerLibFileItem>
+            <linkerLibFileItem>lib/osx/libxerces-c.a</linkerLibFileItem>
           </linkerLibItems>
           <commandLine>-framework GLUT -framework OPENGL -lm -lstdc++ -liconv -fexceptions -lz -framework Carbon -framework SystemConfiguration</commandLine>
         </linkerTool>
@@ -209,6 +198,15 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>lib-include</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -216,6 +214,15 @@
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -269,10 +276,28 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -319,10 +344,28 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -423,10 +466,28 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -488,10 +549,28 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
@@ -551,10 +630,28 @@
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
           <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>
             <pElem>.</pElem>

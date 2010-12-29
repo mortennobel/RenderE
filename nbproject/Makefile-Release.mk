@@ -25,6 +25,7 @@ PROC=proc
 CND_PLATFORM=GNU-MacOSX
 CND_CONF=Release
 CND_DISTDIR=dist
+CND_BUILDDIR=build
 
 # Include project Makefile
 include Makefile
@@ -51,7 +52,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/render_e/textures/PNGFileTextureDataSource.o \
 	${OBJECTDIR}/png_texture.o \
 	${OBJECTDIR}/src/render_e/Transform.o \
+	${OBJECTDIR}/src/render_e/SceneXMLParser.o \
 	${OBJECTDIR}/src/render_e/Material.o \
+	${OBJECTDIR}/src/render_e/Light.o \
 	${OBJECTDIR}/src/render_e/textures/Texture2D.o \
 	${OBJECTDIR}/src/render_e/textures/CubeTexture.o \
 	${OBJECTDIR}/src/render_e/textures/TextureDataSource.o \
@@ -180,10 +183,20 @@ ${OBJECTDIR}/src/render_e/Transform.o: src/render_e/Transform.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Transform.o src/render_e/Transform.cpp
 
+${OBJECTDIR}/src/render_e/SceneXMLParser.o: src/render_e/SceneXMLParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneXMLParser.o src/render_e/SceneXMLParser.cpp
+
 ${OBJECTDIR}/src/render_e/Material.o: src/render_e/Material.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Material.o src/render_e/Material.cpp
+
+${OBJECTDIR}/src/render_e/Light.o: src/render_e/Light.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Light.o src/render_e/Light.cpp
 
 ${OBJECTDIR}/src/render_e/textures/Texture2D.o: src/render_e/textures/Texture2D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e/textures
@@ -251,31 +264,31 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newtestclass.o ${TESTDIR}/tests/newtes
 ${TESTDIR}/tests/newtestclass1.o: tests/newtestclass1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass1.o tests/newtestclass1.cpp
 
 
 ${TESTDIR}/tests/newtestrunner1.o: tests/newtestrunner1.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner1.o tests/newtestrunner1.cpp
 
 
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
 ${TESTDIR}/tests/newtestclass.o: tests/newtestclass.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestclass.o tests/newtestclass.cpp
 
 
 ${TESTDIR}/tests/newtestrunner.o: tests/newtestrunner.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
+	$(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -I. -MMD -MP -MF $@.d -o ${TESTDIR}/tests/newtestrunner.o tests/newtestrunner.cpp
 
 
 ${OBJECTDIR}/src/render_e/Component_nomain.o: ${OBJECTDIR}/src/render_e/Component.o src/render_e/Component.cpp 
@@ -499,6 +512,19 @@ ${OBJECTDIR}/src/render_e/Transform_nomain.o: ${OBJECTDIR}/src/render_e/Transfor
 	    ${CP} ${OBJECTDIR}/src/render_e/Transform.o ${OBJECTDIR}/src/render_e/Transform_nomain.o;\
 	fi
 
+${OBJECTDIR}/src/render_e/SceneXMLParser_nomain.o: ${OBJECTDIR}/src/render_e/SceneXMLParser.o src/render_e/SceneXMLParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/SceneXMLParser.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/SceneXMLParser_nomain.o src/render_e/SceneXMLParser.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/SceneXMLParser.o ${OBJECTDIR}/src/render_e/SceneXMLParser_nomain.o;\
+	fi
+
 ${OBJECTDIR}/src/render_e/Material_nomain.o: ${OBJECTDIR}/src/render_e/Material.o src/render_e/Material.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src/render_e
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/Material.o`; \
@@ -510,6 +536,19 @@ ${OBJECTDIR}/src/render_e/Material_nomain.o: ${OBJECTDIR}/src/render_e/Material.
 	    $(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Material_nomain.o src/render_e/Material.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/src/render_e/Material.o ${OBJECTDIR}/src/render_e/Material_nomain.o;\
+	fi
+
+${OBJECTDIR}/src/render_e/Light_nomain.o: ${OBJECTDIR}/src/render_e/Light.o src/render_e/Light.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/render_e
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/src/render_e/Light.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -DRENDER_E_PNG -I. -I. -I. -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/render_e/Light_nomain.o src/render_e/Light.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/src/render_e/Light.o ${OBJECTDIR}/src/render_e/Light_nomain.o;\
 	fi
 
 ${OBJECTDIR}/src/render_e/textures/Texture2D_nomain.o: ${OBJECTDIR}/src/render_e/textures/Texture2D.o src/render_e/textures/Texture2D.cpp 
