@@ -498,7 +498,7 @@ public:
     void endElement(const XMLCh * const name) {
         assert(!state.empty());
         state.pop();
-        if (state.top()==SCENEGRAPH && !sceneObjectStack.empty()){
+        if (!state.empty() && state.top()==SCENEGRAPH && !sceneObjectStack.empty()){
             sceneObjectStack.pop();
         }
     }

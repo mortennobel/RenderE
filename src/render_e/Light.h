@@ -13,7 +13,7 @@
 
 namespace render_e {
 
-enum LightType {
+enum LightType{
     PointLight
 };
 
