@@ -36,6 +36,11 @@ public:
     void SetRenderMode(RenderMode renderMode);
     void SetBackfaceCulling(bool enabled);
 
+    void PrintDebug();
+    
+    std::vector<SceneObject*> *GetSceneObjects() { return &sceneObjects; }
+    std::vector<SceneObject*> *GetCameras() { return &cameras; }
+    
     /**
      * Singleton pattern
      * @return the render base instance

@@ -32,7 +32,7 @@
 
 // define xerces namespace
 XERCES_CPP_NAMESPACE_USE
-        using namespace std;
+using namespace std;
 
 
 namespace render_e {
@@ -137,6 +137,8 @@ public:
                     shaderName.append(attValue);
                 } else if (stringEqual("file", attName)) {
                     file.append(attValue);
+                } else {
+                    cout << "Unknown shader attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -166,6 +168,8 @@ public:
                     textureName.append(attValue);
                 } else if (stringEqual("file", attName)) {
                     file.append(attValue);
+                } else {
+                    cout << "Unknown texture2d attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -193,6 +197,8 @@ public:
                     back.append(attValue);
                 } else if (stringEqual("front", attName)) {
                     front.append(attValue);
+                } else {
+                    cout << "Unknown cubetexture attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -220,17 +226,20 @@ public:
                     matName.append(attValue);
                 } else if (stringEqual("shader", attName)) {
                     shader.append(attValue);
+                } else {
+                    cout << "Unknown attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
-            Shader *shaderObj = shaders[shader];
-            if (shaderObj == NULL) {
-                cerr << "Shader " << shader << " not found" << endl;
-            }
-            material = new Material(shaderObj);
             
-            materials[matName] = material;
+            map<string, Shader*>::iterator iter = shaders.find(shader);
+            if (iter == shaders.end()) {
+                cout << "Cannot find shader " << shader << endl;
+            } else {
+                material = new Material(iter->second);
+                materials[matName] = material;
+            }
         } else if (stringEqual("parameter", message)) {
             assert(material != NULL);
             string parameterName;
@@ -255,6 +264,8 @@ public:
                 } else if (stringEqual("float", attName)) {
                     float f = stringToFloat(attValue);
                     material->SetFloat(parameterName, f);
+                } else {
+                    cout << "Unknown parameter attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -269,7 +280,7 @@ public:
             string objectName;
             Vector3 position;
             Vector3 rotation;
-            Vector3 scale;
+            Vector3 scale(1,1,1);
             string parent;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
@@ -284,6 +295,8 @@ public:
                     scale = stringToVector3(attValue);
                 } else if (stringEqual("parent", attName)) {
                     parent.append(attValue);
+                } else {
+                    cout << "Unknown object attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -292,6 +305,7 @@ public:
             sceneObject->GetTransform().SetPosition(position);
             sceneObject->GetTransform().SetRotation(rotation);
             sceneObject->GetTransform().SetScale(scale);
+            sceneObject->SetName(objectName);
             if (objectName.length() > 0 && parent.length() > 0){
                 parentMap[objectName] = parent;
             }
@@ -303,101 +317,114 @@ public:
     void parseComponents(const XMLCh * const name, AttributeList& attributes, char* message) {
         if (stringEqual("camera", message)) {
             Camera *cam = new Camera();
-            cout << "Todo setup camera"<<endl;
+            bool projection = true;
+            float fieldOfView = 40.0f;
+            float aspect = 1.0f;
+            float nearPlane = 0.1f;
+            float farPlane = 1000.0f;
+            float left = -1;
+            float right = 1;
+            float bottom = -1;
+            float top = 1;
+            Vector4 clearColor(0,0,0,1);
+            for (int i = 0; i < attributes.getLength(); i++) {
+                char *attName = XMLString::transcode(attributes.getName(i));
+                char *attValue = XMLString::transcode(attributes.getValue(i));
+
+                if (stringEqual("type", attName) && stringEqual("orthographic",attValue)){
+                    projection = false;
+                } else if (stringEqual("fieldOfView",attName)){
+                    fieldOfView = stringToFloat(attValue);
+                } else if (stringEqual("aspect",attName)){
+                    aspect = stringToFloat(attValue);
+                } else if (stringEqual("nearPlane",attName)){
+                    nearPlane = stringToFloat(attValue);
+                } else if (stringEqual("farPlane",attName)){
+                    farPlane = stringToFloat(attValue);
+                } else if (stringEqual("left",attName)){
+                    left = stringToFloat(attValue);
+                } else if (stringEqual("right",attName)){
+                    right = stringToFloat(attValue);
+                } else if (stringEqual("bottom",attName)){
+                    bottom = stringToFloat(attValue);
+                } else if (stringEqual("top",attName)){
+                    top = stringToFloat(attValue);
+                } else if (stringEqual("nearPlane",attName)){
+                    nearPlane = stringToFloat(attValue);
+                } else if (stringEqual("farPlane",attName)){
+                    farPlane = stringToFloat(attValue);
+                } else if (stringEqual("clearColor",attName)){
+                    clearColor = stringToVector4(attValue);
+                } else {
+                    cout << "Unknown camera attribute name "<<attName<<endl;
+                }
+                XMLString::release(&attValue);
+                XMLString::release(&attName);
+            }
+            if (projection){
+                cam->SetProjection(fieldOfView, aspect, nearPlane,farPlane);
+            } else {
+                cam->SetOrthographic(left, right, bottom, top, nearPlane,farPlane);
+            }
+            cam->SetClearColor(clearColor);
             sceneObject->AddCompnent(cam);
-        /*} else if (stringEqual("mesh", message)) {
+        } else if (stringEqual("material", message)) {
+            string ref;
+            for (int i = 0; i < attributes.getLength(); i++) {
+                char *attName = XMLString::transcode(attributes.getName(i));
+                char *attValue = XMLString::transcode(attributes.getValue(i));
+                if (stringEqual("ref", attName)) {
+                    ref.append(attValue);
+                } else {
+                    cout << "Unknown material attribute name "<<attName<<endl;
+                }
+                XMLString::release(&attValue);
+                XMLString::release(&attName);
+            }
+            if (ref.length()>0){
+                map<string, Material*>::iterator iter = materials.find(ref);
+                if (iter == materials.end()) {
+                    cout << "Cannot find material " << ref << endl;
+                } else {
+                    sceneObject->AddCompnent(iter->second);
+                }
+            } else {
+                cout << "Warn material ref not set"<<endl;
+            }
+        } else if (stringEqual("mesh", message)) {
             string meshName;
-            Vector3 position;
-            Vector3 rotation;
-            Vector3 scale;
-            string material;
+            string primitive;
             string fbxfile;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
-                if (stringEqual("name", attName)) {
-                    meshName.append(attValue);
-                } else if (stringEqual("position", attName)) {
-                    position = stringToVector3(attValue);
-                } else if (stringEqual("rotation", attName)) {
-                    rotation = stringToVector3(attValue);
-                } else if (stringEqual("scale", attName)) {
-                    scale = stringToVector3(attValue);
-                } else if (stringEqual("material", attName)) {
-                    material.append(attValue);
+                if (stringEqual("primitive", attName)) {
+                    primitive.append(attValue);
                 } else if (stringEqual("fbxfile", attName)) {
                     fbxfile.append(attValue);
+                } else {
+                    cout << "Unknown attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
-            SceneObject *sceneObject = fbxLoader.Load(fbxfile.c_str());
-            if (sceneObject ==NULL){
-                cout <<"Cannot load "<<fbxfile<<endl;
-                return;
-            }
-            
-            position = position+sceneObject->GetTransform().GetPosition();
-            sceneObject->GetTransform().SetPosition(position);
-            
-            if (scale != Vector3::Zero()){
-                scale = scale*sceneObject->GetTransform().GetScale();
-                sceneObject->GetTransform().SetScale(scale);
-            }
-            
-            if (rotation != Vector3::Zero()){
-                Quaternion rotation = Quaternion::MakeFromEuler(rotation.x*Mathf::DEGREE_TO_RADIAN, rotation.y*Mathf::DEGREE_TO_RADIAN, rotation.z*Mathf::DEGREE_TO_RADIAN);
-                rotation = rotation * sceneObject->GetTransform().GetRotation();
-                sceneObject->GetTransform().SetRotation(rotation);
-            }
-            
-            renderBase->AddSceneObject(sceneObject);
-            
-        } else if (stringEqual("cube", message)) {
-            string meshName;
-            Vector3 position;
-            Vector3 rotation;
-            Vector3 scale;
-            string material;
-            for (int i = 0; i < attributes.getLength(); i++) {
-                char *attName = XMLString::transcode(attributes.getName(i));
-                char *attValue = XMLString::transcode(attributes.getValue(i));
-                if (stringEqual("name", attName)) {
-                    meshName.append(attValue);
-                } else if (stringEqual("position", attName)) {
-                    position = stringToVector3(attValue);
-                } else if (stringEqual("rotation", attName)) {
-                    rotation = stringToVector3(attValue);
-                } else if (stringEqual("scale", attName)) {
-                    scale = stringToVector3(attValue);
-                } else if (stringEqual("material", attName)) {
-                    material.append(attValue);
+            Mesh *mesh = NULL;
+            if (primitive.length() > 0){
+                if (stringEqual("cube", primitive.c_str())){
+                    mesh = MeshFactory::CreateCube();
+                } else if (stringEqual("tetrahedron", primitive.c_str())){
+                    mesh = MeshFactory::CreateTetrahedron();
+                } else {
+                    cout << "Unknown mesh.primitive name "<<primitive.c_str()<<endl;
                 }
-                XMLString::release(&attValue);
-                XMLString::release(&attName);
+            } else if (fbxfile.length() > 0){
+                cout << "Todo : implement fbx import"<<endl;
             }
-            Mesh *mesh = MeshFactory::CreateCube();
-            SceneObject *cubeObject = new SceneObject();
-            MeshComponent *meshComponent = new MeshComponent();
-            meshComponent->SetMesh(mesh);
-            cubeObject->AddCompnent(meshComponent);
-            
-            position = position+cubeObject->GetTransform().GetPosition();
-            cubeObject->GetTransform().SetPosition(position);
-            
-            if (scale != Vector3::Zero()){
-                scale = scale*cubeObject->GetTransform().GetScale();
-                cubeObject->GetTransform().SetScale(scale);
+            if (mesh != NULL){
+                MeshComponent *meshComponent = new MeshComponent();
+                meshComponent->SetMesh(mesh);
+                sceneObject->AddCompnent(meshComponent);
             }
-            
-            if (rotation != Vector3::Zero()){
-                Quaternion rotation = Quaternion::MakeFromEuler(rotation.x*Mathf::DEGREE_TO_RADIAN, rotation.y*Mathf::DEGREE_TO_RADIAN, rotation.z*Mathf::DEGREE_TO_RADIAN);
-                rotation = rotation * cubeObject->GetTransform().GetRotation();
-                cubeObject->GetTransform().SetRotation(rotation);
-            }
-            
-            renderBase->AddSceneObject(cubeObject);
-            */
         } else if (stringEqual("light", message)){
             string lightName;
             Light *light = new Light();
@@ -423,6 +450,8 @@ public:
                     } else {
                         cout << "Unknown lighttype "<<attValue << endl;
                     }
+                } else {
+                    cout << "Unknown light attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);

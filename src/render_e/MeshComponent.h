@@ -24,6 +24,9 @@ public:
     void Render();
     void SetMesh(Mesh *mesh);
     void Release();
+#ifdef RENDER_E_NO_VBO  
+    void DebugRendering();
+#endif
 private:
     unsigned int vboName;
     unsigned int vboElements;
@@ -38,7 +41,6 @@ private:
     int stride;
     unsigned short indexType;
 #ifdef RENDER_E_NO_VBO  
-    void DebugRendering();
     void *indices;
     unsigned char *buffer;
 #endif

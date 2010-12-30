@@ -23,6 +23,7 @@ public:
     Camera *GetCamera();
     MeshComponent *GetMesh();
     void AddCompnent(Component* component);
+    void RemoveComponent(Component* component);
     Material *GetMaterial();
     Light *GetLight();
     

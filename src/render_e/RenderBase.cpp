@@ -169,4 +169,30 @@ void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
 bool RenderBase::GetDoubleSpeedZOnlyRendering(){
     return doubleSpeedZOnlyRendering;
 }
+
+void RenderBase::PrintDebug(){
+    using namespace std;
+    cout << "Scene objects: "<<sceneObjects.size()<<endl;
+    for (int i=0;i<sceneObjects.size();i++){
+        cout <<sceneObjects[i]->GetName()<<endl;
+        Vector3 position = sceneObjects[i]->GetTransform().GetPosition();
+        cout <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
+        Quaternion q = sceneObjects[i]->GetTransform().GetRotation();
+        cout <<"Rotation "<<q.x<<" "<<q.y<<" "<<q.z<<" "<<q.w<<endl;
+        Vector3 scale = sceneObjects[i]->GetTransform().GetScale();
+        cout <<"Scale "<<(int)scale[0]<<" "<<(int)scale[1]<<" "<<(int)scale[2]<<" "<<endl;
+        
+    }
+    
+    cout << "Camera objects: "<<cameras.size()<<endl;
+    for (int i=0;i<cameras.size();i++){
+        cout <<cameras[i]->GetName()<<endl;
+    }
+    
+    cout << "lights objects: "<<lights.size()<<endl;
+    for (int i=0;i<lights.size();i++){
+        cout <<lights[i]->GetName()<<endl;
+    }
+    
+}
 }

@@ -201,6 +201,7 @@ void transformTest(){
 }
 
 void initWorld() {
+    /*
     Camera *camera = new Camera();
     camera->SetProjection(40, 1, 0.1,1000);
     cameraContainer->AddCompnent(camera);
@@ -214,6 +215,7 @@ void initWorld() {
     renderBase->AddSceneObject(meshTeapotContainer);
     meshTeapot->SetMesh(MeshFactory::CreateCube());
     meshTeapotContainer->AddCompnent(meshTeapot);
+    meshTeapotContainer->SetName("Blue cube");
     
     ShaderFileDataSource sfs;
     char name2[] = "diffuse";
@@ -223,10 +225,27 @@ void initWorld() {
     Material *mat = new Material(b);
     meshTeapotContainer->AddCompnent(mat); 
     mat->SetVector4("color", Vector4(1,0,0,1));
-    /*
+    */
     SceneXMLParser parser;
     parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
-     * */
+    cameraContainer = (*(renderBase->GetCameras()))[0];
+      
+    vector<SceneObject*> *sceneObjects = renderBase->GetSceneObjects();
+    for (vector<SceneObject*>::iterator iter = sceneObjects->begin();iter != sceneObjects->end();iter++){
+        SceneObject* sceneObj = *iter;
+        if (sceneObj->GetName().compare("Blue cube")==0){
+            cout<<"Found blue cube"<<endl;
+            cout<<"Mesh     "<<sceneObj->GetMesh()<<endl;
+            cout<<"Material "<<sceneObj->GetMaterial()<<endl;
+            
+            MeshComponent *meshComp = sceneObj->GetMesh();
+            assert(meshComp != NULL);
+            meshComp->DebugRendering();
+            
+        }
+    }
+    
+    renderBase->PrintDebug();
 }
 
 void setMatrial (Shader *shader, SceneObject *so){

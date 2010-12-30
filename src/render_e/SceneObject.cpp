@@ -47,6 +47,32 @@ const std::vector<Component*> * SceneObject::GetComponents() const{
     return &components;
 }
 
+void SceneObject::RemoveComponent(Component* component){
+    std::vector<Component*>::iterator iter = find(components.begin(), components.end(), component);
+    if (iter != components.end()){
+        components.erase(iter);
+        switch (component->GetComponentType()){
+            case TransformType:
+                assert(false); // cannot have multiple 
+                return;
+                break;
+            case MeshType:
+                mesh = NULL;
+                break;
+            case CameraType:
+                camera = NULL;
+                break;
+            case MaterialType:
+                material = NULL;
+                break;
+            case LightComponentType:
+                light = NULL;
+                break;
+        }
+    }
+    
+}
+
 void SceneObject::AddCompnent(Component* component){
     assert(component->GetOwner()==NULL); // Each component can only have one owner
     switch (component->GetComponentType()){

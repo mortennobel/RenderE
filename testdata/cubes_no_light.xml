@@ -1,27 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <scene>
     <shaders>
-        <shader name="diffuse-color" file="diffuse"/>
+        <shader name="diffuse" file="diffuse"/>
     </shaders>
     <materials>
-        <material name="Blue" shader="diffuse-color">
-            <parameter name="" vector3="0,0,1"/>
+        <material name="Blue" shader="diffuse">
+            <parameter name="color" vector4="0,0,1,1"/>
         </material>
-        <material name="Red" shader="diffuse-color">
-            <parameter name="" vector3="1,0,0"/>
+        <!-- <material name="Blue1" shader="diffuse">
+            <parameter name="color" vector3="0,0,1"/>
         </material>
+        <material name="Blue2" shader="diffuse">
+            <parameter name="color" vector3="0,0,1"/>
+        </material>
+        <material name="Blue3" shader="diffuse">
+            <parameter name="color" vector3="0,0,1"/>
+        </material>
+        <material name="Blue4" shader="diffuse">
+            <parameter name="color" vector3="0,0,1"/>
+        </material>
+        
+        <material name="Red" shader="diffuse">
+            <parameter name="color" vector3="1,0,0"/>
+        </material> -->
     </materials>
     <scenegraph>
         <!-- <light name="" type="point" position="" ambient="" diffuse="" specular="" constantAttenuation="" linearAttenuation="" quadraticAttenuation=""/> -->
-        <object name="MainCamera" position="0,0,-5">
-            <camera/>
+        <object name="MainCamera" position="0,0,15">
+            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
+            <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
         </object>
         <object name="Blue cube" position="0,0,0" rotation="0,0,0" scale="1,1,1">
-            <mesh material="Blue" primitive="cube"/> 
+            <mesh primitive="cube"/> 
+            <material ref="Blue"/>
+        </object>
+<!--        
+        <object name="Blue cube" position="0,0,-10" rotation="0,0,0" scale="1,1,1">
+            <mesh primitive="cube"/> 
+            <material ref="Blue1"/>
+        </object>
+        
+        <object name="Blue cube" position="-10,0,-10" rotation="0,0,0" scale="1,1,1">
+            <mesh primitive="cube"/> 
+            <material ref="Blue2"/>
+        </object>
+        
+        
+        <object name="Blue cube" position="-10,0,0" rotation="0,0,0" scale="1,1,1">
+            <mesh primitive="cube"/> 
+            <material ref="Blue3"/>
         </object>
         
         <object name="Red cube" position="2,2,2" rotation="0,45,0" scale="1.5,1.5,1.5">
-            <mesh material="Red" primitive="cube"/>
+            <mesh primitive="cube"/>
+            <material ref="Red"/>
         </object>
+        -->
+        
     </scenegraph>
 </scene>
