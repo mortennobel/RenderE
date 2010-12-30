@@ -28,6 +28,7 @@
 #include "FBXLoader.h"
 #include "MeshFactory.h"
 #include "Light.h"
+#include "RenderBase.h"
 
 // define xerces namespace
 XERCES_CPP_NAMESPACE_USE
@@ -84,7 +85,7 @@ Vector2 stringToVector2(char *s1) {
         index++;
         pch = strtok(NULL, ",");
     }
-
+ 
     return f;
 }
 
@@ -93,7 +94,9 @@ enum MyParserState {
     SHADERS,
     TEXTURES,
     MATERIALS,
-    SCENEGRAPH
+    SCENEOBJECTS,
+    SCENEOBJECT,
+    COMPONENT
 };
 
 // internal helper classes
@@ -101,7 +104,7 @@ enum MyParserState {
 class MySAXHandler : public HandlerBase {
 public:
 
-    MySAXHandler() : scene(NULL) {
+    MySAXHandler(RenderBase *renderBase) : renderBase(renderBase), sceneObject(NULL) {
     }
     
     void error(char *tagName){
@@ -116,7 +119,7 @@ public:
         } else if (stringEqual("textures", message)) {
             state.push(TEXTURES);
         } else if (stringEqual("scenegraph", message)) {
-            state.push(SCENEGRAPH);
+            state.push(SCENEOBJECTS);
         } else {
             error(message);
         }
@@ -143,6 +146,7 @@ public:
             if (status==SHADER_OK){
                 shader->SetName(shaderName);
                 shaders[shaderName] = shader;
+                cout << "Loaded shader "<<shaderName<<endl;
             } else {
                 cout << "Cannot load shader "<<file<<endl;
             }
@@ -214,7 +218,7 @@ public:
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
                     matName.append(attValue);
-                } else if (stringEqual("file", attName)) {
+                } else if (stringEqual("shader", attName)) {
                     shader.append(attValue);
                 }
                 XMLString::release(&attValue);
@@ -225,7 +229,7 @@ public:
                 cerr << "Shader " << shader << " not found" << endl;
             }
             material = new Material(shaderObj);
-            material->SetName(matName);
+            
             materials[matName] = material;
         } else if (stringEqual("parameter", message)) {
             assert(material != NULL);
@@ -260,35 +264,48 @@ public:
         }
     }
 
-    void parseSceneGraph(const XMLCh * const name, AttributeList& attributes, char* message) {
-        if (stringEqual("camera", message)) {
-            string cameraName;
+    void parseSceneObjects(const XMLCh * const name, AttributeList& attributes, char* message) {
+        if (stringEqual("object", message)) {
+            string objectName;
             Vector3 position;
             Vector3 rotation;
+            Vector3 scale;
+            string parent;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
-                    cameraName.append(attValue);
+                    objectName.append(attValue);
                 } else if (stringEqual("position", attName)) {
                     position = stringToVector3(attValue);
                 } else if (stringEqual("rotation", attName)) {
                     rotation = stringToVector3(attValue);
+                } else if (stringEqual("scale", attName)) {
+                    scale = stringToVector3(attValue);
+                } else if (stringEqual("parent", attName)) {
+                    parent.append(attValue);
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
-            Camera *cam = new Camera();
-            SceneObject *sceneObject = new SceneObject();
-            sceneObject->AddCompnent(cam);
+            sceneObject = new SceneObject();
             sceneObject->GetTransform().SetPosition(position);
             sceneObject->GetTransform().SetRotation(rotation);
-            scene->AddChild(sceneObject);
-            if (!sceneObjectStack.empty()){
-                sceneObjectStack.top()->AddChild(sceneObject);
+            sceneObject->GetTransform().SetScale(scale);
+            if (objectName.length() > 0 && parent.length() > 0){
+                parentMap[objectName] = parent;
             }
-            sceneObjectStack.push(sceneObject);
-        } else if (stringEqual("mesh", message)) {
+        } else {
+            error(message);
+        }
+    }
+    
+    void parseComponents(const XMLCh * const name, AttributeList& attributes, char* message) {
+        if (stringEqual("camera", message)) {
+            Camera *cam = new Camera();
+            cout << "Todo setup camera"<<endl;
+            sceneObject->AddCompnent(cam);
+        /*} else if (stringEqual("mesh", message)) {
             string meshName;
             Vector3 position;
             Vector3 rotation;
@@ -334,11 +351,8 @@ public:
                 sceneObject->GetTransform().SetRotation(rotation);
             }
             
-            scene->AddChild(sceneObject);
-            if (!sceneObjectStack.empty()){
-                sceneObjectStack.top()->AddChild(sceneObject);
-            }
-            sceneObjectStack.push(sceneObject);
+            renderBase->AddSceneObject(sceneObject);
+            
         } else if (stringEqual("cube", message)) {
             string meshName;
             Vector3 position;
@@ -382,20 +396,13 @@ public:
                 cubeObject->GetTransform().SetRotation(rotation);
             }
             
-            scene->AddChild(cubeObject);
-            if (!sceneObjectStack.empty()){
-                SceneObject *so = sceneObjectStack.top();
-                so->AddChild(cubeObject);
-            }
-            sceneObjectStack.push(cubeObject);
+            renderBase->AddSceneObject(cubeObject);
+            */
         } else if (stringEqual("light", message)){
             string lightName;
             Light *light = new Light();
             
             string lightType;
-            Vector3 position;
-            Vector3 rotation;
-            Vector3 scale;
             
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
@@ -404,12 +411,6 @@ public:
                     lightName.append(attValue);
                 } else if (stringEqual("type", attName)) {
                     lightType.append(attValue);
-                } else if (stringEqual("position", attName)) {
-                    position = stringToVector3(attValue);
-                } else if (stringEqual("rotation", attName)) {
-                    rotation = stringToVector3(attValue);
-                } else if (stringEqual("scale", attName)) {
-                    scale = stringToVector3(attValue);
                 } else if (stringEqual("ambient", attName)) {
                     light->SetAmbient(stringToVector3(attValue));
                 } else if (stringEqual("diffuse", attName)) {
@@ -427,69 +428,7 @@ public:
                 XMLString::release(&attName);
             }
             
-            SceneObject *cubeObject = new SceneObject();
-            MeshComponent *meshComponent = new MeshComponent();
-            cubeObject->AddCompnent(meshComponent);
-            
-            cubeObject->GetTransform().SetPosition(position);
-            
-            if (scale != Vector3::Zero()){
-                cubeObject->GetTransform().SetScale(scale);
-            }
-            
-            if (rotation != Vector3::Zero()){
-                Quaternion rotation = Quaternion::MakeFromEuler(rotation.x*Mathf::DEGREE_TO_RADIAN, rotation.y*Mathf::DEGREE_TO_RADIAN, rotation.z*Mathf::DEGREE_TO_RADIAN);
-                cubeObject->GetTransform().SetRotation(rotation);
-            }
-            
-            scene->AddChild(cubeObject);
-            if (!sceneObjectStack.empty()){
-                SceneObject *so = sceneObjectStack.top();
-                so->AddChild(cubeObject);
-            }
-            sceneObjectStack.push(cubeObject);
-        } else if (stringEqual("group", message)){
-            string meshName;
-            Vector3 position;
-            Vector3 rotation;
-            Vector3 scale;
-            for (int i = 0; i < attributes.getLength(); i++) {
-                char *attName = XMLString::transcode(attributes.getName(i));
-                char *attValue = XMLString::transcode(attributes.getValue(i));
-                if (stringEqual("name", attName)) {
-                    meshName.append(attValue);
-                } else if (stringEqual("position", attName)) {
-                    position = stringToVector3(attValue);
-                } else if (stringEqual("rotation", attName)) {
-                    rotation = stringToVector3(attValue);
-                } else if (stringEqual("scale", attName)) {
-                    scale = stringToVector3(attValue);
-                }
-                XMLString::release(&attValue);
-                XMLString::release(&attName);
-            }
-            
-            SceneObject *cubeObject = new SceneObject();
-            MeshComponent *meshComponent = new MeshComponent();
-            cubeObject->AddCompnent(meshComponent);
-            
-            cubeObject->GetTransform().SetPosition(position);
-            
-            if (scale != Vector3::Zero()){
-                cubeObject->GetTransform().SetScale(scale);
-            }
-            
-            if (rotation != Vector3::Zero()){
-                Quaternion rotation = Quaternion::MakeFromEuler(rotation.x*Mathf::DEGREE_TO_RADIAN, rotation.y*Mathf::DEGREE_TO_RADIAN, rotation.z*Mathf::DEGREE_TO_RADIAN);
-                cubeObject->GetTransform().SetRotation(rotation);
-            }
-            
-            scene->AddChild(cubeObject);
-            if (!sceneObjectStack.empty()){
-                SceneObject *so = sceneObjectStack.top();
-                so->AddChild(cubeObject);
-            }
-            sceneObjectStack.push(cubeObject);
+            sceneObject->AddCompnent(light);
         } else {
             error(message);
         }
@@ -497,9 +436,10 @@ public:
 
     void endElement(const XMLCh * const name) {
         assert(!state.empty());
+        MyParserState prevState = state.top();
         state.pop();
-        if (!state.empty() && state.top()==SCENEGRAPH && !sceneObjectStack.empty()){
-            sceneObjectStack.pop();
+        if (prevState == SCENEOBJECT){
+            renderBase->AddSceneObject(sceneObject);
         }
     }
 
@@ -508,8 +448,6 @@ public:
         char* message = XMLString::transcode(name);
         
         if (state.empty()) {
-            assert(scene == NULL);
-            scene = new SceneObject();
             state.push(SCENE);
         } else {
             cout<<state.top()<<endl;
@@ -529,9 +467,13 @@ public:
                     parseMaterials(name, attributes, message);
                     state.push(MATERIALS); // push same value to stack
                     break;
-                case SCENEGRAPH:
-                    parseSceneGraph(name, attributes, message);
-                    state.push(SCENEGRAPH); // push same value to stack
+                case SCENEOBJECTS:
+                    parseSceneObjects(name, attributes, message);
+                    state.push(SCENEOBJECT); // push same value to stack
+                    break;
+                case SCENEOBJECT:
+                    parseComponents(name, attributes, message);
+                    state.push(COMPONENT); // push same value to stack
                     break;
             }
         }
@@ -547,15 +489,16 @@ public:
         XMLString::release(&message);
     }
 
-    SceneObject *scene;
+    SceneObject *sceneObject;
+    RenderBase *renderBase;
     stack<MyParserState> state;
-    stack<SceneObject*> sceneObjectStack;
 
     FBXLoader fbxLoader;
     ShaderFileDataSource shaderLoader;
     map<string, Shader*> shaders;
     map<string, TextureBase*> textures;
     map<string, Material*> materials;
+    map<string, string> parentMap;
 };
 
 SceneXMLParser::SceneXMLParser() {
@@ -575,11 +518,11 @@ SceneXMLParser::~SceneXMLParser() {
     XMLPlatformUtils::Terminate();
 }
 
-SceneObject *SceneXMLParser::LoadScene(const char* filename) {
+void SceneXMLParser::LoadScene(const char* filename, RenderBase *renderBase) {
     SAXParser* parser = new SAXParser();
     parser->setDoNamespaces(true); // optional
 
-    MySAXHandler* docHandler = new MySAXHandler();
+    MySAXHandler* docHandler = new MySAXHandler(renderBase);
     ErrorHandler* errHandler = (ErrorHandler*) docHandler;
     parser->setDocumentHandler(docHandler);
     parser->setErrorHandler(errHandler);
@@ -591,21 +534,19 @@ SceneObject *SceneXMLParser::LoadScene(const char* filename) {
         cout << "Exception message is: \n"
                 << message << "\n";
         XMLString::release(&message);
-        return NULL;
+        return;
     } catch (const SAXParseException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
         cout << "Exception message is: \n"
                 << message << "\n";
         XMLString::release(&message);
-        return NULL;
+        return;
     } catch (...) {
         cout << "Unexpected Exception \n";
-        return NULL;
+        return;
     }
-    SceneObject *scene = docHandler->scene;
     delete parser;
     delete docHandler;
-    return scene;
 }
 }
 

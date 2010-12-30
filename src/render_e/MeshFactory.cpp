@@ -114,7 +114,6 @@ Mesh *MeshFactory::CreateCube(){
     m->SetNormals(normals,4*6);
     m->SetColors(colors,4*6);
     m->SetIndices(indices,3*2*6);
-
     return m;
 }
 }

@@ -18,23 +18,48 @@
 #include "Component.h"
 
 namespace render_e {
+
+enum ShaderParamType{
+    SPT_FLOAT,
+    SPT_VECTOR2,
+    SPT_VECTOR3,
+    SPT_VECTOR4,
+    SPT_TEXTURE
+};
+
+struct ShaderParameters{
+    int id;
+    ShaderParamType paramType;
+    union ShaderValue {
+        float f[4];
+        int textureId; 
+    } shaderValue;
+};
+
 class Material : public Component{
 public:
     Material(Shader *shader);
     virtual ~Material();
     void Bind();
     
-    void SetVector2(std::string name, Vector2 vec);
-    void SetVector3(std::string name, Vector3 vec);
-    void SetVector4(std::string name, Vector4 vec);
-    void SetFloat(std::string name, float f);
-    void SetTexture(std::string name, TextureBase *texture);
+    bool SetVector2(std::string name, Vector2 vec);
+    bool SetVector3(std::string name, Vector3 vec);
+    bool SetVector4(std::string name, Vector4 vec);
+    bool SetFloat(std::string name, float f);
+    bool SetTexture(std::string name, TextureBase *texture);
+    
+    void SetName(std::string name) { this->name = name;}
+    std::string GetName() {return name; }
 private:
     Material(const Material& orig); // disallow copy constructor
     Material& operator = (const Material&); // disallow copy constructor
     
+    void AddParameter(ShaderParameters &param);
+    
     Shader *shader;
     std::vector<TextureBase*> textures;    
+    std::string name;
+    std::vector<ShaderParameters> parameters;
 };
 }
 #endif	/* MATERIAL_H */

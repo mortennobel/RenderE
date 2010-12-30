@@ -31,15 +31,12 @@ public:
     SceneObject *GetOwner();
     void SetOwner(SceneObject *owner);
     ComponentType GetComponentType (){ return componentType; }
-    void SetName(std::string name) { this->name = name;}
-    std::string GetName() {return name; }
 private:
     Component(const Component& orig); // disallow copy constructor
     Component& operator = (const Component&); // disallow copy constructor
     
     SceneObject *owner;
     ComponentType componentType;
-    std::string name;
 };
 
 }

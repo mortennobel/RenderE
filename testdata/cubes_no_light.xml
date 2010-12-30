@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <shaders>
+        <shader name="diffuse-color" file="diffuse"/>
+    </shaders>
+    <materials>
+        <material name="Blue" shader="diffuse-color">
+            <parameter name="" vector3="0,0,1"/>
+        </material>
+        <material name="Red" shader="diffuse-color">
+            <parameter name="" vector3="1,0,0"/>
+        </material>
+    </materials>
+    <scenegraph>
+        <!-- <light name="" type="point" position="" ambient="" diffuse="" specular="" constantAttenuation="" linearAttenuation="" quadraticAttenuation=""/> -->
+        <object name="MainCamera" position="0,0,-5">
+            <camera/>
+        </object>
+        <object name="Blue cube" position="0,0,0" rotation="0,0,0" scale="1,1,1">
+            <mesh material="Blue" primitive="cube"/> 
+        </object>
+        
+        <object name="Red cube" position="2,2,2" rotation="0,45,0" scale="1.5,1.5,1.5">
+            <mesh material="Red" primitive="cube"/>
+        </object>
+    </scenegraph>
+</scene>

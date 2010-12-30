@@ -100,6 +100,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
 
 void RenderBase::AddSceneObject(SceneObject *sceneObject){
 	assert(sceneObject != NULL);
+    
     sceneObjects.push_back(sceneObject);
     if (sceneObject->GetCamera() != NULL){
         cameras.push_back(sceneObject);

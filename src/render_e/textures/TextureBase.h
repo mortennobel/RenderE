@@ -31,6 +31,7 @@ public:
     void Unload();
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }
+    int GetTextureId() { return textureId; }
 protected:
     unsigned short textureType;
     unsigned int textureId;

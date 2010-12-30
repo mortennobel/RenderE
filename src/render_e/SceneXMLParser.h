@@ -12,13 +12,16 @@
 
 namespace render_e {
 
+// forward declaration
+class RenderBase;
+
 class SceneXMLParser {
 public:
     SceneXMLParser();
     
     virtual ~SceneXMLParser();
     
-    SceneObject *LoadScene(const char* filename);
+    void LoadScene(const char* filename, RenderBase *renderBase);
 private:
     SceneXMLParser(const SceneXMLParser& orig); // not allowed (no implementation)
 };

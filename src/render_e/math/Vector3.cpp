@@ -23,7 +23,7 @@ Vector3::Vector3(const Vector4 &vector)
 :x(vector[0]), y(vector[1]), z(vector[2])
 {}
 
-Vector3::Vector3(void){}
+Vector3::Vector3(void):x(0), y(0), z(0){}
 
 
 Vector3::~Vector3(void){}
@@ -56,7 +56,11 @@ float Vector3::Length() const{
 }
 
 void Vector3::NormalizeExact(){
-    double length = 1/sqrt(((double)x)*x+((double)y)*y+((double)z)*z);
+    double lengthSquarred = sqrt(((double)x)*x+((double)y)*y+((double)z)*z);
+    if (lengthSquarred){
+        return;
+    }
+    double length = 1/lengthSquarred;
     x = (float)(x/length);
     y = (float)(y/length);
     z = (float)(z/length);
@@ -64,7 +68,8 @@ void Vector3::NormalizeExact(){
 
 void Vector3::Normalize(){
     float lengthSqr = LengthSqr();
-    if (Mathf::Abs(lengthSqr-1.0f)>Mathf::EPSILON){
+    // performance optimization - only run if not 0 and not 1
+    if (lengthSqr != 0 && Mathf::Abs(lengthSqr-1.0f)>Mathf::EPSILON){
         float lFactor = 1/Mathf::Sqrt(lengthSqr);
         if (lFactor!=1){
             x *= lFactor;

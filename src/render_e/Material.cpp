@@ -7,6 +7,8 @@
 
 #include "Material.h"
 #include <iostream>
+#include <cassert>
+#include <GL/glew.h>
 
 using namespace std;
 
@@ -20,21 +22,109 @@ Material::~Material() {
 
 void Material::Bind(){
     shader->Bind();
+    
+    std::vector<ShaderParameters>::iterator iter =  parameters.begin();
+    for (;iter != parameters.end();iter++){
+        switch ((*iter).paramType){
+            case SPT_FLOAT:
+                glUniform1fv((*iter).id,1, (*iter).shaderValue.f);
+                break;
+            case SPT_VECTOR2:
+                glUniform2fv((*iter).id,1, (*iter).shaderValue.f);
+                break;
+            case SPT_VECTOR3:
+                glUniform3fv((*iter).id,1, (*iter).shaderValue.f);
+                break;
+            case SPT_VECTOR4:
+                glUniform4fv((*iter).id,1, (*iter).shaderValue.f);
+                break;
+            case SPT_TEXTURE:
+                glUniform1iv((*iter).id,1, &((*iter).shaderValue.textureId));
+                break;
+        }
+    }
 }
 
-void Material::SetVector2(std::string name, Vector2 vec){
-    cout<<"Not implemented"<<endl;
+void Material::AddParameter(ShaderParameters &param){
+    // replace a existing parameter
+    std::vector<ShaderParameters>::iterator iter = parameters.begin();
+    for (;iter != parameters.end();iter++){
+        if ((*iter).id == param.id){
+            (*iter).shaderValue.f[0] = param.shaderValue.f[0];
+            (*iter).shaderValue.f[1] = param.shaderValue.f[1];
+            (*iter).shaderValue.f[2] = param.shaderValue.f[2];
+            (*iter).shaderValue.f[3] = param.shaderValue.f[3];
+            assert ((*iter).paramType == param.paramType); // assume parameter type
+            return;
+        }
+    }
+    // parameter not found - add new
+    parameters.push_back(param);
 }
-void Material::SetVector3(std::string name, Vector3 vec){
-    cout<<"Not implemented"<<endl;
+
+bool Material::SetVector2(std::string name, Vector2 vec){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_VECTOR2;
+    param.shaderValue.f[0] = vec[0];
+    param.shaderValue.f[1] = vec[1];
+    AddParameter(param);
 }
-void Material::SetVector4(std::string name, Vector4 vec){
-    cout<<"Not implemented"<<endl;
+
+bool Material::SetVector3(std::string name, Vector3 vec){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_VECTOR3;
+    param.shaderValue.f[0] = vec[0];
+    param.shaderValue.f[1] = vec[1];
+    param.shaderValue.f[2] = vec[2];
+    AddParameter(param);
 }
-void Material::SetFloat(std::string name, float f){
-    cout<<"Not implemented"<<endl;
+
+bool Material::SetVector4(std::string name, Vector4 vec){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_VECTOR4;
+    param.shaderValue.f[0] = vec[0];
+    param.shaderValue.f[1] = vec[1];
+    param.shaderValue.f[2] = vec[2];
+    param.shaderValue.f[3] = vec[3];
+    AddParameter(param);
 }
-void Material::SetTexture(std::string name, TextureBase *texture){
-    cout<<"Not implemented"<<endl;
+
+bool Material::SetFloat(std::string name, float f){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_FLOAT;
+    param.shaderValue.f[0] = f;
+    AddParameter(param);
+}
+
+bool Material::SetTexture(std::string name, TextureBase *texture){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_FLOAT;
+    param.shaderValue.textureId = texture->GetTextureId();
+    AddParameter(param);
 }
 }

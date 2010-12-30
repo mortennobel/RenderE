@@ -112,4 +112,8 @@ ShaderLoadStatus Shader::Link(){
 void Shader::Bind(){
     glUseProgram(shaderProgramId);
 }
+
+int Shader::GetUniformLocation(const char *location){
+    return glGetUniformLocation(shaderProgramId, location);
+}
 }

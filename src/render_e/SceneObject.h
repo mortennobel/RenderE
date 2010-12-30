@@ -28,6 +28,9 @@ public:
     
     // Delegate call to transform object
     void AddChild(SceneObject *sceneObject);
+    
+    void SetName(std::string name) { this->name = name;}
+    std::string GetName() {return name; }
 private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
     SceneObject& operator = (const SceneObject&); // disallow copy constructor
@@ -38,6 +41,8 @@ private:
     Material *material;
     Light *light;
     std::vector<Component*> components;
+    
+    std::string name;
 };
 }
 

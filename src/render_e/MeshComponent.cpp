@@ -46,10 +46,10 @@ void  MeshComponent::DebugRendering(){
         int index = ((unsigned char*)indices)[i];
         Vector3 *vv = (Vector3*)(&(buffer[index*stride]));
         Vector3 v = vv[0];
-        cout<<index<<"\t"<<v[0]<<","<<v[1]<<","<<v[2]<<endl;
+        cout<<index<<"  "<<v[0]<<","<<v[1]<<","<<v[2]<<endl;
         if (normalOffset!=-1){
             Vector3 n = vv[1];
-            cout<<index<<"\t\t"<<n[0]<<","<<n[1]<<","<<n[2]<<endl;
+            cout<<index<<"      "<<n[0]<<","<<n[1]<<","<<n[2]<<endl;
         }
     }
     cout<<"Print rendering start"<<endl;
@@ -226,9 +226,11 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // Memory layout: Vertex0, Normal0, ..., Vertex1, Normal1, ...
     // This layout gives a better performance, since the data that belongs
     // together are located close to each other
+    
     int destIndex = 0;
     for (int i=0;i<primitiveCount;i++){
         memcpy(&bufferAsFloat[destIndex], vertices[i].Get(), sizePrimitives);
+        
         destIndex += 3;
         if (normals != NULL){
             memcpy(&bufferAsFloat[destIndex], normals[i].Get(), sizePrimitives);
@@ -236,6 +238,10 @@ void MeshComponent::SetMesh(Mesh *mesh){
         }
         if (tangents != NULL){
             memcpy(&bufferAsFloat[destIndex], tangents[i].Get(), sizePrimitives);
+            destIndex += 3;
+        }
+        if (colors != NULL){
+            memcpy(&bufferAsFloat[destIndex], colors[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (textureCoords != NULL){
@@ -246,8 +252,9 @@ void MeshComponent::SetMesh(Mesh *mesh){
             memcpy(&bufferAsFloat[destIndex], textureCoords2[i].Get(), sizeTexCoords);
             destIndex += 2;
         }
+        
     }
-    
+        
     // print buffer
     /*
     using namespace std;

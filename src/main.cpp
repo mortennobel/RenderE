@@ -85,13 +85,8 @@ void reshape(int w, int h){
 
 //forward declaration
 void initWorld();
-void initWorld2();
-void testPNG();
 void initGL();
 void initRenderBase();
-void transformTest();
-void TestLoadShader();
-void fbxTest();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = &(meshTeapotContainer->GetTransform());
@@ -133,18 +128,9 @@ int main(int argc, char **argv) {
     }
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
-    if (!GLEW_ARB_vertex_array_object){
-        cout<<"vertex_array_object not supported"<<endl;
-    }
-    initWorld2();
     initGL();
     initRenderBase();
-    
-    // debug start
-    transformTest();
-    TestLoadShader();
-    fbxTest();
-    // endif
+    initWorld();
     
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -235,7 +221,12 @@ void initWorld() {
     Shader *b = sfs.LoadLinkShader(name2, status);
     
     Material *mat = new Material(b);
-    meshTeapotContainer->AddCompnent(mat);   
+    meshTeapotContainer->AddCompnent(mat); 
+    mat->SetVector4("color", Vector4(1,0,0,1));
+    /*
+    SceneXMLParser parser;
+    parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
+     * */
 }
 
 void setMatrial (Shader *shader, SceneObject *so){
@@ -282,13 +273,11 @@ void initWorld2() {
     setMatrial (b, meshTeapotContainer);
 }
 
-
+/*
 void fbxTest(){
     FBXLoader loader;
     SceneXMLParser sceneParser;
-    SceneObject *o = sceneParser.LoadScene("testdata/scene.xml");
-
-}
+} */
 
 /*
 #include "render_e/textures/PNGTextureDataSource.h"

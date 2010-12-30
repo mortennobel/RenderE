@@ -34,6 +34,8 @@ public:
     void SetMatrix44(unsigned int index, float *mat);
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }
+    /** Returns -1 if not found */
+    int GetUniformLocation(const char *location);
 private:
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor

@@ -85,79 +85,86 @@ void Mesh::ComputeNormals(){
     normals.clear();
     // fill normal vector
     while (normals.size()<vertices.size()){
-        normals.push_back(Vector3());
+        normals.push_back(Vector3(0,0,0));
     }
     
     for (int i=0;i<indices.size();i=i+3){
-        Vector3 v1 = vertices[indices[i]];
-        Vector3 v2 = vertices[indices[i+1]];
-        Vector3 v3 = vertices[indices[i+2]];
+        int index1 = indices[i];
+        int index2 = indices[i+1];
+        int index3 = indices[i+2];
+        Vector3 v1 = vertices[index1];
+        Vector3 v2 = vertices[index2];
+        Vector3 v3 = vertices[index3];
         
         Vector3 v1v2 = v2-v1;
         Vector3 v1v3 = v3-v1;
         
         Vector3 normal = v1v2.Cross(v1v3).Normalized();
         
-        // faceNormals[i] = normal;
-        // todo allow shared normals
-        normals[indices[i]] = normal;
-        normals[indices[i+1]] = normal;
-        normals[indices[i+2]] = normal;
-        
+        normals[index1] = normals[index1]+normal;
+        normals[index2] = normals[index2]+normal;
+        normals[index3] = normals[index3]+normal;
+    }
+    
+    cout << "Normals are now:" << endl;
+    for (int i=0;i<indices.size();i++){
+        cout << normals[i][0]<<" "<< normals[i][1]<<" "<< normals[i][2]<<" "<<endl;
+    }
+    
+    for (vector<Vector3>::iterator iter = normals.begin();iter != normals.end();iter++){
+        (*iter).Normalize();
+    }
+    
+    cout << "Normals are now:" << endl;
+    for (int i=0;i<indices.size();i++){
+        cout << normals[i][0]<<" "<< normals[i][1]<<" "<< normals[i][2]<<" "<<endl;
     }
 }
 
 
 void Mesh::SetVertices(Vector3 *vertices, int length){
     this->vertices.clear();
-    for (;length>0;length--){
-        this->vertices.push_back(*vertices);
-        vertices++;
+    for (int i=0;i<length;i++){
+        this->vertices.push_back(vertices[i]);
     }
 }
 
 void Mesh::SetNormals(Vector3 *normals, int length){
     this->normals.clear();
-    for (;length>0;length--){
-        this->normals.push_back(*normals);
-        normals++;
+    for (int i=0;i<length;i++){
+        this->normals.push_back(normals[i]);
     }
 }
 void Mesh::SetTangents(Vector3 *tangents, int length){
     this->tangents.clear();
-    for (;length>0;length--){
-        this->tangents.push_back(*tangents);
-        tangents++;
+    for (int i=0;i<length;i++){
+        this->tangents.push_back(tangents[i]);
     }
 }
 
 void Mesh::SetColors(Vector3 *colors, int length){
     this->colors.clear();
-    for (;length>0;length--){
-        this->colors.push_back(*colors);
-        colors++;
+    for (int i=0;i<length;i++){
+        this->colors.push_back(colors[i]);
     }
 
 }
 void Mesh::SetTextureCoords1(Vector2 *textureCoords1, int length){
     this->textureCoords1.clear();
-    for (;length>0;length--){
-        this->textureCoords1.push_back(*textureCoords1);
-        textureCoords1++;
+    for (int i=0;i<length;i++){
+        this->textureCoords1.push_back(textureCoords1[i]);
     }
 }
 void Mesh::SetTextureCoords2(Vector2 *textureCoords2, int length){
     this->textureCoords2.clear();
-    for (;length>0;length--){
-        this->textureCoords2.push_back(*textureCoords2);
-        textureCoords2++;
+    for (int i=0;i<length;i++){
+        this->textureCoords2.push_back(textureCoords2[i]);
     }
 }
 void Mesh::SetIndices(int *indices, int length){
     this->indices.clear();
-    for (;length>0;length--){
-        this->indices.push_back(*indices);
-        indices++;
+    for (int i=0;i<length;i++){
+        this->indices.push_back(indices[i]);
     }
 }
 

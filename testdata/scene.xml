@@ -16,12 +16,19 @@
         </material>
     </materials>
     <scenegraph>
-        <camera name="" position="" rotation=""/>
-        <mesh name="" position="" rotation="" scale="" material="" fbxfile="">
-            <mesh name="" position="" rotation="" scale="" material="" fbxfile=""/>
-            <cube name="" position="" rotation="" scale="" material=""/>
-        </mesh>
-        <light name="" type="point" position="" ambient="" diffuse="" specular="" constantAttenuation="" linearAttenuation="" quadraticAttenuation=""/>
-        <group name="" position="" rotation="" scale=""/>
+        <object name="" position="" rotation="" scale="" parent="">
+            <camera/>
+        </object>
+        <object name="" position="" rotation="" scale="" parent="">
+            <light type="point" specular="" constantAttenuation="" linearAttenuation="" quadraticAttenuation=""/>
+        </object>
+        
+        <object name="" position="" rotation="" scale="" parent="">
+            <mesh material="" fbxfile=""/>
+        </object>
+        
+        <object name="" position="" rotation="" scale="" parent="">
+            <mesh material="" primitive=""/>
+        </object>
     </scenegraph>
 </scene>
