@@ -16,14 +16,14 @@
 namespace render_e {
 
 SceneObject::SceneObject()
-:camera(NULL),mesh(NULL),material(NULL),transform(this),light(NULL) {
+:camera(NULL),mesh(NULL),material(NULL),transform(new Transform(this)),light(NULL) {
 }
 
 SceneObject::~SceneObject() {
 }
 
 
-Transform &SceneObject::GetTransform() { 
+Transform *SceneObject::GetTransform() { 
     return transform; 
 }
 
@@ -102,6 +102,6 @@ void SceneObject::AddCompnent(Component* component){
 }
 
 void SceneObject::AddChild(SceneObject *sceneObject){
-    this->transform.AddChild(&(sceneObject->transform));
+    this->transform->AddChild(sceneObject->transform);
 }
 }

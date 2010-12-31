@@ -52,7 +52,7 @@ void RenderBase::Display(){
         glGetIntegerv(GL_MATRIX_MODE,&matrixMode);
         assert(matrixMode==GL_MODELVIEW);
 #endif //_DEBUG
-        Matrix44 cameraMatrix = lastCamera->GetTransform().GetLocalTransformInverse();
+        Matrix44 cameraMatrix = lastCamera->GetTransform()->GetLocalTransformInverse();
         RenderScene(cameraMatrix);
     }
     swapBuffersFunc();
@@ -69,7 +69,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
            MeshComponent *mesh = (*sIter)->GetMesh();
             Material *currentMaterial = (*sIter)->GetMaterial();
             if (mesh!=NULL){
-                Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
+                Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform()->GetLocalTransform());
                 glLoadMatrixf(modelView.GetReference());
                 mesh->Render();
             }
@@ -91,7 +91,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
             
         }
         if (mesh!=NULL){
-            Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform().GetLocalTransform());
+            Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform()->GetLocalTransform());
             glLoadMatrixf(modelView.GetReference());
             mesh->Render();
         }
@@ -111,7 +111,7 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     }
     
     using std::vector;
-    vector<Transform*> *children = sceneObject->GetTransform().GetChildren();
+    vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
         std::cout<<"Children"<<std::endl;
         AddSceneObject((*iter)->GetSceneObject());
@@ -175,11 +175,11 @@ void RenderBase::PrintDebug(){
     cout << "Scene objects: "<<sceneObjects.size()<<endl;
     for (int i=0;i<sceneObjects.size();i++){
         cout <<sceneObjects[i]->GetName()<<endl;
-        Vector3 position = sceneObjects[i]->GetTransform().GetPosition();
+        Vector3 position = sceneObjects[i]->GetTransform()->GetPosition();
         cout <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
-        Quaternion q = sceneObjects[i]->GetTransform().GetRotation();
+        Quaternion q = sceneObjects[i]->GetTransform()->GetRotation();
         cout <<"Rotation "<<q.x<<" "<<q.y<<" "<<q.z<<" "<<q.w<<endl;
-        Vector3 scale = sceneObjects[i]->GetTransform().GetScale();
+        Vector3 scale = sceneObjects[i]->GetTransform()->GetScale();
         cout <<"Scale "<<(int)scale[0]<<" "<<(int)scale[1]<<" "<<(int)scale[2]<<" "<<endl;
         
     }

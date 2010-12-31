@@ -89,17 +89,17 @@ void initGL();
 void initRenderBase();
 
 void keyPress(unsigned char key, int x, int y){
-    Transform *t = &(meshTeapotContainer->GetTransform());
-    Vector3 cameraPosition = cameraContainer->GetTransform().GetPosition();
+    Transform *t = meshTeapotContainer->GetTransform();
+    Vector3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
     switch (key){
         case 'd':
-            cameraPosition[0] =cameraPosition[0]+1;
+            cameraPosition[0] = cameraPosition[0]+1;
             break;
         case 'a':
-            cameraPosition[0] =cameraPosition[0]-1;
+            cameraPosition[0] = cameraPosition[0]-1;
             break;
         case 's':
-            cameraPosition[2] =cameraPosition[2]+1;
+            cameraPosition[2] = cameraPosition[2]+1;
             break;
         case 'w':
             cameraPosition[2] = cameraPosition[2]-1;
@@ -111,7 +111,7 @@ void keyPress(unsigned char key, int x, int y){
             
     }
     printMatrix(t->GetLocalTransform().GetReference());
-    cameraContainer->GetTransform().SetPosition(cameraPosition);
+    cameraContainer->GetTransform()->SetPosition(cameraPosition);
 }
 
 int main(int argc, char **argv) {
@@ -252,7 +252,7 @@ void setMatrial (Shader *shader, SceneObject *so){
     Material *mat = new Material(shader);
     so->AddCompnent(mat);   
     
-    vector<Transform *> *trans = so->GetTransform().GetChildren();
+    vector<Transform *> *trans = so->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = trans->begin();iter != trans->end();iter++){
         so = (*iter)->GetSceneObject();
         setMatrial(shader, so);
@@ -265,7 +265,7 @@ void initWorld2() {
     cameraContainer->AddCompnent(camera);
     renderBase->AddSceneObject(cameraContainer);
     Vector3 v(0.0,0.0,15.0);
-    cameraContainer->GetTransform().SetPosition(v);
+    cameraContainer->GetTransform()->SetPosition(v);
     
     FBXLoader loader;
     

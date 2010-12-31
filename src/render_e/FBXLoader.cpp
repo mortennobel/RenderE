@@ -134,17 +134,17 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 // Set translate
                 fbxDouble3 v3 = node->LclTranslation.Get();
                 Vector3 translate = toVector(v3);
-                sceneObject->GetTransform().SetPosition(translate);
+                sceneObject->GetTransform()->SetPosition(translate);
                 
                 // Set rotation
                 v3 = node->LclRotation.Get();
                 Vector3 rotation = toVector(v3)*Mathf::DEGREE_TO_RADIAN;
-                sceneObject->GetTransform().SetRotation(rotation);
+                sceneObject->GetTransform()->SetRotation(rotation);
 
                 // Set scale
                 v3 = node->LclScaling.Get();
                 Vector3 scale = toVector(v3);
-                sceneObject->GetTransform().SetScale(scale);
+                sceneObject->GetTransform()->SetScale(scale);
                 }
                 break;
             case KFbxNodeAttribute::eCAMERA:

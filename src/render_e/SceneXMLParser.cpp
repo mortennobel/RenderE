@@ -302,9 +302,9 @@ public:
                 XMLString::release(&attName);
             }
             sceneObject = new SceneObject();
-            sceneObject->GetTransform().SetPosition(position);
-            sceneObject->GetTransform().SetRotation(rotation);
-            sceneObject->GetTransform().SetScale(scale);
+            sceneObject->GetTransform()->SetPosition(position);
+            sceneObject->GetTransform()->SetRotation(rotation);
+            sceneObject->GetTransform()->SetScale(scale);
             sceneObject->SetName(objectName);
             if (objectName.length() > 0 && parent.length() > 0){
                 parentMap[objectName] = parent;

@@ -19,7 +19,7 @@ public:
     SceneObject();
     virtual ~SceneObject();
     const std::vector<Component*> * GetComponents() const;
-    Transform &GetTransform();
+    Transform *GetTransform();
     Camera *GetCamera();
     MeshComponent *GetMesh();
     void AddCompnent(Component* component);
@@ -36,7 +36,7 @@ private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
     SceneObject& operator = (const SceneObject&); // disallow copy constructor
     
-    Transform transform;   
+    Transform *transform;   
     Camera *camera;
     MeshComponent *mesh;
     Material *material;
