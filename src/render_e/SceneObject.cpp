@@ -20,6 +20,7 @@ SceneObject::SceneObject()
 }
 
 SceneObject::~SceneObject() {
+    delete transform;
 }
 
 
