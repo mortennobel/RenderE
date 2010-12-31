@@ -13,7 +13,7 @@ void main(){
     eye = -eyePosition.xyz;
 
     for (int i=0;i<lightCount;i++){
-        vec4 eyeLightPos = gl_LightSource[0].position;
+        vec4 eyeLightPos = gl_LightSource[i].position;
         lights[i] = eyeLightPos.xyz-eyePosition.xyz;
     }
 }
