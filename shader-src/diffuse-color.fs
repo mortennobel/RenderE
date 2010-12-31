@@ -12,7 +12,6 @@ void main(){
     vec3 nNormal = normalize(normal);
     vec3 nEye = normalize(eye);
     
-    
     vec4 ambient = vec4(0.0,0.0,0.0,0.0);
     vec4 diffuse = vec4(0.0,0.0,0.0,0.0);
     vec4 specular= vec4(0.0,0.0,0.0,0.0);
