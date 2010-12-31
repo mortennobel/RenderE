@@ -15,6 +15,7 @@ class MeshFactory {
 public:
     // static Mesh *CreateCube(float size);
     static Mesh *CreateTetrahedron();
+    static Mesh *CreateICOSphere(int subdivisions=2, float radius=1.0f);
     static Mesh *CreateCube();
 private:
     MeshFactory();

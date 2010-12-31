@@ -116,5 +116,64 @@ Mesh *MeshFactory::CreateCube(){
     m->SetIndices(indices,3*2*6);
     return m;
 }
+
+// based on the code in the OpenGL red book (chapter 2, the example at the end)
+
+void drawtri(Vector3 a, Vector3 b, Vector3 c, int div, float r, vector<Vector3> &vertices, vector<Vector3> &normals) {
+    if (div<=0) {
+        normals.push_back(a);
+        normals.push_back(b);
+        normals.push_back(c);
+        vertices.push_back(a*r);
+        vertices.push_back(b*r);
+        vertices.push_back(c*r);
+    } else {
+        Vector3 ab, ac, bc;
+        for (int i=0;i<3;i++) {
+            ab[i]=(a[i]+b[i])/2;
+            ac[i]=(a[i]+c[i])/2;
+            bc[i]=(b[i]+c[i])/2;
+        }
+        ab.Normalize();
+        ac.Normalize();
+        bc.Normalize();
+        drawtri(a, ab, ac, div-1, r,vertices, normals);
+        drawtri(b, bc, ab, div-1, r,vertices, normals);
+        drawtri(c, ac, bc, div-1, r,vertices, normals);
+        drawtri(ab, bc, ac, div-1, r,vertices, normals);   
+    }  
+}
+
+Mesh *MeshFactory::CreateICOSphere(int subdivisions, float radius){
+    #define X .525731112119133606f
+    #define Z .850650808352039932f
+
+    Vector3 vdata[12] = {    
+        Vector3(-X, 0.0, Z), Vector3(X, 0.0, Z), Vector3(-X, 0.0, -Z), Vector3(X, 0.0, -Z),    
+        Vector3(0.0, Z, X), Vector3(0.0, Z, -X), Vector3(0.0, -Z, X), Vector3(0.0, -Z, -X),    
+        Vector3(Z, X, 0.0), Vector3(-Z, X, 0.0), Vector3(Z, -X, 0.0), Vector3(-Z, -X, 0.0) 
+    };
+    int tindices[20][3] = { 
+        {0,4,1}, {0,9,4}, {9,5,4}, {4,5,8}, {4,8,1},    
+        {8,10,1}, {8,3,10}, {5,3,8}, {5,2,3}, {2,7,3},    
+        {7,10,3}, {7,6,10}, {7,11,6}, {11,0,6}, {0,1,6}, 
+        {6,1,10}, {9,0,11}, {9,11,2}, {9,2,5}, {7,2,11} };
+
+    vector<Vector3> vertices;
+    vector<Vector3> normals;
+    
+    for (int i=0;i<20;i++)
+        drawtri(vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], subdivisions, radius, vertices, normals);
+
+    vector<int> indices;
+    for (int i=0;i<vertices.size();i++){
+        indices.push_back(i);
+    }
+    Mesh *m = new Mesh();
+    m->SetVertices(vertices);
+    m->SetNormals(normals);
+    m->SetIndices(indices);
+    return m;
+}
 }
 

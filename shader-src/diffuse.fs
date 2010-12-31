@@ -1,6 +1,7 @@
 #version 110
 varying vec3 normal;
+uniform vec4 color;
 
 void main(){
-	gl_FragColor = vec4(1,1,0,1);
+    gl_FragColor = color;
 }

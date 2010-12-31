@@ -24,7 +24,7 @@ enum ShaderParamType{
     SPT_VECTOR2,
     SPT_VECTOR3,
     SPT_VECTOR4,
-    SPT_TEXTURE
+    SPT_INT
 };
 
 struct ShaderParameters{
@@ -32,7 +32,7 @@ struct ShaderParameters{
     ShaderParamType paramType;
     union ShaderValue {
         float f[4];
-        int textureId; 
+        int integer; 
     } shaderValue;
 };
 
@@ -47,6 +47,7 @@ public:
     bool SetVector4(std::string name, Vector4 vec);
     bool SetFloat(std::string name, float f);
     bool SetTexture(std::string name, TextureBase *texture);
+    bool SetInt(std::string name, int i);
     
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }

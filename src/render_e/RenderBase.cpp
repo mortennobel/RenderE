@@ -40,6 +40,27 @@ void RenderBase::Display(){
     assert(swapBuffersFunc!=NULL);
     static SceneObject *lastCamera = NULL;
     
+    // todo: this need not to run every frame
+    int lightIndex=0;
+    for (std::vector<SceneObject*>::iterator iter = lights.begin(); iter != lights.end();iter++){
+        SceneObject *sceneObject = *iter;
+        Light *light = sceneObject->GetLight(); 
+        
+        glEnable(GL_LIGHT0+lightIndex);
+        // Setup and enable light 0
+        glLightfv(GL_LIGHT0+lightIndex,GL_AMBIENT, light->GetAmbient().Get());
+        glLightfv(GL_LIGHT0+lightIndex,GL_DIFFUSE, light->GetDiffuse().Get());
+        glLightfv(GL_LIGHT0+lightIndex,GL_SPECULAR, light->GetSpecular().Get());
+        float w = 0;
+        if (light->GetLightType()==PointLight){
+            w = 1;
+        }
+        Vector4 lightPos(sceneObject->GetTransform()->GetPosition(), w);
+        
+        glLightfv(GL_LIGHT0+lightIndex,GL_POSITION, lightPos.Get());
+        lightIndex--;
+    }
+    
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         if (lastCamera!=*iter){
             lastCamera = *iter;
@@ -160,6 +181,7 @@ void RenderBase::Init(void (*swapBuffersFunc)()){
     glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glCullFace(GL_BACK);
+    glEnable(GL_LIGHTING);
 }
 
 void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){

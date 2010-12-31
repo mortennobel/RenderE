@@ -10,6 +10,8 @@
 #ifndef VECTOR4_H
 #define	VECTOR4_H
 
+#include "Vector3.h"
+
 namespace render_e {
 
 class Vector4
@@ -28,6 +30,10 @@ public:
 	{   // copy constructor
 	}
 	
+    Vector4(const Vector3& p, float w)
+	:x(p[0]), y(p[1]), z(p[2]), w(w)
+	{   // copy constructor
+	}
 	~Vector4(void);
 		
 	float Dot(const Vector4 &v);

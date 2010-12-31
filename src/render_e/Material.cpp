@@ -38,8 +38,8 @@ void Material::Bind(){
             case SPT_VECTOR4:
                 glUniform4fv((*iter).id,1, (*iter).shaderValue.f);
                 break;
-            case SPT_TEXTURE:
-                glUniform1iv((*iter).id,1, &((*iter).shaderValue.textureId));
+            case SPT_INT:
+                glUniform1iv((*iter).id,1, &((*iter).shaderValue.integer));
                 break;
         }
     }
@@ -124,7 +124,19 @@ bool Material::SetTexture(std::string name, TextureBase *texture){
     ShaderParameters param;
     param.id = id;
     param.paramType = SPT_FLOAT;
-    param.shaderValue.textureId = texture->GetTextureId();
+    param.shaderValue.integer = texture->GetTextureId();
+    AddParameter(param);
+}
+
+bool Material::SetInt(std::string name, int i){
+    int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+    ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_INT;
+    param.shaderValue.integer = i;
     AddParameter(param);
 }
 }

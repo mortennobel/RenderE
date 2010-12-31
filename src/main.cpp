@@ -227,9 +227,10 @@ void initWorld() {
     mat->SetVector4("color", Vector4(1,0,0,1));
     */
     SceneXMLParser parser;
-    parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
+    parser.LoadScene("testdata/cubes_with_light.xml", renderBase);
+    //parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
     cameraContainer = (*(renderBase->GetCameras()))[0];
-      
+      /*
     vector<SceneObject*> *sceneObjects = renderBase->GetSceneObjects();
     for (vector<SceneObject*>::iterator iter = sceneObjects->begin();iter != sceneObjects->end();iter++){
         SceneObject* sceneObj = *iter;
@@ -244,7 +245,7 @@ void initWorld() {
             
         }
     }
-    
+    */
     renderBase->PrintDebug();
 }
 

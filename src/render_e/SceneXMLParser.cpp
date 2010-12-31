@@ -47,6 +47,10 @@ float stringToFloat(const char *s1) {
     return (float) atof(s1);
 }
 
+int stringToInt(const char *s1) {
+    return atoi(s1);
+}
+
 Vector3 stringToVector3(char *s1) {
     Vector3 f;
     char * pch;
@@ -264,6 +268,9 @@ public:
                 } else if (stringEqual("float", attName)) {
                     float f = stringToFloat(attValue);
                     material->SetFloat(parameterName, f);
+                } else if (stringEqual("int", attName)) {
+                    int i = stringToFloat(attValue);
+                    material->SetInt(parameterName, i);
                 } else {
                     cout << "Unknown parameter attribute name "<<attName<<endl;
                 }
@@ -331,8 +338,10 @@ public:
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
 
-                if (stringEqual("type", attName) && stringEqual("orthographic",attValue)){
-                    projection = false;
+                if (stringEqual("type", attName)){
+                    if (stringEqual("orthographic",attValue)){
+                        projection = false;
+                    }
                 } else if (stringEqual("fieldOfView",attName)){
                     fieldOfView = stringToFloat(attValue);
                 } else if (stringEqual("aspect",attName)){
@@ -412,6 +421,8 @@ public:
             if (primitive.length() > 0){
                 if (stringEqual("cube", primitive.c_str())){
                     mesh = MeshFactory::CreateCube();
+                } else if (stringEqual("sphere", primitive.c_str())){
+                    mesh = MeshFactory::CreateICOSphere();
                 } else if (stringEqual("tetrahedron", primitive.c_str())){
                     mesh = MeshFactory::CreateTetrahedron();
                 } else {
@@ -439,17 +450,23 @@ public:
                 } else if (stringEqual("type", attName)) {
                     lightType.append(attValue);
                 } else if (stringEqual("ambient", attName)) {
-                    light->SetAmbient(stringToVector3(attValue));
+                    light->SetAmbient(stringToVector4(attValue));
                 } else if (stringEqual("diffuse", attName)) {
-                    light->SetDiffuse(stringToVector3(attValue));
+                    light->SetDiffuse(stringToVector4(attValue));
                 } else if (stringEqual("specular", attName)) {
-                    light->SetSpecular(stringToVector3(attValue));
+                    light->SetSpecular(stringToVector4(attValue));
                 } else if (stringEqual("type", attName)) {
                     if (stringEqual("point", attValue)){
                         light->SetLightType(PointLight);
                     } else {
                         cout << "Unknown lighttype "<<attValue << endl;
                     }
+                } else if (stringEqual("constantAttenuation", attName)) {
+                    light->SetConstantAttenuation(stringToFloat(attValue));
+                } else if (stringEqual("linearAttenuation", attName)) {
+                    light->SetLinearAttenuation(stringToFloat(attValue));
+                } else if (stringEqual("quadraticAttenuation", attName)) {
+                    light->SetQuadraticAttenuation(stringToFloat(attValue));
                 } else {
                     cout << "Unknown light attribute name "<<attName<<endl;
                 }
