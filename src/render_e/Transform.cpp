@@ -44,7 +44,7 @@ bool Transform::RemoveChild(Transform *transform){
 void Transform::UpdateIfDirty(){
     if (dirtyFlag){
         rotation.GetMatrix(&localTransform);
-        localTransform = Matrix44::Scale(scale)* Matrix44::Translate(position) *localTransform;
+        localTransform = Matrix44::Translate(position) * Matrix44::Scale(scale) * localTransform;
         dirtyFlag = false;
     }
 }
@@ -52,7 +52,7 @@ void Transform::UpdateIfDirty(){
 void Transform::UpdateInverseIfDirty(){
     if (dirtyFlagInverse){
         rotation.GetMatrix(&localTransformInverse);
-        localTransformInverse = localTransformInverse.Transpose()* Matrix44::Translate(-position) * Matrix44::ScaleInverse(scale);
+        localTransformInverse = localTransformInverse.Transpose()* Matrix44::ScaleInverse(scale)* Matrix44::Translate(-position) ;
         dirtyFlagInverse = false;
     }
 }
