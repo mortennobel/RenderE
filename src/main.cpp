@@ -84,7 +84,7 @@ void reshape(int w, int h){
 
 
 //forward declaration
-void initWorld();
+void initWorld(const char *filename);
 void initGL();
 void initRenderBase();
 
@@ -127,9 +127,25 @@ int main(int argc, char **argv) {
     }
     fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
+    if (GLEW_EXT_framebuffer_object){
+        cout<<"Framebuffer objects ok" << endl;
+    } else {
+        cout << "WARN: Framebuffer objects not ok" << endl;
+    }
+    
     initGL();
     initRenderBase();
-    initWorld();
+    
+    const char *filename;
+    if (argc<2){
+        filename = "testdata/render_to_texture.xml";
+        cout<<"Using scene not found - using default: "<<filename<<endl;  
+    } else {
+        filename = argv[1];
+    
+    }
+    
+    initWorld(filename);
     
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -199,53 +215,11 @@ void transformTest(){
     printMatrix(m.GetReference());
 }
 
-void initWorld() {
-    /*
-    Camera *camera = new Camera();
-    camera->SetProjection(40, 1, 0.1,1000);
-    cameraContainer->AddCompnent(camera);
-    renderBase->AddSceneObject(cameraContainer);
-    Vector3 v(0.0,0.0,15.0);
-    cameraContainer->GetTransform().SetPosition(v);
-    
-    
-    Vector3 v2(0.0,0.0,0.0);
-    meshTeapotContainer->GetTransform().SetPosition(v2);
-    renderBase->AddSceneObject(meshTeapotContainer);
-    meshTeapot->SetMesh(MeshFactory::CreateCube());
-    meshTeapotContainer->AddCompnent(meshTeapot);
-    meshTeapotContainer->SetName("Blue cube");
-    
-    ShaderFileDataSource sfs;
-    char name2[] = "diffuse";
-    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
-    Shader *b = sfs.LoadLinkShader(name2, status);
-    
-    Material *mat = new Material(b);
-    meshTeapotContainer->AddCompnent(mat); 
-    mat->SetVector4("color", Vector4(1,0,0,1));
-    */
+void initWorld(const char *filename) {
     SceneXMLParser parser;
-    parser.LoadScene("testdata/plane_with_texture.xml", renderBase);
-    //parser.LoadScene("testdata/cubes_with_light.xml", renderBase);
-    //parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
+    parser.LoadScene(filename, renderBase);
     cameraContainer = (*(renderBase->GetCameras()))[0];
-      /*
-    vector<SceneObject*> *sceneObjects = renderBase->GetSceneObjects();
-    for (vector<SceneObject*>::iterator iter = sceneObjects->begin();iter != sceneObjects->end();iter++){
-        SceneObject* sceneObj = *iter;
-        if (sceneObj->GetName().compare("Blue cube")==0){
-            cout<<"Found blue cube"<<endl;
-            cout<<"Mesh     "<<sceneObj->GetMesh()<<endl;
-            cout<<"Material "<<sceneObj->GetMaterial()<<endl;
-            
-            MeshComponent *meshComp = sceneObj->GetMesh();
-            assert(meshComp != NULL);
-            meshComp->DebugRendering();
-            
-        }
-    }
-    */
+    
     renderBase->PrintDebug();
 }
 

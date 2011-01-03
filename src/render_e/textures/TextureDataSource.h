@@ -12,7 +12,8 @@ namespace render_e {
 
 enum TextureFormat {
     RGB,
-    RGBA
+    RGBA,
+    DEPTH
 };
 
 class TextureDataSource {

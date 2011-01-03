@@ -12,12 +12,19 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <iostream>
 #include <GL/glew.h>
 
 #include "TextureDataSource.h"
 
+using namespace std;
 
 namespace render_e {
+
+Texture2D::Texture2D()
+:TextureBase(GL_TEXTURE_2D),textureDataSource(NULL), interpolationLinear(true), clamp(false),resourceName(NULL){
+    mipmapping = false;
+}
 
 Texture2D::Texture2D(const char *resourceName)
 :TextureBase(GL_TEXTURE_2D),textureDataSource(TextureDataSource::GetTextureDataSource()), interpolationLinear(true), clamp(false)
@@ -33,12 +40,32 @@ Texture2D::~Texture2D(){
         delete[] resourceName;
     }
 }
+
+void Texture2D::GetTextureFormat(GLint &internalFormat,GLenum &format){
+    switch (textureFormat){
+        case DEPTH:
+            internalFormat = GL_DEPTH_COMPONENT;
+            format = GL_LUMINANCE;
+            break;
+        case RGB:
+            internalFormat = GL_RGB8;
+            format = GL_RGB;
+            break;
+        case RGBA:
+        default:
+            internalFormat = GL_RGBA8;
+            format = GL_RGBA;
+            break;
+    }
+}
+
 TextureLoadStatus Texture2D::Load(){    
     unsigned char* data = NULL;
     TextureLoadStatus res = textureDataSource->LoadTexture(resourceName, width, height, textureFormat, &data);
     if (res==OK){
         // allocate a texture name
         glGenTextures( 1, &textureId );
+        cout<<name<<" Created textureid "<<textureId<<endl;
         // select our current texture
         glBindTexture( GL_TEXTURE_2D, textureId );
         
@@ -52,13 +79,18 @@ TextureLoadStatus Texture2D::Load(){
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
         
+        GLint internalFormat;
+        GLenum format;
+        
+        GetTextureFormat(internalFormat, format);
+        
         glPixelStorei(GL_UNPACK_ALIGNMENT,1);
         if (mipmapping){
-            gluBuild2DMipmaps( GL_TEXTURE_2D, textureFormat==RGB?GL_RGB8:GL_RGBA8, width, height,
-                   textureFormat==RGB?GL_RGB:GL_RGBA, GL_UNSIGNED_BYTE, data );
+            gluBuild2DMipmaps( GL_TEXTURE_2D, internalFormat, width, height,
+                   format, GL_UNSIGNED_BYTE, data );
         } else {
-            glTexImage2D(GL_TEXTURE_2D,0, textureFormat==RGB?GL_RGB8:GL_RGBA8, width, height, 
-                    0, textureFormat==RGB?GL_RGB:GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D,0, internalFormat, width, height, 
+                    0, format, GL_UNSIGNED_BYTE, data);
         }
     }
     
@@ -68,5 +100,38 @@ TextureLoadStatus Texture2D::Load(){
     
     return res;
 }
+
+void Texture2D::Create(int width, int height, TextureFormat textureFormat){
+    assert(!mipmapping); // mipmapping not supported
+    this->width = width;
+    this->height = height;
+    // allocate a texture name
+    glGenTextures( 1, &textureId );
+    cout<<name<<" Created textureid "<<textureId<<endl;
+    // select our current texture
+    glBindTexture( GL_TEXTURE_2D, textureId );
+
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+             GL_LINEAR_MIPMAP_NEAREST );
+    // when texture area is large, bilinear filter the original
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+    // the texture wraps over at the edges (repeat)
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+    
+    GLint internalFormat;
+    GLenum format;
+    
+    GetTextureFormat(internalFormat, format);
+    
+    glTexImage2D(GL_TEXTURE_2D,0, internalFormat, width, height, 
+                0, format, GL_UNSIGNED_BYTE, NULL);
+    
+}
+
 }
 

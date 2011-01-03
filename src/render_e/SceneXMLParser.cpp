@@ -165,6 +165,9 @@ public:
         if (stringEqual("texture2d", message)) {
             string textureName;
             string file;
+            int width;
+            int height;
+            string type;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
@@ -172,19 +175,40 @@ public:
                     textureName.append(attValue);
                 } else if (stringEqual("file", attName)) {
                     file.append(attValue);
+                } else if (stringEqual("type", attName)) {
+                    type.append(attValue);
+                } else if (stringEqual("width", attName)) {
+                    width = stringToInt(attValue);
+                } else if (stringEqual("height", attName)) {
+                    height = stringToInt(attValue);
                 } else {
                     cout << "Unknown texture2d attribute name "<<attName<<endl;
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
-            Texture2D *texture = new Texture2D(file.c_str());
-            texture->SetName(textureName);
-            TextureLoadStatus status = texture->Load();
-            if (status == OK){
-                textures[textureName] = texture;
+            if (file.length()>0){
+                Texture2D *texture = new Texture2D(file.c_str());
+                texture->SetName(textureName);
+                TextureLoadStatus status = texture->Load();
+                if (status == OK){
+                    textures[textureName] = texture;
+                } else {
+                    cout<<"Error loading texture "<<textureName<<" filename "<<file<<endl;
+                }
             } else {
-                cout<<"Error loading texture "<<textureName<<" filename "<<file<<endl;
+                Texture2D *texture = new Texture2D();
+                texture->SetName(textureName);
+                TextureFormat textureFormat;
+                if (type.compare("DEPTH")){
+                    textureFormat = DEPTH;
+                } else if (type.compare("RGB")){
+                    textureFormat = RGB;
+                } else {
+                    textureFormat = RGBA;
+                }
+                texture->Create(width, height, textureFormat);
+                textures[textureName] = texture;
             }
         } else if (stringEqual("cubetexture", message)) {
             string textureName;

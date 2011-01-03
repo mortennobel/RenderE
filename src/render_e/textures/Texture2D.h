@@ -17,12 +17,16 @@ namespace render_e {
 
 class Texture2D : public TextureBase {
 public:
+    Texture2D();
     Texture2D(const char *resourceName);
     virtual ~Texture2D();
     virtual TextureLoadStatus Load();
+    /** Create a texture without content */
+    void Create(int width, int height, TextureFormat textureFormat);
 private:
     Texture2D(const Texture2D& orig); // disallow copy constructor
     Texture2D& operator = (const Texture2D&); // disallow copy constructor
+    void GetTextureFormat(int &internalFormat,unsigned int &format);
     TextureDataSource *textureDataSource;
     bool interpolationLinear;
     bool clamp;

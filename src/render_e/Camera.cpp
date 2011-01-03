@@ -10,6 +10,7 @@
 #include <iostream>
 #include "GL/glew.h"
 #include "math/Mathf.h"
+#include "textures/Texture2D.h"
 
 namespace render_e {
 
@@ -17,12 +18,13 @@ Camera::Camera()
 :Component(CameraType),cameraMode(ORTHOGRAPHIC),
         nearPlane(-1),farPlane(1),
         left(-1), right(1),
-        bottom(-1),top(1), clearColor(0,0,0,1){
+        bottom(-1),top(1), clearColor(0,0,0,1),renderToTexture(false){
     SetClearMask(COLOR_BUFFER|DEPTH_BUFFER);
     SetClearColor(Vector4(0,0,0,1));
 }
 
 Camera::~Camera() {
+    SetRenderToTexture(false, COLOR_BUFFER, NULL);
 }
 
 void Camera::SetProjection(float fieldOfView, float aspect, float nearPlane, float farPlane){
@@ -94,4 +96,43 @@ void Camera::SetClearColor(Vector4 clearColor){
     this->clearColor = clearColor; 
 }
 
+void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, Texture2D *texture2d){
+    if (renderToTexture == doRenderToTexture){
+        return;
+    }
+    
+    renderToTexture = doRenderToTexture;
+    if (renderToTexture){
+        glGenFramebuffersEXT (1, &framebufferId);
+        framebufferTextureId = texture2d->GetTextureId();
+        framebufferTextureType = GL_TEXTURE_2D;
+        switch (framebufferTargetType) {
+            case COLOR_BUFFER:
+                this->framebufferTargetType = GL_COLOR_ATTACHMENT0;
+                break;
+            case DEPTH_BUFFER:
+                this->framebufferTargetType = GL_DEPTH_ATTACHMENT;
+                break;
+            case STENCIL_BUFFER:
+            default:
+                this->framebufferTargetType = GL_STENCIL_ATTACHMENT;
+        }
+    } else {
+        glDeleteFramebuffersEXT(1, &framebufferId);
+    }
+    
+}
+
+void Camera::BindFrameBufferObject(){
+    assert(renderToTexture);
+    
+    // target parameter : GL_FRAMEBUFFER = read/write, GL_DRAW_FRAMEBUFFER = write only
+    glBindFramebuffer( GL_DRAW_FRAMEBUFFER, framebufferId);
+    
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, framebufferTargetType, framebufferTextureType, framebufferTextureId, 0);
+}
+
+void Camera::UnBindFrameBufferObject(){
+    glBindFramebuffer( GL_FRAMEBUFFER, 0);
+}
 }

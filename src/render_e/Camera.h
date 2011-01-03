@@ -17,11 +17,14 @@
 namespace render_e {
 
 enum CameraMode { ORTHOGRAPHIC, PERSPECTIVE };
-enum ClearTypes {
+enum CameraBuffer {
     COLOR_BUFFER = 1, 
     DEPTH_BUFFER = 2,
     STENCIL_BUFFER = 4
 };
+
+// forward declaration
+class Texture2D;
 
 class Camera : public Component {
 public:
@@ -46,6 +49,10 @@ public:
     void Setup();
     void SetClearColor(Vector4 clearColor);
     Vector4 GetClearColor(){ return clearColor; }
+    bool IsRenderToTexture(){ return renderToTexture; }
+    void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, Texture2D *texture2d);
+    void BindFrameBufferObject();
+    void UnBindFrameBufferObject();
 private:
     CameraMode cameraMode;
     float fieldOfView;
@@ -59,6 +66,11 @@ private:
     int clearMask;
     int clearMaskNative;
     Vector4 clearColor;
+    bool renderToTexture;
+    unsigned int framebufferId;
+    int framebufferTargetType;
+    unsigned int framebufferTextureId;
+    unsigned int framebufferTextureType;
 };
 }
 #endif	/* CAMERA_H */
