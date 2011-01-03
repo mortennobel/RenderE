@@ -64,7 +64,6 @@ void MeshComponent::Render(){
 #ifdef RENDER_E_NO_VBO 
 #ifdef RENDER_INTERMEDIATE_MODE
     glBegin(GL_TRIANGLES);
-    static int c = 0;
     
     for (int i=0;i<indicesCount;i++){
         
@@ -82,17 +81,21 @@ void MeshComponent::Render(){
         }
         
         Vector3 *vv = (Vector3*)(&(buffer[index*(stride)]));
-        glNormal3fv(vv[1].Get());
-        glVertex3fv(vv[0].Get());
-        // debug
         
-        if (c==0){
-            using namespace std;
-            cout<<vv[0][0]<<", "<<vv[0][1]<<", "<<vv[0][2]<<", ";
-            cout<<vv[1][0]<<", "<<vv[1][1]<<", "<<vv[1][2]<<endl;
+        if (normalOffset!=-1){
+            glNormal3fv(vv[1].Get());
         }
+        
+        if (texture1Offset != -1){
+            using namespace std;
+            Vector2 *vv = (Vector2*)(&(buffer[texture1Offset+index*(stride)]));
+            glTexCoord2fv(vv->Get());
+        }
+        
+        glVertex3fv(vv[0].Get());
+        
     }
-    c++;
+    
     glEnd();
 #else
     glVertexPointer(3, GL_FLOAT, stride, buffer);

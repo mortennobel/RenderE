@@ -175,5 +175,35 @@ Mesh *MeshFactory::CreateICOSphere(int subdivisions, float radius){
     m->SetIndices(indices);
     return m;
 }
+
+Mesh *MeshFactory::CreatePlane(){
+    Vector3 vertices [] = {
+        Vector3(0.,0.,0.),
+        Vector3(1.,0.,0.),
+        Vector3(1.,1.,0.),
+        Vector3(0.,1.,0.)
+    };
+    
+    int indices[] = {
+        0,1,2,
+        0,2,3
+    };
+    
+    
+    Vector2 uv[] = {
+        Vector2(0.,0.),
+        Vector2(1.,0.),
+        Vector2(1.,1.),
+        Vector2(0.,1.)
+    };
+    
+
+    Mesh *m = new Mesh();
+    m->SetVertices(vertices,4);
+    m->SetTextureCoords1(uv,4);
+    m->SetIndices(indices,6);
+    m->ComputeNormals();
+    return m;
+}
 }
 

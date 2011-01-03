@@ -110,7 +110,6 @@ void keyPress(unsigned char key, int x, int y){
             renderBase->SetRenderMode(renderMode?RENDER_MODE_LINE:RENDER_MODE_FILL);
             
     }
-    printMatrix(t->GetLocalTransform().GetReference());
     cameraContainer->GetTransform()->SetPosition(cameraPosition);
 }
 
@@ -227,7 +226,8 @@ void initWorld() {
     mat->SetVector4("color", Vector4(1,0,0,1));
     */
     SceneXMLParser parser;
-    parser.LoadScene("testdata/cubes_with_light.xml", renderBase);
+    parser.LoadScene("testdata/plane_with_texture.xml", renderBase);
+    //parser.LoadScene("testdata/cubes_with_light.xml", renderBase);
     //parser.LoadScene("testdata/cubes_no_light.xml", renderBase);
     cameraContainer = (*(renderBase->GetCameras()))[0];
       /*

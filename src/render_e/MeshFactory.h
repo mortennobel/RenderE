@@ -17,6 +17,7 @@ public:
     static Mesh *CreateTetrahedron();
     static Mesh *CreateICOSphere(int subdivisions=2, float radius=1.0f);
     static Mesh *CreateCube();
+    static Mesh *CreatePlane();
 private:
     MeshFactory();
 

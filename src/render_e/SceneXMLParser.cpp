@@ -180,7 +180,12 @@ public:
             }
             Texture2D *texture = new Texture2D(file.c_str());
             texture->SetName(textureName);
-            textures[textureName] = texture;
+            TextureLoadStatus status = texture->Load();
+            if (status == OK){
+                textures[textureName] = texture;
+            } else {
+                cout<<"Error loading texture "<<textureName<<" filename "<<file<<endl;
+            }
         } else if (stringEqual("cubetexture", message)) {
             string textureName;
             string left, right, top, bottom, back, front;
@@ -212,7 +217,12 @@ public:
                     top.c_str(), bottom.c_str(),
                     back.c_str(), front.c_str());
             texture->SetName(textureName);
-            textures[textureName] = texture;
+            TextureLoadStatus status = texture->Load();
+            if (status == OK){
+                textures[textureName] = texture;
+            } else {
+                cout<<"Error loading cube texture "<<textureName<<" filename "<<left<<endl;
+            }
         } else {
             error(message);
         }
@@ -425,6 +435,8 @@ public:
                     mesh = MeshFactory::CreateICOSphere();
                 } else if (stringEqual("tetrahedron", primitive.c_str())){
                     mesh = MeshFactory::CreateTetrahedron();
+                } else if (stringEqual("plane", primitive.c_str())){
+                    mesh = MeshFactory::CreatePlane();
                 } else {
                     cout << "Unknown mesh.primitive name "<<primitive.c_str()<<endl;
                 }

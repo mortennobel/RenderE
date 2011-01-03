@@ -182,6 +182,7 @@ void RenderBase::Init(void (*swapBuffersFunc)()){
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glCullFace(GL_BACK);
     glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
 }
 
 void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){

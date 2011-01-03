@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <shaders>
+        <shader name="diffuse" file="diffuse-color"/>
+        <shader name="diffuse-tex" file="diffuse-texture"/>
+    </shaders>
+    <textures>
+        <texture2d name="background" file="testdata/AncientHopscotch.png"/>
+    </textures>
+    <materials>
+        <material name="Texture" shader="diffuse-tex">
+            <parameter name="texture" texture="background"/>
+            <parameter name="lightCount" int="1"/>
+        </material>
+        <material name="Yellow" shader="diffuse">
+            <parameter name="color" vector4="1,1,0,1"/>
+            <parameter name="lightCount" int="1"/>
+        </material>
+        <material name="White" shader="diffuse">
+            <parameter name="color" vector4="1,1,1,1"/>
+            <parameter name="lightCount" int="1"/>
+        </material>
+    </materials>
+    <scenegraph>
+        <object name="Point Light" position="5,5,1">
+            <light type="point" diffuse="1,1,1,1" ambient="0.15,0.15,0.15,1" specular="1,1,1,1"/>
+        </object>
+        <object name="MainCamera" position="0,1,15">
+            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
+            <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
+        </object>
+        <object name="Texture cube" position="0,0,0" rotation="0,0,0" scale="10,10,10">
+            <mesh primitive="plane"/> 
+            <material ref="Texture"/>
+        </object>
+        <object name="Texture cube behind" position="-2.5,-2.5,-1" rotation="0,0,0" scale="15,15,15">
+            <mesh primitive="plane"/> 
+            <material ref="White"/>
+        </object>
+        <object name="Light sphere" position="5,5,1" rotation="0,0,0" scale=".05,.05,.05">
+            <mesh primitive="sphere"/> 
+            <material ref="Yellow"/>
+        </object>
+        
+    </scenegraph>
+</scene>
