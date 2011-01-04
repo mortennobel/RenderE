@@ -37,7 +37,7 @@
             <mesh primitive="plane"/> 
             <material ref="White"/>
         </object>
-        <object name="Light sphere" position="5,5,1" rotation="0,0,0" scale=".05,.05,.05">
+        <object name="Light sphere" position="5,5,1" rotation="0,0,0" scale=".25,.25,.25">
             <mesh primitive="sphere"/> 
             <material ref="Yellow"/>
         </object>

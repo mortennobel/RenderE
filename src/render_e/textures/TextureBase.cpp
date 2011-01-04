@@ -10,7 +10,7 @@
 
 namespace render_e {
 
-TextureBase::TextureBase(unsigned short textureType)
+TextureBase::TextureBase(int textureType)
 :textureType(textureType), mipmapping(true), textureId(0){
 }
 

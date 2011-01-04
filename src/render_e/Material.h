@@ -24,7 +24,8 @@ enum ShaderParamType{
     SPT_VECTOR2,
     SPT_VECTOR3,
     SPT_VECTOR4,
-    SPT_INT
+    SPT_INT,
+    SPT_TEXTURE
 };
 
 struct ShaderParameters{
@@ -32,7 +33,7 @@ struct ShaderParameters{
     ShaderParamType paramType;
     union ShaderValue {
         float f[4];
-        int integer; 
+        int integer[2]; // value, bind texturetype
     } shaderValue;
 };
 

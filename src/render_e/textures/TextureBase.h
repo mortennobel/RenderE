@@ -22,7 +22,7 @@ enum TextureLoadStatus{
 
 class TextureBase {
 public:
-    TextureBase(unsigned short textureType);
+    TextureBase(int textureType);
     virtual ~TextureBase();
     
     virtual TextureLoadStatus Load() = 0;
@@ -32,8 +32,9 @@ public:
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }
     int GetTextureId() { return textureId; }
+    int GetTextureType() { return textureType; }
 protected:
-    unsigned short textureType;
+    int textureType;
     unsigned int textureId;
     bool mipmapping;
     std::string name;

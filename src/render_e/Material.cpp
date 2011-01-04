@@ -39,7 +39,11 @@ void Material::Bind(){
                 glUniform4fv((*iter).id,1, (*iter).shaderValue.f);
                 break;
             case SPT_INT:
-                glUniform1iv((*iter).id,1, &((*iter).shaderValue.integer));
+                glUniform1iv((*iter).id,1, (*iter).shaderValue.integer);
+                break;
+            case SPT_TEXTURE:
+                glBindTexture( (*iter).shaderValue.integer[1], (*iter).shaderValue.integer[0] );
+                glUniform1iv((*iter).id,1, (*iter).shaderValue.integer);
                 break;
         }
     }
@@ -50,11 +54,7 @@ void Material::AddParameter(ShaderParameters &param){
     std::vector<ShaderParameters>::iterator iter = parameters.begin();
     for (;iter != parameters.end();iter++){
         if ((*iter).id == param.id){
-            (*iter).shaderValue.f[0] = param.shaderValue.f[0];
-            (*iter).shaderValue.f[1] = param.shaderValue.f[1];
-            (*iter).shaderValue.f[2] = param.shaderValue.f[2];
-            (*iter).shaderValue.f[3] = param.shaderValue.f[3];
-            assert ((*iter).paramType == param.paramType); // assume parameter type
+            memcpy(&((*iter).shaderValue), &(param.shaderValue), sizeof(ShaderParameters));
             return;
         }
     }
@@ -123,8 +123,11 @@ bool Material::SetTexture(std::string name, TextureBase *texture){
     }
     ShaderParameters param;
     param.id = id;
-    param.paramType = SPT_FLOAT;
-    param.shaderValue.integer = texture->GetTextureId();
+    param.paramType = SPT_TEXTURE;
+    param.shaderValue.integer[0] = texture->GetTextureId();
+    param.shaderValue.integer[1] = texture->GetTextureId();
+    cout<<"Todo add support for cube textures "<<endl;
+    // param.shaderValue.integer[1] = GL_TEXTURE_2D;
     AddParameter(param);
 }
 
@@ -136,7 +139,7 @@ bool Material::SetInt(std::string name, int i){
     ShaderParameters param;
     param.id = id;
     param.paramType = SPT_INT;
-    param.shaderValue.integer = i;
+    param.shaderValue.integer[0] = i;
     AddParameter(param);
 }
 }

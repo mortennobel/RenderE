@@ -188,6 +188,7 @@ public:
                 XMLString::release(&attName);
             }
             if (file.length()>0){
+                cout << "Loading texture "<<(file.c_str())<<endl;
                 Texture2D *texture = new Texture2D(file.c_str());
                 texture->SetName(textureName);
                 TextureLoadStatus status = texture->Load();
@@ -276,6 +277,7 @@ public:
                 cout << "Cannot find shader " << shader << endl;
             } else {
                 material = new Material(iter->second);
+                material->SetName(matName);
                 materials[matName] = material;
             }
         } else if (stringEqual("parameter", message)) {
@@ -298,6 +300,7 @@ public:
                         cout << "Cannot find texture " << attValue << endl;
                     } else {
                         material->SetTexture(parameterName, iter->second);
+                        cout<<"Set texture parameter "<<iter->second->GetName()<<" value "<<iter->second->GetTextureId()<<endl;
                     }
                 } else if (stringEqual("float", attName)) {
                     float f = stringToFloat(attValue);
@@ -608,7 +611,7 @@ void SceneXMLParser::LoadScene(const char* filename, RenderBase *renderBase) {
     ErrorHandler* errHandler = (ErrorHandler*) docHandler;
     parser->setDocumentHandler(docHandler);
     parser->setErrorHandler(errHandler);
-
+    cout<<"Loading scene "<<filename<<endl;
     try {
         parser->parse(filename);
     } catch (const XMLException& toCatch) {
