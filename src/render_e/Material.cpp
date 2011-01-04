@@ -22,7 +22,7 @@ Material::~Material() {
 
 void Material::Bind(){
     shader->Bind();
-    
+    int textureIndex = 0;
     std::vector<ShaderParameters>::iterator iter =  parameters.begin();
     for (;iter != parameters.end();iter++){
         switch ((*iter).paramType){
@@ -39,11 +39,13 @@ void Material::Bind(){
                 glUniform4fv((*iter).id,1, (*iter).shaderValue.f);
                 break;
             case SPT_INT:
-                glUniform1iv((*iter).id,1, (*iter).shaderValue.integer);
+                glUniform1i((*iter).id, (*iter).shaderValue.integer[0]);
                 break;
             case SPT_TEXTURE:
+                glActiveTexture(GL_TEXTURE0+textureIndex);
                 glBindTexture( (*iter).shaderValue.integer[1], (*iter).shaderValue.integer[0] );
-                glUniform1iv((*iter).id,1, (*iter).shaderValue.integer);
+                glUniform1i((*iter).id, textureIndex);
+                textureIndex++;
                 break;
         }
     }
@@ -125,7 +127,7 @@ bool Material::SetTexture(std::string name, TextureBase *texture){
     param.id = id;
     param.paramType = SPT_TEXTURE;
     param.shaderValue.integer[0] = texture->GetTextureId();
-    param.shaderValue.integer[1] = texture->GetTextureId();
+    param.shaderValue.integer[1] = texture->GetTextureType();
     cout<<"Todo add support for cube textures "<<endl;
     // param.shaderValue.integer[1] = GL_TEXTURE_2D;
     AddParameter(param);

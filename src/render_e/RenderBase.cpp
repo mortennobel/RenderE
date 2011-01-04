@@ -25,6 +25,18 @@ Shader *zOnlyShader = NULL;
 RenderBase::RenderBase():swapBuffersFunc(NULL),doubleSpeedZOnlyRendering(true){
 }
 
+
+// helper function that prints OpenGL errors (if any)
+inline void doRenderErrorCheck() {
+    GLenum errorCode;
+    while ((errorCode = glGetError()) != GL_NO_ERROR) {
+        const GLubyte* errorStr = gluErrorString(errorCode);
+        std::cout << " " << errorCode << " " << errorStr <<
+            std::endl;
+    }
+}
+
+
 void RenderBase::Reshape(int width, int height){
     if (doubleSpeedZOnlyRendering){
         glDepthFunc(GL_LEQUAL);
@@ -77,6 +89,7 @@ void RenderBase::Display(){
         RenderScene(cameraMatrix);
     }
     swapBuffersFunc();
+    doRenderErrorCheck();
 }
 
 void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
