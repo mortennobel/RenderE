@@ -17,8 +17,8 @@
             <parameter name="color" vector4="1,1,0,1"/>
             <parameter name="lightCount" int="1"/>
         </material>
-        <material name="White" shader="diffuse">
-            <parameter name="color" vector4="1,1,1,1"/>
+        <material name="White" shader="diffuse-tex">
+            <parameter name="texture" texture="texture"/>
             <parameter name="lightCount" int="1"/>
         </material>
     </materials>
@@ -28,6 +28,10 @@
         </object>
         <object name="MainCamera" position="0,1,15">
             <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
+            <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
+        </object>
+        <object name="RenderToTextureCamera" position="0,1,15">
+            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="COLOR_BUFFER"/>
             <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
         </object>
         <object name="Texture cube" position="0,0,0" rotation="0,0,0" scale="10,10,10">
