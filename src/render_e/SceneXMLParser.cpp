@@ -334,7 +334,7 @@ public:
                 } else if (stringEqual("position", attName)) {
                     position = stringToVector3(attValue);
                 } else if (stringEqual("rotation", attName)) {
-                    rotation = stringToVector3(attValue);
+                    rotation = stringToVector3(attValue)*Mathf::DEGREE_TO_RADIAN;
                 } else if (stringEqual("scale", attName)) {
                     scale = stringToVector3(attValue);
                 } else if (stringEqual("parent", attName)) {
