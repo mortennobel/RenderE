@@ -90,6 +90,15 @@ void Camera::Setup(){
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
     glMatrixMode(GL_MODELVIEW);
+    if (renderToTexture){
+        BindFrameBufferObject();
+    }
+}
+
+void Camera::TearDown(){
+    if (renderToTexture){
+        UnBindFrameBufferObject();
+    }
 }
 
 void Camera::SetClearColor(Vector4 clearColor){ 

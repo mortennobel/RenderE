@@ -47,6 +47,7 @@ public:
     /// Clear buffers in 
     void Clear();
     void Setup();
+    void TearDown();
     void SetClearColor(Vector4 clearColor);
     Vector4 GetClearColor(){ return clearColor; }
     bool IsRenderToTexture(){ return renderToTexture; }
