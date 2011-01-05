@@ -74,20 +74,17 @@ void RenderBase::SetupLight(){
 
 void RenderBase::Display(){
     assert(swapBuffersFunc!=NULL);
-    
+    glLoadIdentity();
     SetupLight();
-        
+    
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
-        Camera *camera = (*iter)->GetCamera();
-        camera->Setup(); // only setup if changed
+        SceneObject *sceneObject = *iter;
+        Camera *camera = sceneObject->GetCamera();
+        camera->Setup();
         camera->Clear();
+
         // setup camera transform
-#ifdef _DEBUG // make sure that the rendering takes place in MODELVIEW mode
-        int matrixMode;
-        glGetIntegerv(GL_MATRIX_MODE,&matrixMode);
-        assert(matrixMode==GL_MODELVIEW);
-#endif //_DEBUG
-        Matrix44 cameraMatrix = (*iter)->GetTransform()->GetLocalTransformInverse();
+        Matrix44 cameraMatrix = sceneObject->GetTransform()->GetLocalTransformInverse();
         RenderScene(cameraMatrix);
         camera->TearDown();
     }

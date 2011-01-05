@@ -93,7 +93,6 @@ void Camera::Setup(){
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
     glMatrixMode(GL_MODELVIEW);
-    
 }
 
 void Camera::TearDown(){
