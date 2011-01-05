@@ -128,8 +128,6 @@ bool Material::SetTexture(std::string name, TextureBase *texture){
     param.paramType = SPT_TEXTURE;
     param.shaderValue.integer[0] = texture->GetTextureId();
     param.shaderValue.integer[1] = texture->GetTextureType();
-    cout<<"Todo add support for cube textures "<<endl;
-    // param.shaderValue.integer[1] = GL_TEXTURE_2D;
     AddParameter(param);
 }
 
