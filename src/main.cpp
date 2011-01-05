@@ -218,7 +218,9 @@ void transformTest(){
 void initWorld(const char *filename) {
     SceneXMLParser parser;
     parser.LoadScene(filename, renderBase);
-    cameraContainer = (*(renderBase->GetCameras()))[0];
+    cameraContainer = (*(renderBase->GetCameras()))[0]; 
+    
+    cout << "Using camera "<<(*(renderBase->GetCameras()))[0]->GetName()<<endl;
     
     renderBase->PrintDebug();
 }

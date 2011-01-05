@@ -40,7 +40,7 @@ Texture2D::~Texture2D() {
     }
 }
 
-void Texture2D::GetTextureFormat(GLint &internalFormat, GLenum &format) {
+void Texture2D::GetTextureFormat( GLenum &format ) {
     switch (textureFormat) {
         case DEPTH:
             internalFormat = GL_DEPTH_COMPONENT;
@@ -77,10 +77,9 @@ TextureLoadStatus Texture2D::Load() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        GLint internalFormat;
         GLenum format;
 
-        GetTextureFormat(internalFormat, format);
+        GetTextureFormat(format);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         if (mipmapping) {
@@ -121,10 +120,10 @@ void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    GLint internalFormat;
+    
     GLenum format;
 
-    GetTextureFormat(internalFormat, format);
+    GetTextureFormat(format);
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
             0, format, GL_UNSIGNED_BYTE, NULL);

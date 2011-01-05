@@ -78,6 +78,9 @@ void Camera::Clear(){
 }
 
 void Camera::Setup(){
+    if (renderToTexture){
+        BindFrameBufferObject();
+    }
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -90,9 +93,7 @@ void Camera::Setup(){
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
     glMatrixMode(GL_MODELVIEW);
-    if (renderToTexture){
-        BindFrameBufferObject();
-    }
+    
 }
 
 void Camera::TearDown(){
@@ -112,8 +113,13 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
     
     renderToTexture = doRenderToTexture;
     if (renderToTexture){
-        glGenFramebuffersEXT (1, &framebufferId);
+        glGenFramebuffers(1, &framebufferId);
         framebufferTextureId = texture2d->GetTextureId();
+        
+        glGenRenderbuffers(1, &renderBufferId);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+        glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, texture2d->GetWidth(), texture2d->GetHeight());
+        
         framebufferTextureType = GL_TEXTURE_2D;
         switch (framebufferTargetType) {
             case COLOR_BUFFER:
@@ -126,8 +132,13 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
             default:
                 this->framebufferTargetType = GL_STENCIL_ATTACHMENT;
         }
+        // Todo handle depth attachment
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
+        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
     } else {
-        glDeleteFramebuffersEXT(1, &framebufferId);
+        glDeleteFramebuffers(1, &framebufferId);
+        glDeleteRenderbuffers(1, &renderBufferId);
     }
     
 }
@@ -138,10 +149,10 @@ void Camera::BindFrameBufferObject(){
     // target parameter : GL_FRAMEBUFFER = read/write, GL_DRAW_FRAMEBUFFER = write only
     glBindFramebuffer( GL_DRAW_FRAMEBUFFER, framebufferId);
     
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, framebufferTargetType, framebufferTextureType, framebufferTextureId, 0);
 }
 
 void Camera::UnBindFrameBufferObject(){
+    glGenerateMipmap(GL_TEXTURE_2D);
     glBindFramebuffer( GL_FRAMEBUFFER, 0);
 }
 }

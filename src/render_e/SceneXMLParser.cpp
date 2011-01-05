@@ -370,6 +370,9 @@ public:
             float right = 1;
             float bottom = -1;
             float top = 1;
+            Texture2D *renderToTexture = NULL;
+            CameraBuffer cameraBuffer; // used in renderToTexture
+            /*renderToTexture="texture" renderBuffer="COLOR_BUFFER"*/
             Vector4 clearColor(0,0,0,1);
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
@@ -378,6 +381,24 @@ public:
                 if (stringEqual("type", attName)){
                     if (stringEqual("orthographic",attValue)){
                         projection = false;
+                    }
+                } else if (stringEqual("renderToTexture",attName)){
+                    map<string, TextureBase*>::iterator iter = textures.find(attValue);
+                    if (iter == textures.end()) {
+                        cout << "Cannot find texture " << attValue << endl;
+                    } else {
+                        renderToTexture = static_cast<Texture2D *>( iter->second);
+                    }
+                    
+                } else if (stringEqual("renderBuffer",attName)){
+                    if (stringEqual("COLOR_BUFFER", attValue)){
+                        cameraBuffer = COLOR_BUFFER;
+                    } else if (stringEqual("DEPTH_BUFFER", attValue)){
+                        cameraBuffer = DEPTH_BUFFER;
+                    } else if (stringEqual("STENCIL_BUFFER", attValue)){
+                        cameraBuffer = STENCIL_BUFFER;
+                    } else {
+                        cout <<"Unknown type for renderBuffer - supported types are: COLOR_BUFFER, DEPTH_BUFFER, STENCIL_BUFFER. Actual value was "<<attValue<<endl;
                     }
                 } else if (stringEqual("fieldOfView",attName)){
                     fieldOfView = stringToFloat(attValue);
@@ -411,6 +432,9 @@ public:
                 cam->SetProjection(fieldOfView, aspect, nearPlane,farPlane);
             } else {
                 cam->SetOrthographic(left, right, bottom, top, nearPlane,farPlane);
+            }
+            if (renderToTexture != NULL){
+                cam->SetRenderToTexture(true, cameraBuffer, static_cast<Texture2D*>(renderToTexture));
             }
             cam->SetClearColor(clearColor);
             sceneObject->AddCompnent(cam);

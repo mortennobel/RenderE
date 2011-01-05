@@ -69,6 +69,7 @@ private:
     Vector4 clearColor;
     bool renderToTexture;
     unsigned int framebufferId;
+    unsigned int renderBufferId;
     int framebufferTargetType;
     unsigned int framebufferTextureId;
     unsigned int framebufferTextureType;

@@ -23,10 +23,13 @@ public:
     virtual TextureLoadStatus Load();
     /** Create a texture without content */
     void Create(int width, int height, TextureFormat textureFormat);
+    int GetInternalFormat(){ return internalFormat; }
+    int GetWidth(){ return width; }
+    int GetHeight(){ return height; }
 private:
     Texture2D(const Texture2D& orig); // disallow copy constructor
     Texture2D& operator = (const Texture2D&); // disallow copy constructor
-    void GetTextureFormat(int &internalFormat,unsigned int &format);
+    void GetTextureFormat(unsigned int &format);
     TextureDataSource *textureDataSource;
     bool interpolationLinear;
     bool clamp;
@@ -34,6 +37,7 @@ private:
     int width;
     int height;
     TextureFormat textureFormat;
+    int internalFormat;
 };
 }
 #endif // TEXTURE_H
