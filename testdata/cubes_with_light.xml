@@ -9,20 +9,20 @@
             <parameter name="lightCount" int="1"/>
         </material>
         <material name="Blue1" shader="diffuse">
-            <parameter name="color" vector3="0,0,1"/>
+            <parameter name="color" vector4="0,0,1,1"/>
         </material>
         <material name="Blue2" shader="diffuse">
-            <parameter name="color" vector3="0,0,1"/>
+            <parameter name="color" vector4="0,0,1,1"/>
         </material>
         <material name="Blue3" shader="diffuse">
-            <parameter name="color" vector3="0,0,1"/>
+            <parameter name="color" vector4="0,0,1,1"/>
         </material>
         <material name="Blue4" shader="diffuse">
-            <parameter name="color" vector3="0,0,1"/>
+            <parameter name="color" vector4="0,0,1,1"/>
         </material>
         
         <material name="Red" shader="diffuse">
-            <parameter name="color" vector3="1,0,0"/>
+            <parameter name="color" vector4="1,0,0,1"/>
         </material>
     </materials>
     <scenegraph>

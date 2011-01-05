@@ -61,6 +61,8 @@ private:
     std::vector<SceneObject*> lights;
     void (*swapBuffersFunc)();
     bool doubleSpeedZOnlyRendering;
+    int width;
+    int height;
 };
 
 }

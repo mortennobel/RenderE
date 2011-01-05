@@ -77,9 +77,12 @@ void Camera::Clear(){
     glClear(clearMaskNative);
 }
 
-void Camera::Setup(){
+void Camera::Setup(int viewportWidth, int viewportHeight){
     if (renderToTexture){
         BindFrameBufferObject();
+        glViewport(0,0,fboWidth, fboHeight);
+    } else {
+        glViewport(0,0,viewportWidth, viewportHeight);
     }
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glMatrixMode(GL_PROJECTION);
@@ -117,7 +120,9 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
         
         glGenRenderbuffers(1, &renderBufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, texture2d->GetWidth(), texture2d->GetHeight());
+        fboWidth = texture2d->GetWidth();
+        fboHeight = texture2d->GetHeight();
+        glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, fboWidth, fboHeight);
         
         framebufferTextureType = GL_TEXTURE_2D;
         switch (framebufferTargetType) {
@@ -135,6 +140,32 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
         glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
         glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
+        
+        GLenum frameBufferRes = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+        using namespace std;
+        switch (frameBufferRes){
+            case GL_FRAMEBUFFER_COMPLETE:
+                cout<<"Framebuffer ok"<<endl;
+                break;
+            case GL_FRAMEBUFFER_UNDEFINED:
+                cout<<"Framebuffer undefined"<<endl;
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+                cout<<"Framebuffer incomplete attachment"<<endl;
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+                cout<<"Framebuffer incomplete missing attachment"<<endl;
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+                cout<<"Framebuffer incomplete read buffer"<<endl;
+                break;
+            case GL_FRAMEBUFFER_UNSUPPORTED:
+                cout<<"Framebuffer unsupported"<<endl;
+                break;
+            case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+                cout<<"Framebuffer incomplete multisample"<<endl;
+                break;
+        }
     } else {
         glDeleteFramebuffers(1, &framebufferId);
         glDeleteRenderbuffers(1, &renderBufferId);

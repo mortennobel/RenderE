@@ -168,6 +168,7 @@ public:
             int width;
             int height;
             string type;
+            bool clamp = true;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
@@ -181,6 +182,8 @@ public:
                     width = stringToInt(attValue);
                 } else if (stringEqual("height", attName)) {
                     height = stringToInt(attValue);
+                } else if (stringEqual("clamp", attName)) {
+                    clamp = stringEqual("clamp", attValue);
                 } else {
                     cout << "Unknown texture2d attribute name "<<attName<<endl;
                 }
@@ -191,6 +194,7 @@ public:
                 cout << "Loading texture "<<(file.c_str())<<endl;
                 Texture2D *texture = new Texture2D(file.c_str());
                 texture->SetName(textureName);
+                texture->SetClamp(clamp);
                 TextureLoadStatus status = texture->Load();
                 if (status == OK){
                     textures[textureName] = texture;
@@ -199,6 +203,7 @@ public:
                 }
             } else {
                 Texture2D *texture = new Texture2D();
+                texture->SetClamp(clamp);
                 texture->SetName(textureName);
                 TextureFormat textureFormat;
                 if (type.compare("DEPTH")){

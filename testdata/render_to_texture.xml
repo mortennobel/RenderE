@@ -6,7 +6,7 @@
     </shaders>
     <textures>
         <texture2d name="background" file="testdata/AncientHopscotch.png"/>
-        <texture2d name="texture" width="512" height="512" type="RGB"/>
+        <texture2d name="texture" width="512" height="512" type="RGB" clamp="clamp"/>
     </textures>
     <materials>
         <material name="Texture" shader="diffuse-tex">

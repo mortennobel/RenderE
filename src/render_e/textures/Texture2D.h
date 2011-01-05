@@ -26,6 +26,8 @@ public:
     int GetInternalFormat(){ return internalFormat; }
     int GetWidth(){ return width; }
     int GetHeight(){ return height; }
+    void SetClamp(bool clamp){this->clamp = clamp;}
+    bool IsClamp(){ return clamp; }
 private:
     Texture2D(const Texture2D& orig); // disallow copy constructor
     Texture2D& operator = (const Texture2D&); // disallow copy constructor

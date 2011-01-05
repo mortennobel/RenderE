@@ -46,7 +46,7 @@ public:
     int GetClearMask();
     /// Clear buffers in 
     void Clear();
-    void Setup();
+    void Setup(int viewportWidth, int viewportHeight);
     void TearDown();
     void SetClearColor(Vector4 clearColor);
     Vector4 GetClearColor(){ return clearColor; }
@@ -73,6 +73,8 @@ private:
     int framebufferTargetType;
     unsigned int framebufferTextureId;
     unsigned int framebufferTextureType;
+    int fboWidth;
+    int fboHeight;
 };
 }
 #endif	/* CAMERA_H */

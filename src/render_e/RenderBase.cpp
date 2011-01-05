@@ -38,6 +38,8 @@ inline void doRenderErrorCheck() {
 
 
 void RenderBase::Reshape(int width, int height){
+    this->width = width;
+    this->height = height;
     if (doubleSpeedZOnlyRendering){
         glDepthFunc(GL_LEQUAL);
         if (zOnlyShader == NULL){
@@ -80,7 +82,7 @@ void RenderBase::Display(){
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         SceneObject *sceneObject = *iter;
         Camera *camera = sceneObject->GetCamera();
-        camera->Setup();
+        camera->Setup(width, height);
         camera->Clear();
 
         // setup camera transform
