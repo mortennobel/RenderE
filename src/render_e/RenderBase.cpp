@@ -48,10 +48,8 @@ void RenderBase::Reshape(int width, int height){
     }
 }
 
-void RenderBase::Display(){
-    assert(swapBuffersFunc!=NULL);
-    static SceneObject *lastCamera = NULL;
-    
+void RenderBase::SetupLight(){
+    // Setup light
     // todo: this need not to run every frame
     int lightIndex=0;
     for (std::vector<SceneObject*>::iterator iter = lights.begin(); iter != lights.end();iter++){
@@ -72,21 +70,26 @@ void RenderBase::Display(){
         glLightfv(GL_LIGHT0+lightIndex,GL_POSITION, lightPos.Get());
         lightIndex--;
     }
+}
+
+void RenderBase::Display(){
+    assert(swapBuffersFunc!=NULL);
     
+    SetupLight();
+        
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
-        if (lastCamera!=*iter){
-            lastCamera = *iter;
-            lastCamera->GetCamera()->Setup(); // only setup if changed
-        }
-        lastCamera->GetCamera()->Clear();
+        Camera *camera = (*iter)->GetCamera();
+        camera->Setup(); // only setup if changed
+        camera->Clear();
         // setup camera transform
 #ifdef _DEBUG // make sure that the rendering takes place in MODELVIEW mode
         int matrixMode;
         glGetIntegerv(GL_MATRIX_MODE,&matrixMode);
         assert(matrixMode==GL_MODELVIEW);
 #endif //_DEBUG
-        Matrix44 cameraMatrix = lastCamera->GetTransform()->GetLocalTransformInverse();
+        Matrix44 cameraMatrix = (*iter)->GetTransform()->GetLocalTransformInverse();
         RenderScene(cameraMatrix);
+        camera->TearDown();
     }
     swapBuffersFunc();
     doRenderErrorCheck();

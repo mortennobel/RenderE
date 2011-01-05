@@ -52,6 +52,7 @@ public:
         return s_instance;
     }
 private:
+    inline void SetupLight();
     RenderBase();
     void RenderScene(const Matrix44 &cameraMatrix);
     static RenderBase *s_instance;
