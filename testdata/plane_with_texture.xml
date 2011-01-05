@@ -6,12 +6,18 @@
     </shaders>
     <textures>
         <texture2d name="background" file="testdata/AncientHopscotch.png"/>
+        <texture2d name="texture" file="testdata/texture.png"/>
     </textures>
     <materials>
         <material name="Texture" shader="diffuse-tex">
             <parameter name="texture" texture="background"/>
             <parameter name="lightCount" int="1"/>
         </material>
+        <material name="Texture2" shader="diffuse-tex">
+            <parameter name="texture" texture="texture"/>
+            <parameter name="lightCount" int="1"/>
+        </material>
+        
         <material name="Yellow" shader="diffuse">
             <parameter name="color" vector4="1,1,0,1"/>
             <parameter name="lightCount" int="1"/>
@@ -33,9 +39,10 @@
             <mesh primitive="plane"/> 
             <material ref="Texture"/>
         </object>
-        <object name="Texture cube behind" position="-2.5,-2.5,-1" rotation="0,0,0" scale="15,15,15">
+        
+        <object name="Texture cube behind" position="-2.5,-2.5,-1" rotation="0,0,15" scale="15,15,15">
             <mesh primitive="plane"/> 
-            <material ref="White"/>
+            <material ref="Texture2"/>
         </object>
         <object name="Light sphere" position="5,5,1" rotation="0,0,0" scale=".25,.25,.25">
             <mesh primitive="sphere"/> 
