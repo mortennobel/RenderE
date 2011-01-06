@@ -28,6 +28,7 @@ public:
 	const Matrix44 operator+(const Matrix44 &other) const;
 	const Matrix44 operator*(const Matrix44 &other) const;
 	const Matrix44 operator*(float f) const;
+    const Vector3  operator*(const Vector3 &other) const;
 		
 	float& operator() (unsigned row, unsigned col);
 	float  operator() (unsigned row, unsigned col) const;

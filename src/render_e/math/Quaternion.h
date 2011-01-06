@@ -31,9 +31,10 @@ class Quaternion {
     void SetIdentity();
 
     Quaternion operator * (const Quaternion &q) const;
+    Vector3 operator * (const Vector3 &q) const;
     void operator *= (const Quaternion &q);
 	
-	Quaternion Inverse();
+	Quaternion Inverse() const;
     
     static Quaternion MakeFromEuler(float pitch, float yaw, float roll){
         Quaternion q;

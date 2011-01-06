@@ -79,25 +79,25 @@ Vector3  Transform::GetScale() const{
     return scale;
 }
 
-void Transform::SetPosition(Vector3 &newPosition) {
+void Transform::SetPosition(const Vector3 &newPosition) {
     position = newPosition;
     dirtyFlag = true;
     dirtyFlagInverse = true;
 }
 
-void Transform::SetRotation(Quaternion &quaternion) {
+void Transform::SetRotation(const Quaternion &quaternion) {
     this->rotation = quaternion;
     dirtyFlag = true;
     dirtyFlagInverse = true;
 }
 
-void Transform::SetRotation(Vector3 &euler){
+void Transform::SetRotation(const Vector3 &euler){
     this->rotation.SetFromEuler(euler[0], euler[1], euler[2]);
     dirtyFlag = true;
     dirtyFlagInverse = true;
 }
 
-void Transform::SetScale(Vector3 &scale){
+void Transform::SetScale(const Vector3 &scale){
     this->scale = scale;
     dirtyFlag = true;
     dirtyFlagInverse = true;

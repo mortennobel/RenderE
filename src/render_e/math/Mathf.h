@@ -41,6 +41,12 @@ class Mathf {
 	/* fast square root approximation from the Quake3 game engine */
 	/* http://beyond3d.com/content/articles/8                     */
     static float Sqrt(float x);
+    
+    static float Clamp(float value, float min, float max){
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
  private:
      Mathf(void) {}
      static bool IsRandomInitialized;

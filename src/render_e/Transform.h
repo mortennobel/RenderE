@@ -31,10 +31,10 @@ public:
     Vector3 GetPosition() const;
     Vector3 GetScale() const;
     Quaternion GetRotation() const;
-    void SetPosition(Vector3 &newPosition);
-    void SetRotation(Quaternion &quaternion);
-    void SetRotation(Vector3 &euler);
-    void SetScale(Vector3 &scale);
+    void SetPosition(const Vector3 &newPosition);
+    void SetRotation(const Quaternion &quaternion);
+    void SetRotation(const Vector3 &euler);
+    void SetScale(const Vector3 &scale);
     
     void AddChild(Transform *transform);
     bool RemoveChild(Transform *transform);

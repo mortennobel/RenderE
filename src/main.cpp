@@ -18,6 +18,7 @@
 #include "render_e/shaders/ShaderFileDataSource.h"
 #include "render_e/shaders/DefaultShaders.h"
 #include "render_e/SceneXMLParser.h"
+#include "render_e/math/Mathf.h"
 
 
 #ifndef RENDER_FPS
@@ -32,6 +33,12 @@ MeshComponent *meshTeapot = new MeshComponent();
 SceneObject *meshTeapotContainer = new SceneObject();
 SceneObject *cameraContainer = new SceneObject();
     
+bool mouseDown = false;
+int mouseOffsetX, mouseOffsetY;
+Vector3 mouseRotation;
+Vector3 rotation(0,0,0);
+int moveForward = 0;
+
 // The main purpose of the main is to created a windows
 // and hook up the opengl to that (using GLUT).
 // Other purposes include:
@@ -59,13 +66,15 @@ void printMatrix(float *m){
 
 
 void localUpdate(float time){
-//    static Quaternion rotation = Quaternion::MakeFromEuler(10,0,0);
-//    Quaternion q = meshTeapot->GetOwner()->GetTransform().GetRotation()*rotation/* *time*/;
-//    meshTeapot->GetOwner()->GetTransform().SetRotation(q);
     static float totalTime =0;
     totalTime += time;
-//    Quaternion q = Quaternion::MakeFromEuler(0.0f,totalTime,0.0f);
-//    meshTeapotContainer->GetTransform().SetRotation(q);
+    if (moveForward!=0){
+        float movementSpeed = 2.0;
+        Vector3 forward(0,0,-1);
+        forward = cameraContainer->GetTransform()->GetRotation()*forward;
+        Vector3 newPos = cameraContainer->GetTransform()->GetPosition()+forward*(movementSpeed*time*moveForward);
+        cameraContainer->GetTransform()->SetPosition(newPos);
+    }
 }
 
 void timerFunc(int value) {
@@ -89,6 +98,7 @@ void initGL();
 void initRenderBase();
 
 void keyPress(unsigned char key, int x, int y){
+    cout<<"Keypress "<<key<<endl;
     Transform *t = meshTeapotContainer->GetTransform();
     Vector3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
     switch (key){
@@ -113,12 +123,51 @@ void keyPress(unsigned char key, int x, int y){
     cameraContainer->GetTransform()->SetPosition(cameraPosition);
 }
 
+void mouseMotionFunc(int x, int y){
+    if (mouseDown){
+        float rotationSpeed = 0.3;
+        rotation[0] = Mathf::Clamp(mouseRotation[0]+(-y+mouseOffsetY)*rotationSpeed,-89.0f,89.0f);
+        rotation[1] = mouseRotation[1]+(-x+mouseOffsetX)*rotationSpeed;
+
+        Quaternion newRotation = Quaternion::MakeFromEuler(
+                rotation[0]*Mathf::DEGREE_TO_RADIAN, 
+                rotation[1]*Mathf::DEGREE_TO_RADIAN, 0);
+        cameraContainer->GetTransform()->SetRotation(newRotation);
+    }
+}
+
+void mouseFunc(int button, int state, int x, int y){
+    if (button == GLUT_RIGHT_BUTTON){
+        if (state==GLUT_DOWN){
+            mouseOffsetX = x;
+            mouseOffsetY = y;
+            mouseRotation = rotation;
+            mouseDown = true;
+        } else if (state==GLUT_UP){
+            rotation = mouseRotation;
+            mouseDown = false;
+        }
+    } else if (button == GLUT_LEFT_BUTTON){
+        if (state==GLUT_DOWN){
+            moveForward = 1;
+        } else {
+            moveForward = 0;
+        }
+    } else if (button == GLUT_MIDDLE_BUTTON){
+        if (state==GLUT_DOWN){
+            moveForward = -1;
+        } else {
+            moveForward = 0;
+        }
+    }
+}
+
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(700, 500);
     glutInitWindowPosition(10, 10);
-    glutCreateWindow("Hello World");
+    glutCreateWindow("RenderE");
     GLenum err = glewInit();
     if (GLEW_OK != err) {
         // Problem: glewInit failed, something is seriously wrong. 
@@ -130,7 +179,8 @@ int main(int argc, char **argv) {
     if (GLEW_EXT_framebuffer_object){
         cout<<"Framebuffer objects ok" << endl;
     } else {
-        cout << "WARN: Framebuffer objects not ok" << endl;
+        cout << "Error: Framebuffer objects not supported" << endl;
+        return -1;
     }
     
     initGL();
@@ -149,6 +199,8 @@ int main(int argc, char **argv) {
     
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
+    glutMouseFunc(mouseFunc);
+    glutMotionFunc(mouseMotionFunc);
 
     glutKeyboardFunc(keyPress);
     glutTimerFunc(RENDER_FPS, timerFunc, 0);

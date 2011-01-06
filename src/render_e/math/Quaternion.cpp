@@ -178,7 +178,7 @@ void Quaternion::operator *=(const Quaternion &q) {
     w = _w;
 }
 
-Quaternion Quaternion::Inverse() {
+Quaternion Quaternion::Inverse() const {
     float norm = w * w + x * x + y * y + z*z;
     // if we're the zero quaternion, just return
     if (Mathf::IsZero(norm))
@@ -192,4 +192,16 @@ Quaternion Quaternion::Inverse() {
 
     return Quaternion(x, y, z, w);
 }
+
+
+Vector3 Quaternion::operator * (const Vector3 &vector) const{
+    float vMult = 2.0f*(x*vector[0] + y*vector[1] + z*vector[2]);
+    float crossMult = 2.0f*w;
+    float pMult = crossMult*w - 1.0f;
+
+    return Vector3( pMult*vector[0] + vMult*x + crossMult*(y*vector[2] - z*vector[1]),
+                      pMult*vector[1] + vMult*y + crossMult*(z*vector[0] - x*vector[2]),
+                      pMult*vector[2] + vMult*z + crossMult*(x*vector[1] - y*vector[0]) );
+}
+
 }
