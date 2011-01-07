@@ -28,7 +28,7 @@ PNGFileTextureDataSource::PNGFileTextureDataSource(const PNGFileTextureDataSourc
 PNGFileTextureDataSource::~PNGFileTextureDataSource() {
 }
 
-TextureLoadStatus PNGFileTextureDataSource::LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) {
+TextureLoadStatus PNGFileTextureDataSource::LoadTexture(const char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) {
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;

@@ -21,7 +21,7 @@ public:
     TextureDataSource();
     virtual ~TextureDataSource();
     
-    virtual TextureLoadStatus LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) = 0;
+    virtual TextureLoadStatus LoadTexture(const char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData) = 0;
     static TextureDataSource *GetTextureDataSource();
     static void SetTextureDataSource(TextureDataSource *textureDataSource);
 private:

@@ -23,7 +23,7 @@ enum CameraBuffer {
     STENCIL_BUFFER = 4
 };
 
-// forward declaration
+//  forward declaration
 class Texture2D;
 
 class Camera : public Component {

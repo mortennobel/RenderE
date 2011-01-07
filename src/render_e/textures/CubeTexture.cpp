@@ -8,18 +8,11 @@
 #include "CubeTexture.h"
 #include <cstring>
 #include <cassert>
+#include <iostream>
 #include "GL/glew.h"
 
 
 namespace render_e {
-
-char *copy(const char *s){
-    assert(s!=NULL);
-    int length = strlen(s);
-    char *strCopy = new char[length];
-    memcpy(strCopy,s, length);
-    return strCopy;
-}
 
 CubeTexture::CubeTexture(
         const char* left, const char* right, 
@@ -27,22 +20,15 @@ CubeTexture::CubeTexture(
         const char* back, const char* front)
 :TextureBase(GL_TEXTURE_CUBE_MAP), textureDataSource(TextureDataSource::GetTextureDataSource()){
     assert(textureDataSource!=NULL);
-    resourceNames = new char *[6];
-    resourceNames[0] = copy(left);
-    resourceNames[1] = copy(right);
-    resourceNames[2] = copy(top);
-    resourceNames[3] = copy(bottom);
-    resourceNames[4] = copy(back);
-    resourceNames[5] = copy(front);
+    resourceNames[0].append(left);
+    resourceNames[1].append(right);
+    resourceNames[2].append(top);
+    resourceNames[3].append(bottom);
+    resourceNames[4].append(back);
+    resourceNames[5].append(front);
 }
 
 CubeTexture::~CubeTexture() {
-    for (int i=0;i<6;i++){
-        if (resourceNames[i]!= NULL){
-            delete [] resourceNames[i];
-        }
-    }
-    delete [] resourceNames;
 }
 
 TextureLoadStatus CubeTexture::Load(){
@@ -55,7 +41,12 @@ TextureLoadStatus CubeTexture::Load(){
         int height;
         TextureFormat textureFormat;
         unsigned char *data = NULL;
-        TextureLoadStatus res = textureDataSource->LoadTexture(resourceNames[i], width, height, textureFormat, &data);
+        TextureLoadStatus res = textureDataSource->LoadTexture(resourceNames[i].c_str(), width, height, textureFormat, &data);
+        
+        if (res != OK){
+            std::cout<<"Error loading "<<resourceNames[i]<<std::endl;
+            return res;
+        }
         
         glPixelStorei(GL_UNPACK_ALIGNMENT,1);
         if (mipmapping){

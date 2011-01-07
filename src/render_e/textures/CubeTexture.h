@@ -8,6 +8,8 @@
 #ifndef CUBETEXTURE_H
 #define	CUBETEXTURE_H
 
+#include <string>
+
 #include "TextureBase.h"
 #include "TextureDataSource.h"
 
@@ -22,7 +24,7 @@ private:
     CubeTexture& operator = (const CubeTexture&); // disallow copy constructor
     
     TextureDataSource *textureDataSource;
-    char** resourceNames;
+    std::string resourceNames[6];
 };
 
 }

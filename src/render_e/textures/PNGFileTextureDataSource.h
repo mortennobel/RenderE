@@ -19,7 +19,7 @@ class PNGFileTextureDataSource : public TextureDataSource {
 public:
     PNGFileTextureDataSource();
     ~PNGFileTextureDataSource();
-    TextureLoadStatus LoadTexture(char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData);
+    TextureLoadStatus LoadTexture(const char* name, int &outWidth, int &outHeight, TextureFormat &outFormat, unsigned char **outData);
     
 private:
     PNGFileTextureDataSource(const PNGFileTextureDataSource& orig);
