@@ -98,7 +98,6 @@ void initGL();
 void initRenderBase();
 
 void keyPress(unsigned char key, int x, int y){
-    cout<<"Keypress "<<key<<endl;
     Transform *t = meshTeapotContainer->GetTransform();
     Vector3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
     switch (key){
@@ -144,7 +143,6 @@ void mouseFunc(int button, int state, int x, int y){
             mouseRotation = rotation;
             mouseDown = true;
         } else if (state==GLUT_UP){
-            rotation = mouseRotation;
             mouseDown = false;
         }
     } else if (button == GLUT_LEFT_BUTTON){
@@ -208,34 +206,6 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
-void TestLoadShader(){
-    cout<<"TestLoadShader"<<endl;
-    ShaderFileDataSource sfs;
-    char name[] = "shadertest";
-    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
-    Shader *s = sfs.LoadLinkShader(name, status);
-    assert(status == SHADER_FILE_NOT_FOUND);
-
-    char nameLinkBuggy[] = "linkbug";
-    Shader *linkBug = sfs.LoadLinkShader(nameLinkBuggy, status);
-    cout<<"Link status: "<<status<<endl;
-//    assert (status == SHADER_LINK_ERROR); // OpenGL on windows allows this
-
-    char nameBuggy[] = "buggy";
-    Shader *bug = sfs.LoadLinkShader(nameBuggy, status);
-    assert (bug == NULL);
-    assert (status == SHADER_COMPILE_ERROR_VERTEX_SHADER);
-    
-    char name2[] = "diffuse";
-    Shader *b = sfs.LoadLinkShader(name2, status);
-    assert (b!= NULL);
-    assert (status == SHADER_OK);
-    
-    DefaultShaders *df = DefaultShaders::Instance();
-    Shader *diffuseColor = df->GetDiffuseColor();
-    assert(diffuseColor!=NULL);
-}
-
 void initGL(){
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
@@ -249,31 +219,11 @@ void initRenderBase(){
     renderBase->Init(swap);
 }
 
-void transformTest(){
-    Transform transform(NULL);
-    Vector3 v(1,2,3);
-    transform.SetPosition(v);
-    float *localTransform = transform.GetLocalTransform().GetReference();
-    float *localInverse = transform.GetLocalTransformInverse().GetReference();
-    cout<<"localTranfor"<<endl;
-    printMatrix(localTransform);
-    cout<<"localInverse"<<endl;
-    printMatrix(localInverse);
-    
-    Transform transform2(NULL);
-    Matrix44 m;
-    transform2.GetRotation().GetMatrix(&m);
-    cout<<"Rotation"<<endl;
-    printMatrix(m.GetReference());
-}
-
 void initWorld(const char *filename) {
     SceneXMLParser parser;
     parser.LoadScene(filename, renderBase);
     cameraContainer = (*(renderBase->GetCameras()))[0]; 
-    
-    cout << "Using camera "<<(*(renderBase->GetCameras()))[0]->GetName()<<endl;
-    
+        
     renderBase->PrintDebug();
 }
 
@@ -288,62 +238,3 @@ void setMatrial (Shader *shader, SceneObject *so){
     }
 }
 
-void initWorld2() {
-    Camera *camera = new Camera();
-    camera->SetProjection(40, 1, 0.1,1000);
-    cameraContainer->AddCompnent(camera);
-    renderBase->AddSceneObject(cameraContainer);
-    Vector3 v(0.0,0.0,15.0);
-    cameraContainer->GetTransform()->SetPosition(v);
-    
-    FBXLoader loader;
-    
-    SceneObject *sceneObject = loader.Load("testdata/cube.fbx");
-//    SceneObject *sceneObject = loader.Load("testdata/two_triangles.fbx");
-    
-    /*/while (sceneObject->GetTransform().GetChildren()->size()!=0){
-        sceneObject = sceneObject->GetTransform().GetChildren()->at(0)->GetSceneObject();
-    }*/
-    meshTeapotContainer = sceneObject;
-    // Vector3 rotation(-90.,0.,0.);
-    // meshTeapotContainer->GetTransform().SetRotation(rotation);
-//    meshTeapotContainer->AddChild(loader.Load("/Users/morten/Programmering/cpp/RenderE/testdata/cube.fbx"));
-//    meshTeapotContainer->AddChild(loader.Load("/Users/morten/Downloads/Cottage.3DS"));
-    
-//    meshTeapotContainer->AddCompnent(meshTeapot);
-    renderBase->AddSceneObject(meshTeapotContainer);
-    
-    ShaderFileDataSource sfs;
-    char name2[] = "diffuse";
-    ShaderLoadStatus status = SHADER_FILE_NOT_FOUND;
-    Shader *b = sfs.LoadLinkShader(name2, status);
-    
-    setMatrial (b, meshTeapotContainer);
-}
-
-/*
-void fbxTest(){
-    FBXLoader loader;
-    SceneXMLParser sceneParser;
-} */
-
-/*
-#include "render_e/textures/PNGTextureDataSource.h"
-
-void testPNG() {
-    using namespace render_e;
-    PNGTextureDataSource t;
-    TextureFormat textureFormat;
-    int width, height;
-    unsigned char *data;
-    char filename[] = "/Users/morten/Desktop/Screen shot 2010-11-06 at 6.24.22 PM.png";
-    TextureLoadStatus res = t.LoadTexture(filename, width, height, textureFormat, &data);
-
-    std::cout << "Load texture returned " << res << std::endl;
-    if (res == OK) {
-        std::cout << "Width: " << width << " height " << height << " Texture format " << textureFormat << std::endl;
-        std::cout << "First pixel " << (int) data[0] << " " << (int) data[1] << " " << (int) data[2] << std::endl;
-        std::cout << "First pixel " << (int) data[1620 - 1] << " " << (int) data[1620 - 2] << " " << (int) data[1620 - 3] << std::endl;
-    }
-}
- * */
