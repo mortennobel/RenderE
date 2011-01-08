@@ -29,7 +29,7 @@ Texture2D::Texture2D()
 Texture2D::Texture2D(const char *resourceName)
 : TextureBase(GL_TEXTURE_2D), textureDataSource(TextureDataSource::GetTextureDataSource()), interpolationLinear(true), clamp(false) {
     assert(textureDataSource != NULL);
-    int length = strlen(resourceName);
+    int length = strlen(resourceName)+1;
     this->resourceName = new char[length];
     memcpy(this->resourceName, resourceName, length);
 }
@@ -60,7 +60,11 @@ void Texture2D::GetTextureFormat( GLenum &format ) {
 
 TextureLoadStatus Texture2D::Load() {
     unsigned char* data = NULL;
-    TextureLoadStatus res = textureDataSource->LoadTexture(resourceName, width, height, textureFormat, &data);
+	unsigned int w;
+	unsigned int h;
+    TextureLoadStatus res = textureDataSource->LoadTexture(resourceName, w, h, textureFormat, &data);
+	width = w;
+	height = h;
     if (res == OK) {
         // allocate a texture name
         glGenTextures(1, &textureId);

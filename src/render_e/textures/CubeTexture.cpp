@@ -75,8 +75,10 @@ TextureLoadStatus CubeTexture::Load(){
     for (int i=0;i<6;i++){
         TextureFormat textureFormat;
         unsigned char *data = NULL;
-        TextureLoadStatus res = textureDataSource->LoadTexture(resourceNames[i].c_str(), width, height, textureFormat, &data);
-        
+		unsigned int w,h;
+        TextureLoadStatus res = textureDataSource->LoadTexture(resourceNames[i].c_str(), w, h, textureFormat, &data);
+        width = w;
+		height = h;
         if (res != OK){
             std::cout<<"Error loading "<<resourceNames[i]<<std::endl;
             return res;

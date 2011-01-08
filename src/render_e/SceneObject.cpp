@@ -8,6 +8,7 @@
 #include "SceneObject.h"
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 #include <GL/glew.h>
 
 #include "Camera.h"
