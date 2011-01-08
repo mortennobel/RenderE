@@ -9,6 +9,7 @@
 #include "GL/glew.h"
 
 #include <iostream>
+#include <string>
 #ifdef _WIN32
 #include <GL/glut.h>
 #else
@@ -16,8 +17,12 @@
 #endif
 
 namespace render_e {
-Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource)
-:vertexShaderSource(vertexShaderSource),fragmentShaderSource(fragmentShaderSource),shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0) {
+Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
+        const char *sharedShaderLib)
+:vertexShaderSource(vertexShaderSource),
+        fragmentShaderSource(fragmentShaderSource),
+        sharedShaderLib(sharedShaderLib),
+        shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0) {
 }
 
 Shader::~Shader() {
@@ -30,6 +35,8 @@ Shader::~Shader() {
     if (shaderProgramId != 0) {
         glDeleteProgram(shaderProgramId);
     }
+    // do not delete sharedShaderLib, since that is shared between different 
+    // shader instances
 }
 
 void checkInfoLogShader(unsigned int shaderId){
@@ -46,29 +53,48 @@ void checkInfoLogShader(unsigned int shaderId){
 ShaderLoadStatus Shader::Compile(){
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    if (vertexShaderId == 0 || fragmentShaderId == 0){
-        return SHADER_CANNOT_ALLOCATE;
-    }
     
-    // Load shader sources
-    glShaderSource(vertexShaderId, 1, &vertexShaderSource, NULL);
-    glShaderSource(fragmentShaderId, 1, &fragmentShaderSource, NULL);
-
-    // Compile the shaders
-    int compileStatus = 0;
-    glCompileShader(vertexShaderId);
-    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileStatus);
-    if (!compileStatus){
-        return SHADER_COMPILE_ERROR_VERTEX_SHADER;
+    // concatenate shaders into one file
+    // It should be possible to compile files independently and link them
+    // together, but it seems to be a bit buggy
+    using namespace std;
+    string vShader;
+    string fShader;
+    vShader.append(sharedShaderLib);
+    vShader.append(vertexShaderSource);
+    
+    fShader.append(sharedShaderLib);
+    fShader.append(fragmentShaderSource);
+    
+    int shaderIds[4] = {
+        vertexShaderId,
+        fragmentShaderId,    
+    };
+    
+    const char *shaderSource[] = {
+        vShader.c_str(),
+        fShader.c_str(),
+    };
+    const char *shaderSourceName[] = {
+        "vertexShaderSource",
+        "fragmentShaderSource",
+    };
+    
+    for (int i=0;i<2;i++){
+        if (shaderIds[i] == 0){
+            return SHADER_CANNOT_ALLOCATE;
+        }
+        glShaderSource(shaderIds[i], 1, &(shaderSource[i]), NULL);
+        
+        int compileStatus = 0;
+        glCompileShader(shaderIds[i]);
+        glGetShaderiv(shaderIds[i], GL_COMPILE_STATUS, &compileStatus);
+        checkInfoLogShader(shaderIds[i]);
+        if (!compileStatus){
+            std::cout<<"Cannot compile shader "<<shaderSourceName[i]<<std::endl;
+            return SHADER_COMPILE_ERROR_VERTEX_SHADER;
+        }
     }
-    glCompileShader(fragmentShaderId);
-    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &compileStatus);
-    if (!compileStatus){
-        return SHADER_COMPILE_ERROR_FRAGMENT_SHADER;
-    }
-    // check info log
-    checkInfoLogShader(vertexShaderId);
-    checkInfoLogShader(fragmentShaderId);
     
     return SHADER_OK;
 }
@@ -103,6 +129,8 @@ ShaderLoadStatus Shader::Link(){
     int linkStatus = 0;
     glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &linkStatus);
     if (!linkStatus){
+        using namespace std;
+        cout<<"Link error"<<endl;
         return SHADER_LINK_ERROR;
     }
     

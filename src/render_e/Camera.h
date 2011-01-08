@@ -51,7 +51,7 @@ public:
     void SetClearColor(Vector4 clearColor);
     Vector4 GetClearColor(){ return clearColor; }
     bool IsRenderToTexture(){ return renderToTexture; }
-    void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, Texture2D *texture2d);
+    void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, TextureBase *texture);
     void BindFrameBufferObject();
     void UnBindFrameBufferObject();
 private:

@@ -99,12 +99,10 @@ TextureLoadStatus Texture2D::Load() {
 }
 
 void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
-    assert(!mipmapping); // mipmapping not supported
     this->width = width;
     this->height = height;
     // allocate a texture name
     glGenTextures(1, &textureId);
-    cout << name << " Created textureid " << textureId << endl;
     // select our current texture
     glBindTexture(GL_TEXTURE_2D, textureId);
 

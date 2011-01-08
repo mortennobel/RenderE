@@ -19,6 +19,7 @@ public:
     CubeTexture(const char* left, const char* right, const char* top, const char* bottom, const char* back, const char* front);
     virtual ~CubeTexture();
     virtual TextureLoadStatus Load();
+    virtual void Create(int width, int height, TextureFormat textureFormat);
 private:
     CubeTexture(const CubeTexture& orig); // disallow copy constructor
     CubeTexture& operator = (const CubeTexture&); // disallow copy constructor

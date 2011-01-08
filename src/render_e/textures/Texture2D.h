@@ -24,8 +24,6 @@ public:
     /** Create a texture without content */
     void Create(int width, int height, TextureFormat textureFormat);
     int GetInternalFormat(){ return internalFormat; }
-    int GetWidth(){ return width; }
-    int GetHeight(){ return height; }
     void SetClamp(bool clamp){this->clamp = clamp;}
     bool IsClamp(){ return clamp; }
 private:
@@ -36,8 +34,6 @@ private:
     bool interpolationLinear;
     bool clamp;
     char *resourceName;
-    int width;
-    int height;
     TextureFormat textureFormat;
     int internalFormat;
 };

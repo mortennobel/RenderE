@@ -1,5 +1,5 @@
 uniform int lightCount;
-uniform sampler2D texture;
+uniform samplerCube texture;
 
 varying vec3 normal;
 varying vec3 eye;
@@ -15,8 +15,8 @@ void main(){
     vec4 diffuse = vec4(0.0,0.0,0.0,0.0);
     vec4 specular= vec4(0.0,0.0,0.0,0.0);
 
-    vec4 color4 = texture2D(texture, gl_TexCoord[0].xy);
-
+    vec4 color4 = textureCube(texture, nNormal*-1.0);
+    
     for (int i=0;i<lightCount;i++){
         vec3 light = normalize(lights[i]);
         vec3 nHalf = normalize(nEye + light);
@@ -43,3 +43,4 @@ void main(){
     
     gl_FragColor = color4*min(ambient + diffuse + specular, vec4(1,1,1,1));
 }
+

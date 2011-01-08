@@ -87,7 +87,9 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (cameraMode==PERSPECTIVE){
+    if (renderToTexture && framebufferTextureType==GL_TEXTURE_CUBE_MAP){
+        glFrustum(left, right, bottom, top, nearPlane, farPlane);
+    } else if (cameraMode==PERSPECTIVE){
         glFrustum(left, right, bottom, top, nearPlane, farPlane);
 //        gluPerspective( /* field of view in degree */ fieldOfView,
 //        /* aspect ratio */ aspect,
@@ -108,7 +110,8 @@ void Camera::SetClearColor(Vector4 clearColor){
     this->clearColor = clearColor; 
 }
 
-void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, Texture2D *texture2d){
+void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, TextureBase *texture){
+    assert(texture!=NULL);
     if (renderToTexture == doRenderToTexture){
         return;
     }
@@ -116,15 +119,15 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
     renderToTexture = doRenderToTexture;
     if (renderToTexture){
         glGenFramebuffers(1, &framebufferId);
-        framebufferTextureId = texture2d->GetTextureId();
+        framebufferTextureId = texture->GetTextureId();
         
         glGenRenderbuffers(1, &renderBufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
-        fboWidth = texture2d->GetWidth();
-        fboHeight = texture2d->GetHeight();
+        fboWidth = texture->GetWidth();
+        fboHeight = texture->GetHeight();
         glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, fboWidth, fboHeight);
         
-        framebufferTextureType = GL_TEXTURE_2D;
+        framebufferTextureType = texture->GetTextureType();
         switch (framebufferTargetType) {
             case COLOR_BUFFER:
                 this->framebufferTargetType = GL_COLOR_ATTACHMENT0;
@@ -138,7 +141,13 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
         }
         // Todo handle depth attachment
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
+        if (framebufferTextureType==GL_TEXTURE_2D){
+            glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
+        } else {
+            for (int i=0;i<6;i++){
+                glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, framebufferTextureId, 0);
+            }
+        }
         glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
         
         GLenum frameBufferRes = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);

@@ -20,13 +20,18 @@ ShaderDataSource::~ShaderDataSource() {
 
 Shader *ShaderDataSource::LoadLinkShader(const char* name, ShaderLoadStatus &outStatus){
     using std::string;
+    static string sharedData;
+    if (sharedData.length()==0){
+        LoadSharedSource(sharedData);
+    }
+    
     string vertexData;
     string fragmentData;
     outStatus = LoadShaderSource(name, vertexData, fragmentData);
     if (outStatus != SHADER_OK){
         return NULL;
     }
-    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str());
+    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), sharedData.c_str());
     outStatus = shader->Compile();
     if (outStatus != SHADER_OK){
         delete shader;

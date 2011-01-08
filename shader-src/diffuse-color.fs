@@ -1,4 +1,3 @@
-#version 110
 uniform int lightCount;
 uniform vec4 color;
 

@@ -51,11 +51,14 @@ int stringToInt(const char *s1) {
     return atoi(s1);
 }
 
-Vector3 stringToVector3(char *s1) {
+Vector3 stringToVector3(const char *s1) {
+    static char tmp[512];
+    strncpy (tmp, s1, 512);
+    
     Vector3 f;
     char * pch;
     int index = 0;
-    pch = strtok(s1, ",");
+    pch = strtok(tmp, ",");
     while (pch != NULL && index < 3) {
         f[index] = (float) atof(pch);
         index++;
@@ -65,11 +68,14 @@ Vector3 stringToVector3(char *s1) {
     return f;
 }
 
-Vector4 stringToVector4(char *s1) {
+Vector4 stringToVector4(const char *s1) {
+    static char tmp[512];
+    strncpy (tmp, s1, 512);
+    
     Vector4 f;
     char * pch;
     int index = 0;
-    pch = strtok(s1, ",");
+    pch = strtok(tmp, ",");
     while (pch != NULL && index < 4) {
         f[index] = (float) atof(pch);
         index++;
@@ -79,11 +85,14 @@ Vector4 stringToVector4(char *s1) {
     return f;
 }
 
-Vector2 stringToVector2(char *s1) {
+Vector2 stringToVector2(const char *s1) {
+    static char tmp[512];
+    strncpy (tmp, s1, 512);
+    
     Vector2 f;
     char * pch;
     int index = 0;
-    pch = strtok(s1, ",");
+    pch = strtok(tmp, ",");
     while (pch != NULL && index < 2) {
         f[index] = (float) atof(pch);
         index++;
@@ -111,11 +120,11 @@ public:
     MySAXHandler(RenderBase *renderBase) : renderBase(renderBase), sceneObject(NULL) {
     }
     
-    void error(char *tagName){
+    void error(const char *tagName){
         cout<<"Unknown tag "<<tagName<<" state "<<state.top()<<endl;
     }
 
-    void parseScene(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseScene(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("shaders", message)) {
             state.push(SHADERS);
         } else if (stringEqual("materials", message)) {
@@ -130,7 +139,7 @@ public:
         
     }
 
-    void parseShaders(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseShaders(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("shader", message)) {
             string shaderName;
             string file;
@@ -161,7 +170,7 @@ public:
         }
     }
 
-    void parseTextures(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseTextures(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("texture2d", message)) {
             string textureName;
             string file;
@@ -258,7 +267,7 @@ public:
         }
     }
 
-    void parseMaterials(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseMaterials(const XMLCh * const name, AttributeList& attributes, const char* message) {
         static Material *material = NULL;
         if (stringEqual("material", message)) {
             string matName;
@@ -324,7 +333,7 @@ public:
         }
     }
 
-    void parseSceneObjects(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseSceneObjects(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("object", message)) {
             string objectName;
             Vector3 position;
@@ -363,7 +372,7 @@ public:
         }
     }
     
-    void parseComponents(const XMLCh * const name, AttributeList& attributes, char* message) {
+    void parseComponents(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("camera", message)) {
             Camera *cam = new Camera();
             bool projection = true;

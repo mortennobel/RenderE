@@ -22,13 +22,49 @@ CubeTexture::CubeTexture(
     assert(textureDataSource!=NULL);
     resourceNames[0].append(left);
     resourceNames[1].append(right);
-    resourceNames[2].append(top);
-    resourceNames[3].append(bottom);
+    resourceNames[2].append(bottom);
+    resourceNames[3].append(top);
     resourceNames[4].append(back);
     resourceNames[5].append(front);
 }
 
 CubeTexture::~CubeTexture() {
+}
+
+void CubeTexture::Create(int width, int height, TextureFormat textureFormat){
+    // http://stackoverflow.com/questions/462721/rendering-to-cube-map
+    this->width = width;
+    this->height = height;
+    if (textureFormat == RGB || textureFormat == RGBA){
+        // color cube map
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        for (int face = 0; face < 6; face++) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA,
+                width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+        }
+    } else if (textureFormat == DEPTH){
+        // depth cube map
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        for (int face = 0; face < 6; face++) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_DEPTH_COMPONENT24,
+                width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        }
+    } else {
+        std::cout << "Unsupported texture format in CubeTexture::Create. Was "<<
+                textureFormat<<std::endl;
+    }
 }
 
 TextureLoadStatus CubeTexture::Load(){
@@ -37,8 +73,6 @@ TextureLoadStatus CubeTexture::Load(){
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
     
     for (int i=0;i<6;i++){
-        int width;
-        int height;
         TextureFormat textureFormat;
         unsigned char *data = NULL;
         TextureLoadStatus res = textureDataSource->LoadTexture(resourceNames[i].c_str(), width, height, textureFormat, &data);

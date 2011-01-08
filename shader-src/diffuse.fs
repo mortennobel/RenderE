@@ -1,4 +1,3 @@
-#version 110
 varying vec3 normal;
 uniform vec4 color;
 
