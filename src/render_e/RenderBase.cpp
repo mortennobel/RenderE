@@ -31,6 +31,10 @@ inline void doRenderErrorCheck() {
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR) {
         const GLubyte* errorStr = gluErrorString(errorCode);
+		if (errorStr==NULL){
+			char *ERR = "Unknown";
+			errorStr=(GLubyte*)ERR;
+		}
         std::cout << " " << errorCode << " " << errorStr <<
             std::endl;
     }

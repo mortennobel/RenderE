@@ -36,6 +36,7 @@ private:
     char *resourceName;
     TextureFormat textureFormat;
     int internalFormat;
+	int storageType;
 };
 }
 #endif // TEXTURE_H

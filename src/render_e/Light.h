@@ -15,7 +15,8 @@ namespace render_e {
 
 enum LightType{
     PointLight,
-    DirectionalLight
+    DirectionalLight,
+	SpotLight
 };
 
 class Light : public Component {
@@ -38,11 +39,17 @@ public:
     LightType GetLightType() { return lightType; }
     void SetLightType(LightType lightType) { this->lightType = lightType; }
     void SetupLight(int lightIndex);
+	Vector3 GetSpotDirection() { return spotDirection; }
+	void SetSpotDirection(Vector3 &p) { spotDirection = p; }
+	int GetSpotCutoff(){ return spotCutoff; }
+	void SetSpotCutoff(int s) { spotCutoff = s; }
 private:
     LightType lightType;
     Vector4 ambient;
     Vector4 diffuse;
     Vector4 specular;
+	Vector3 spotDirection;
+	int spotCutoff;
     float constantAttenuation;
     float linearAttenuation;
     float quadraticAttenuation;

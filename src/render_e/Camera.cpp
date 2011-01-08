@@ -124,11 +124,9 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
         glGenFramebuffers(1, &framebufferId);
         framebufferTextureId = texture->GetTextureId();
         
-        glGenRenderbuffers(1, &renderBufferId);
-        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+        
         fboWidth = texture->GetWidth();
         fboHeight = texture->GetHeight();
-        glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, fboWidth, fboHeight);
         
         framebufferTextureType = texture->GetTextureType();
         switch (framebufferTargetType) {
@@ -139,20 +137,35 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
                 this->framebufferTargetType = GL_DEPTH_ATTACHMENT;
                 break;
             case STENCIL_BUFFER:
+				this->framebufferTargetType = GL_STENCIL_ATTACHMENT;
+				break;
             default:
-                this->framebufferTargetType = GL_STENCIL_ATTACHMENT;
+                this->framebufferTargetType = framebufferTargetType;
         }
-        // Todo handle depth attachment
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
-        if (framebufferTextureType==GL_TEXTURE_2D){
-            glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
-        } else {
-            for (int i=0;i<6;i++){
-                glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, framebufferTextureId, 0);
-            }
-        }
-        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
-        
+
+		if (framebufferTargetType==DEPTH_BUFFER){
+			
+			
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
+			// glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
+			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebufferTextureId, 0);
+		} else {
+			// create render buffer
+
+
+			glGenRenderbuffers(1, &renderBufferId);
+			glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+			glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, fboWidth, fboHeight);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
+			if (framebufferTextureType==GL_TEXTURE_2D){
+				glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebufferTextureId, 0);
+			} else {
+				for (int i=0;i<6;i++){
+					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, framebufferTextureId, 0);
+				}
+			}
+			glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
+		}
         GLenum frameBufferRes = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
         using namespace std;
         switch (frameBufferRes){

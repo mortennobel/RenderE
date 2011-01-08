@@ -151,7 +151,7 @@ void ProcessLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 	}
 	else
 	{
-	spotLight(i,normal,eye,ecPosition3);
+		spotLight(i,normal,eye,ecPosition3);
 	}
 }
 

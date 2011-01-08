@@ -44,17 +44,25 @@ void Texture2D::GetTextureFormat( GLenum &format ) {
     switch (textureFormat) {
         case DEPTH:
             internalFormat = GL_DEPTH_COMPONENT;
-            format = GL_LUMINANCE;
+            format = GL_DEPTH_COMPONENT;
+			storageType = GL_FLOAT;
             break;
         case RGB:
             internalFormat = GL_RGB8;
             format = GL_RGB;
+			storageType = GL_UNSIGNED_BYTE;
             break;
         case RGBA:
-        default:
-            internalFormat = GL_RGBA8;
+			internalFormat = GL_RGBA8;
             format = GL_RGBA;
+			storageType = GL_UNSIGNED_BYTE;
             break;
+        default:
+            cout<<"Unexpected texture format"<<endl;
+			internalFormat = GL_RGBA8;
+            format = GL_RGBA;
+			storageType = GL_UNSIGNED_BYTE;
+			break;
     }
 }
 
@@ -105,6 +113,7 @@ TextureLoadStatus Texture2D::Load() {
 void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
     this->width = width;
     this->height = height;
+	this->textureFormat = textureFormat;
     // allocate a texture name
     glGenTextures(1, &textureId);
     // select our current texture
@@ -128,8 +137,7 @@ void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
     GetTextureFormat(format);
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
-            0, format, GL_UNSIGNED_BYTE, NULL);
-
+            0, format, storageType, NULL);
 }
 
 }

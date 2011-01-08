@@ -215,9 +215,9 @@ public:
                 texture->SetClamp(clamp);
                 texture->SetName(textureName);
                 TextureFormat textureFormat;
-                if (type.compare("DEPTH")){
+                if (type.compare("DEPTH")==0){
                     textureFormat = DEPTH;
-                } else if (type.compare("RGB")){
+                } else if (type.compare("RGB")==0){
                     textureFormat = RGB;
                 } else {
                     textureFormat = RGBA;
@@ -534,6 +534,10 @@ public:
                 } else if (stringEqual("type", attName)) {
                     if (stringEqual("point", attValue)){
                         light->SetLightType(PointLight);
+					} else if (stringEqual("spot", attValue)){
+                        light->SetLightType(SpotLight);
+                    } else if (stringEqual("directional", attValue)){
+                        light->SetLightType(DirectionalLight);
                     } else {
                         cout << "Unknown lighttype "<<attValue << endl;
                     }
@@ -543,9 +547,16 @@ public:
                     light->SetLinearAttenuation(stringToFloat(attValue));
                 } else if (stringEqual("quadraticAttenuation", attName)) {
                     light->SetQuadraticAttenuation(stringToFloat(attValue));
+                } else if (stringEqual("spotDirection", attName)) {
+                    light->SetSpotDirection(stringToVector3(attValue));
+                } else if (stringEqual("spotCutoff", attName)) {
+					light->SetSpotCutoff(stringToInt(attValue));
                 } else {
                     cout << "Unknown light attribute name "<<attName<<endl;
                 }
+
+
+
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
