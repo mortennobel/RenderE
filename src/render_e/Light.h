@@ -14,7 +14,8 @@
 namespace render_e {
 
 enum LightType{
-    PointLight
+    PointLight,
+    DirectionalLight
 };
 
 class Light : public Component {
@@ -36,6 +37,7 @@ public:
     void SetQuadraticAttenuation(float quadraticAttenuation) { this->quadraticAttenuation = quadraticAttenuation;}
     LightType GetLightType() { return lightType; }
     void SetLightType(LightType lightType) { this->lightType = lightType; }
+    void SetupLight(int lightIndex);
 private:
     LightType lightType;
     Vector4 ambient;

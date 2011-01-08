@@ -22,7 +22,7 @@ public:
     Shader *LoadLinkShader(const char* name, ShaderLoadStatus &outStatus);
     
 protected:
-    virtual ShaderLoadStatus LoadSharedSource(std::string &sharedData) = 0;
+    virtual ShaderLoadStatus LoadSharedSource(std::string &sharedVertexData, std::string &sharedFragmentData) = 0;
     virtual ShaderLoadStatus LoadShaderSource(const char* name, 
             std::string &vertexShaderData,
             std::string &fragmentShaderData) = 0;

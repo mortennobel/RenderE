@@ -8,6 +8,7 @@
 #include "MeshFactory.h"
 
 #include <vector>
+#include <iostream>
 #include "math/Vector3.h"
 #include "math/Vector2.h"
 #include "math/Mathf.h"
@@ -177,31 +178,40 @@ Mesh *MeshFactory::CreateICOSphere(int subdivisions, float radius){
 }
 
 Mesh *MeshFactory::CreatePlane(){
-    Vector3 vertices [] = {
-        Vector3(0.,0.,0.),
-        Vector3(1.,0.,0.),
-        Vector3(1.,1.,0.),
-        Vector3(0.,1.,0.)
-    };
+    vector<Vector3> vertices;
+    vector<int> indices;
+    vector<Vector2> uvs;
     
-    int indices[] = {
-        0,1,2,
-        0,2,3
-    };
-    
-    
-    Vector2 uv[] = {
-        Vector2(0.,0.),
-        Vector2(1.,0.),
-        Vector2(1.,1.),
-        Vector2(0.,1.)
-    };
+    for (int x=0;x<10;x++){
+        for (int y=0;y<10;y++){
+            Vector3 offset = Vector3(0.1*x,0.1*y,0);
+            vertices.push_back(Vector3(0.,0.,0.)+offset);
+            vertices.push_back(Vector3(.1,0.,0.)+offset);
+            vertices.push_back(Vector3(.1,.1,0.)+offset);
+            vertices.push_back(Vector3(0.,.1,0.)+offset);
+            
+            int indexOffset = (x*10+y)*4;
+            indices.push_back(0+indexOffset);
+            indices.push_back(1+indexOffset);
+            indices.push_back(2+indexOffset);
+            indices.push_back(0+indexOffset);
+            indices.push_back(2+indexOffset);
+            indices.push_back(3+indexOffset);
+            
+            Vector2 offsetUV = Vector2(0.1*x,0.1*y);
+            uvs.push_back(Vector2(0.,0.)+offsetUV);
+            uvs.push_back(Vector2(.1,0.)+offsetUV);
+            uvs.push_back(Vector2(.1,.1)+offsetUV);
+            uvs.push_back(Vector2(0.,.1)+offsetUV);
+            
+        }
+    }
     
 
     Mesh *m = new Mesh();
-    m->SetVertices(vertices,4);
-    m->SetTextureCoords1(uv,4);
-    m->SetIndices(indices,6);
+    m->SetVertices(vertices);
+    m->SetTextureCoords1(uvs);
+    m->SetIndices(indices);
     m->ComputeNormals();
     return m;
 }

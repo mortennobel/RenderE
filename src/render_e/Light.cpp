@@ -7,6 +7,10 @@
 
 #include "Light.h"
 
+#include <cassert>
+#include <GL/glew.h>
+#include "SceneObject.h"
+
 namespace render_e {
 
 Light::Light() 
@@ -22,6 +26,25 @@ Light::Light(LightType lightType)
 }
 
 Light::~Light() {
+}
+
+void Light::SetupLight(int lightIndex){
+    glEnable(GL_LIGHT0+lightIndex);
+    // Setup and enable light 0
+    glLightfv(GL_LIGHT0+lightIndex,GL_AMBIENT, GetAmbient().Get());
+    glLightfv(GL_LIGHT0+lightIndex,GL_DIFFUSE, GetDiffuse().Get());
+    glLightfv(GL_LIGHT0+lightIndex,GL_SPECULAR, GetSpecular().Get());
+    float w = 0;
+    if (GetLightType()==PointLight){
+        w = 1;
+    } else if (GetLightType()==DirectionalLight){
+        w = 0;
+    }
+    SceneObject *sceneObject = GetOwner();
+    assert(sceneObject != NULL);
+    Vector4 lightPos(sceneObject->GetTransform()->GetPosition(), w);
+
+    glLightfv(GL_LIGHT0+lightIndex,GL_POSITION, lightPos.Get());
 }
 
 }

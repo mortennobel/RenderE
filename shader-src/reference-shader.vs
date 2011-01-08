@@ -1,11 +1,9 @@
-varying vec3 normal;
+
 
 void main (void)
 {
 	vec3  transformedNormal;
 	float alphaFade = 1.0;
-
-        normal = gl_Normal;
 
 	// Eye-coordinate position of vertex, needed in various calculations
 	vec4 ecPosition = gl_ModelViewMatrix * gl_Vertex;

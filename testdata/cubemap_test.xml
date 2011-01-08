@@ -2,7 +2,7 @@
 <scene>
     <shaders>
         <shader name="diffuse" file="diffuse-color"/>
-        <shader name="diffuse-tex" file="diffuse-texture"/>
+        <shader name="diffuse-tex" file="reference-shader"/>
         <shader name="diffuse-cubemap" file="diffuse-cubemap"/>
     </shaders>
     <textures>
@@ -18,26 +18,31 @@
     </textures>
     <materials>
         <material name="Texture" shader="diffuse-tex">
-            <parameter name="texture" texture="background"/>
-            <parameter name="lightCount" int="1"/>
+            <parameter name="texture0" texture="background"/>
+            <parameter name="activelights" int="1"/>
         </material>
         <material name="Texture2" shader="diffuse-tex">
-            <parameter name="texture" texture="background"/>
-            <parameter name="lightCount" int="1"/>
+            <parameter name="texture0" texture="background"/>
+            <parameter name="activelights" int="1"/>
         </material>
         
         <material name="Yellow" shader="diffuse">
             <parameter name="color" vector4="1,1,0,1"/>
-            <parameter name="lightCount" int="1"/>
+            <parameter name="activelights" int="1"/>
         </material>
         <material name="White" shader="diffuse">
             <parameter name="color" vector4="1,1,1,1"/>
-            <parameter name="lightCount" int="1"/>
+            <parameter name="activelights" int="1"/>
         </material>
-        <material name="CubeMat" shader="diffuse-cubemap">
+        <!-- <material name="CubeMat" shader="diffuse-cubemap">
             <parameter name="texture" texture="cubetexture"/>
-            <parameter name="lightCount" int="1"/>
+            <parameter name="activelights" int="1"/>
+        </material> -->
+         <material name="CubeMat" shader="diffuse-tex">
+            <parameter name="texture0" texture="background"/>
+            <parameter name="activelights" int="1"/>
         </material>
+        
         
     </materials>
     <scenegraph>

@@ -1,18 +1,20 @@
-uniform int lightCount;
+void main (void)
+{
+	vec3  transformedNormal;
+	float alphaFade = 1.0;
 
-varying vec3 eye;
-varying vec3 normal;
-varying vec3 lights[8];
+	// Eye-coordinate position of vertex, needed in various calculations
+	vec4 ecPosition = gl_ModelViewMatrix * gl_Vertex;
 
-void main(){
-    gl_Position = ftransform();
-    normal = gl_Normal;
+	// Do fixed functionality vertex transform
+	gl_Position = ftransform();
+	transformedNormal = fnormal();
+	flight(transformedNormal, ecPosition, alphaFade);
 
-    vec4 eyePosition = gl_ModelViewMatrix * gl_Vertex;
-    eye = -eyePosition.xyz;
+	//Enable texture coordinates
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+	//gl_TexCoord[1] = gl_MultiTexCoord1;
+	//gl_TexCoord[2] = gl_MultiTexCoord2;
+	//gl_TexCoord[3] = gl_MultiTexCoord3;
 
-    for (int i=0;i<lightCount;i++){
-        vec4 eyeLightPos = gl_LightSource[i].position;
-        lights[i] = eyeLightPos.xyz-eyePosition.xyz;
-    }
 }

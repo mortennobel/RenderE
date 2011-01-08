@@ -20,9 +20,10 @@ ShaderDataSource::~ShaderDataSource() {
 
 Shader *ShaderDataSource::LoadLinkShader(const char* name, ShaderLoadStatus &outStatus){
     using std::string;
-    static string sharedData;
-    if (sharedData.length()==0){
-        LoadSharedSource(sharedData);
+    static string sharedVertexData;
+    static string sharedFragmentData;
+    if (sharedVertexData.length()==0 || sharedFragmentData.length()==0){
+        LoadSharedSource(sharedVertexData,sharedFragmentData);
     }
     
     string vertexData;
@@ -31,7 +32,8 @@ Shader *ShaderDataSource::LoadLinkShader(const char* name, ShaderLoadStatus &out
     if (outStatus != SHADER_OK){
         return NULL;
     }
-    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), sharedData.c_str());
+    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), 
+            sharedVertexData.c_str(), sharedFragmentData.c_str());
     outStatus = shader->Compile();
     if (outStatus != SHADER_OK){
         delete shader;

@@ -98,6 +98,9 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
     glMatrixMode(GL_MODELVIEW);
+    
+    Matrix44 cameraMatrix = GetOwner()->GetTransform()->GetLocalTransformInverse();
+    glLoadMatrixf(cameraMatrix.GetReference());
 }
 
 void Camera::TearDown(){

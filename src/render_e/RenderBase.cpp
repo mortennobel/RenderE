@@ -57,46 +57,31 @@ void RenderBase::SetupLight(){
     for (std::vector<SceneObject*>::iterator iter = lights.begin(); iter != lights.end();iter++){
         SceneObject *sceneObject = *iter;
         Light *light = sceneObject->GetLight(); 
-        
-        glEnable(GL_LIGHT0+lightIndex);
-        // Setup and enable light 0
-        glLightfv(GL_LIGHT0+lightIndex,GL_AMBIENT, light->GetAmbient().Get());
-        glLightfv(GL_LIGHT0+lightIndex,GL_DIFFUSE, light->GetDiffuse().Get());
-        glLightfv(GL_LIGHT0+lightIndex,GL_SPECULAR, light->GetSpecular().Get());
-        float w = 0;
-        if (light->GetLightType()==PointLight){
-            w = 1;
-        }
-        Vector4 lightPos(sceneObject->GetTransform()->GetPosition(), w);
-        
-        glLightfv(GL_LIGHT0+lightIndex,GL_POSITION, lightPos.Get());
-        lightIndex--;
+        light->SetupLight(lightIndex);
+        lightIndex++;
     }
 }
 
 void RenderBase::Display(){
     assert(swapBuffersFunc!=NULL);
-    glLoadIdentity();
-    SetupLight();
+    
     
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         SceneObject *sceneObject = *iter;
         Camera *camera = sceneObject->GetCamera();
         camera->Setup(width, height);
         camera->Clear();
-
-        // setup camera transform
-        Matrix44 cameraMatrix = sceneObject->GetTransform()->GetLocalTransformInverse();
-        RenderScene(cameraMatrix);
+        SetupLight();
+        RenderScene();
         camera->TearDown();
     }
     swapBuffersFunc();
     doRenderErrorCheck();
 }
 
-void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
-    // Main idea here is to 
-    if (doubleSpeedZOnlyRendering){
+void RenderBase::RenderScene(){
+    // Main idea here is to <-- currently disabled
+    /*if (doubleSpeedZOnlyRendering){
         //Disable color writes, and use flat shading for speed
         glShadeModel(GL_FLAT);
         glColorMask(0, 0, 0, 0);
@@ -112,7 +97,7 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
         }
         glShadeModel(GL_SMOOTH);
         glColorMask(1, 1, 1, 1);
-    }
+    }*/
     
     Material *lastMaterial = NULL;
     for (std::vector<SceneObject*>::iterator sIter = sceneObjects.begin();sIter!=sceneObjects.end();sIter++){
@@ -123,13 +108,13 @@ void RenderBase::RenderScene(const Matrix44 &cameraMatrix){
                 currentMaterial->Bind();
             }
             lastMaterial = currentMaterial;
-            
-            
         }
         if (mesh!=NULL){
-            Matrix44 modelView = cameraMatrix*((*sIter)->GetTransform()->GetLocalTransform());
-            glLoadMatrixf(modelView.GetReference());
+            glPushMatrix();
+            Transform *t = (*sIter)->GetTransform();
+            glMultMatrixf(t->GetLocalTransform().GetReference());
             mesh->Render();
+            glPopMatrix();
         }
     }
 }
@@ -149,7 +134,6 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     using std::vector;
     vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
-        std::cout<<"Children"<<std::endl;
         AddSceneObject((*iter)->GetSceneObject());
     }
 }

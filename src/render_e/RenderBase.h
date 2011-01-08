@@ -54,7 +54,7 @@ public:
 private:
     inline void SetupLight();
     RenderBase();
-    void RenderScene(const Matrix44 &cameraMatrix);
+    void RenderScene();
     static RenderBase *s_instance;
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;

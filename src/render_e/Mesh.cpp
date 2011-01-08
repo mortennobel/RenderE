@@ -106,18 +106,8 @@ void Mesh::ComputeNormals(){
         normals[index3] = normals[index3]+normal;
     }
     
-    cout << "Normals are now:" << endl;
-    for (int i=0;i<indices.size();i++){
-        cout << normals[i][0]<<" "<< normals[i][1]<<" "<< normals[i][2]<<" "<<endl;
-    }
-    
     for (vector<Vector3>::iterator iter = normals.begin();iter != normals.end();iter++){
         (*iter).Normalize();
-    }
-    
-    cout << "Normals are now:" << endl;
-    for (int i=0;i<indices.size();i++){
-        cout << normals[i][0]<<" "<< normals[i][1]<<" "<< normals[i][2]<<" "<<endl;
     }
 }
 

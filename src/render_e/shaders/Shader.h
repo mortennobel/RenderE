@@ -23,7 +23,9 @@ enum ShaderLoadStatus {
 
 class Shader {
 public:
-    Shader(const char *vertexShaderSource, const char *fragmentShaderSource, const char *sharedShaderLib);
+    Shader(const char *vertexShaderSource, const char *fragmentShaderSource,
+        const char *sharedVertexShaderLib,
+        const char *sharedFragmentShaderLib);
     virtual ~Shader();
     ShaderLoadStatus Compile();
     ShaderLoadStatus Link();
@@ -46,7 +48,8 @@ private:
     
     const char *vertexShaderSource;
     const char *fragmentShaderSource;
-    const char *sharedShaderLib;
+    const char *sharedVertexShaderLib;
+    const char *sharedFragmentShaderLib;
     std::string name;
 };
 }

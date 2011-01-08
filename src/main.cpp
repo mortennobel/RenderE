@@ -224,7 +224,7 @@ void initWorld(const char *filename) {
     parser.LoadScene(filename, renderBase);
     cameraContainer = (*(renderBase->GetCameras()))[0]; 
         
-    renderBase->PrintDebug();
+    // renderBase->PrintDebug();
 }
 
 void setMatrial (Shader *shader, SceneObject *so){

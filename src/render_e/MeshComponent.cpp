@@ -258,18 +258,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
         
     }
         
-    // print buffer
-    /*
-    using namespace std;
-    cout<<"Memory dump start"<<endl;
-    for (int i=0;i<primitiveCount*(offset/sizeof(float));i++){
-        if (i%(offset/sizeof(float))==0){
-            cout << endl;
-        }
-        cout<<bufferAsFloat[i]<<", ";
-    }
-    cout<<endl<<"Memory dump end"<<endl;
-    */
+    
 #ifndef RENDER_E_NO_VBO
     unsigned int buffernames[2];
     glGenBuffers(2,buffernames);

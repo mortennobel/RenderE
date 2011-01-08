@@ -18,10 +18,12 @@
 
 namespace render_e {
 Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
-        const char *sharedShaderLib)
+        const char *sharedVertexShaderLib,
+        const char *sharedFragmentShaderLib)
 :vertexShaderSource(vertexShaderSource),
         fragmentShaderSource(fragmentShaderSource),
-        sharedShaderLib(sharedShaderLib),
+        sharedVertexShaderLib(sharedVertexShaderLib),
+        sharedFragmentShaderLib(sharedFragmentShaderLib),
         shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0) {
 }
 
@@ -60,10 +62,10 @@ ShaderLoadStatus Shader::Compile(){
     using namespace std;
     string vShader;
     string fShader;
-    vShader.append(sharedShaderLib);
+    vShader.append(sharedVertexShaderLib);
     vShader.append(vertexShaderSource);
     
-    fShader.append(sharedShaderLib);
+    fShader.append(sharedFragmentShaderLib);
     fShader.append(fragmentShaderSource);
     
     int shaderIds[4] = {

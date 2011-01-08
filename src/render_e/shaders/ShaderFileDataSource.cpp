@@ -21,22 +21,27 @@ ShaderFileDataSource::ShaderFileDataSource(const ShaderFileDataSource& orig) {
 ShaderFileDataSource::~ShaderFileDataSource() {
 }
 
-ShaderLoadStatus ShaderFileDataSource::LoadSharedSource(std::string &sharedData){
+ShaderLoadStatus ShaderFileDataSource::LoadSharedSource(std::string &sharedVertexData, std::string &sharedFragmentData){
     using namespace std;
     
-    ifstream input("shader-src/shared.ss");
-
-    stringstream oss;
-    oss << input.rdbuf();
-    sharedData = oss.str();
-    input.close();
-
-    if (input.fail()) {
-        // file did not exist or error during read
-        std::cout<<"Cannot load shader-src/shared.ss"<<std::endl;
-        return SHADER_FILE_NOT_FOUND;
+    const char *fileEndings[2] = {".vs", ".fs"};
+    string *sources[2] = {&sharedVertexData,&sharedFragmentData};
+    for (int i=0;i<2;i++){
+        string filename("shader-src/shared");
+        filename = filename.append(fileEndings[i]);
+        ifstream input(filename.c_str());
+        
+        stringstream oss;
+        oss << input.rdbuf();
+        *(sources[i]) = oss.str();
+        input.close();
+        
+        if (input.fail()) {
+            // file did not exist or error during read
+            std::cout<<"Cannot load "<<filename<<std::endl;
+            return SHADER_FILE_NOT_FOUND;
+        }
     }
-    cout<<"Loaded "<<sharedData<<endl;
     return SHADER_OK;
 }
 

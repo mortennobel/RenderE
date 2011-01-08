@@ -314,7 +314,6 @@ public:
                         cout << "Cannot find texture " << attValue << endl;
                     } else {
                         material->SetTexture(parameterName, iter->second);
-                        cout<<"Set texture parameter "<<iter->second->GetName()<<" value "<<iter->second->GetTextureId()<<endl;
                     }
                 } else if (stringEqual("float", attName)) {
                     float f = stringToFloat(attValue);
@@ -347,7 +346,7 @@ public:
                     objectName.append(attValue);
                 } else if (stringEqual("position", attName)) {
                     position = stringToVector3(attValue);
-                } else if (stringEqual("rotation", attName)) {
+                } else if (stringEqual("rotation", attName)||stringEqual("rotate", attName)) {
                     rotation = stringToVector3(attValue)*Mathf::DEGREE_TO_RADIAN;
                 } else if (stringEqual("scale", attName)) {
                     scale = stringToVector3(attValue);
@@ -573,7 +572,6 @@ public:
         if (state.empty()) {
             state.push(SCENE);
         } else {
-            cout<<state.top()<<endl;
             switch (state.top()) {
                 case SCENE:
                     parseScene(name, attributes, message);
