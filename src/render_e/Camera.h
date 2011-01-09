@@ -55,7 +55,7 @@ public:
     void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, TextureBase *texture);
     void BindFrameBufferObject();
     void UnBindFrameBufferObject();
-	float *GetShadowMatrix();
+	float *GetShadowMatrix(Matrix44 &modelTransform);
 private:
     CameraMode cameraMode;
     float fieldOfView;
@@ -78,6 +78,7 @@ private:
     int fboWidth;
     int fboHeight;
 	Matrix44 shadowMatrix;
+	Matrix44 shadowMatrixMultiplied;
 };
 }
 #endif	/* CAMERA_H */

@@ -68,7 +68,8 @@ void Material::Bind(){
 				}
 				break;
 			case SPT_SHADOW_SETUP:
-				float *shadowMatrix = (*iter).shaderValue.camera->GetShadowMatrix();
+				Matrix44 m = GetOwner()->GetTransform()->GetLocalTransform();
+				float *shadowMatrix = (*iter).shaderValue.camera->GetShadowMatrix(m);
 				glUniformMatrix4fv((*iter).id,1,false, shadowMatrix);
 				break;
         }

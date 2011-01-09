@@ -38,7 +38,7 @@ void Camera::SetProjection(float fieldOfView, float aspect, float nearPlane, flo
     // inspired by
     // Source code from
     // http://gpwiki.org/index.php/OpenGL_Tutorial_Framework:First_Polygon
-    top = nearPlane * tan(fieldOfView * Mathf::PI / 360.0f);
+    top = nearPlane * tan(fieldOfView * Mathf::DEGREE_TO_RADIAN);
     bottom = -top;
     left = bottom * aspect;
     right = top * aspect;
@@ -81,8 +81,13 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
     if (renderToTexture){
         BindFrameBufferObject();
         glViewport(0,0,fboWidth, fboHeight);
+		
+		// currently this should only be true on depth rendering
+		//Disable color rendering, we only want to write to the Z-Buffer
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); 
     } else {
         glViewport(0,0,viewportWidth, viewportHeight);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); 
     }
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
     glMatrixMode(GL_PROJECTION);
@@ -91,9 +96,6 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
         glFrustum(left, right, bottom, top, nearPlane, farPlane);
     } else if (cameraMode==PERSPECTIVE){
         glFrustum(left, right, bottom, top, nearPlane, farPlane);
-//        gluPerspective( /* field of view in degree */ fieldOfView,
-//        /* aspect ratio */ aspect,
-//        /* Z near */ nearPlane, /* Z far */ farPlane);
     } else {
         glOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
@@ -116,35 +118,7 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
 		Matrix44 mat(bias);
 		Matrix44 pj(projection);
 		Matrix44 mv(modelView);
-		shadowMatrix = mat*mv*pj;
-
-		/*
-		static double modelView[16];
-		static double projection[16];
-		
-		// Moving from unit cube [-1,1] to [0,1]  
-		const GLdouble bias[16] = {	
-			0.5, 0.0, 0.0, 0.0, 
-			0.0, 0.5, 0.0, 0.0,
-			0.0, 0.0, 0.5, 0.0,
-		0.5, 0.5, 0.5, 1.0};
-		
-		// Grab modelview and transformation matrices
-		glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
-		glGetDoublev(GL_PROJECTION_MATRIX, projection);
-		
-		
-		glMatrixMode(GL_TEXTURE);
-		glActiveTexture(GL_TEXTURE7);
-		
-		glLoadIdentity();	
-		glLoadMatrixd(bias);
-		
-		// concatating all matrices into one.
-		glMultMatrixd (projection);
-		glMultMatrixd (modelView);
-		// Go back to normal matrix mode
-		glMatrixMode(GL_MODELVIEW); */
+		shadowMatrix = mat*pj*mv;
 	}
 }
 
@@ -256,9 +230,8 @@ void Camera::UnBindFrameBufferObject(){
     glBindFramebuffer( GL_FRAMEBUFFER, 0);
 }
 
-float *Camera::GetShadowMatrix(){
-	std::cout<<"CamMAtrix:"<<std::endl;
-	shadowMatrix.printDebug();
-	return shadowMatrix.GetReference();
+float *Camera::GetShadowMatrix(Matrix44 &modelTransform){
+	shadowMatrixMultiplied = shadowMatrix*modelTransform;
+	return shadowMatrixMultiplied.GetReference();
 }
 }

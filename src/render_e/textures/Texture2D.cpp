@@ -89,6 +89,7 @@ TextureLoadStatus Texture2D::Load() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp?GL_CLAMP:GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp?GL_CLAMP:GL_REPEAT);
 
+
         GLenum format;
 
         GetTextureFormat(format);
@@ -101,6 +102,7 @@ TextureLoadStatus Texture2D::Load() {
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
                     0, format, GL_UNSIGNED_BYTE, data);
         }
+		glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     if (data != NULL) {
@@ -119,25 +121,44 @@ void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
     // select our current texture
     glBindTexture(GL_TEXTURE_2D, textureId);
 
-    // when texture area is small, bilinear filter the closest mipmap
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-            GL_LINEAR_MIPMAP_NEAREST);
-    // when texture area is large, bilinear filter the original
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (textureFormat==DEPTH){
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+		// This is to allow usage of shadow2DProj function in the shader
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY); 				
+	
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	} else {
+		// when texture area is small, bilinear filter the closest mipmap
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+				GL_LINEAR_MIPMAP_NEAREST);
+		// when texture area is large, bilinear filter the original
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// the texture wraps over at the edges (repeat)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp?GL_CLAMP:GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp?GL_CLAMP:GL_REPEAT);
 
-    // the texture wraps over at the edges (repeat)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp?GL_CLAMP:GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp?GL_CLAMP:GL_REPEAT);
+	}
+    
+
+    
+	// glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+	
+	
     
     GLenum format;
-
     GetTextureFormat(format);
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
             0, format, storageType, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 }

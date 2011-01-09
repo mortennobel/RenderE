@@ -37,15 +37,13 @@
         <!-- <object name="Point Light" position="5,5,1">
             <light type="point" diffuse="1,1,1,1" ambient="0.05,0.05,0.05,1" specular="1,1,1,1"/>
         </object> -->
-        
-        
         <object name="MainCamera" position="0,1,15">
             <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
             <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
         </object>
         <object name="Point Light" position="5,5,2" rotate="0,0,0.0">
-          <light type="spot" diffuse="2,2,2,1" ambient="0.5,0.5,0.5,1" specular="1,1,1,1" spotCutoff="60"/>
-          <camera type="projection" fieldOfView="60" aspect="1" nearPlane="0.1" farPlane="100" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="DEPTH_BUFFER"/>
+          <light type="spot" diffuse="2,2,2,1" ambient="0.1,0.1,0.1,1" specular="1,1,1,1" spotCutoff="60"/>
+          <camera type="projection" fieldOfView="60" aspect="1" nearPlane="0.4" farPlane="10" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="DEPTH_BUFFER"/>
         </object>
       <object name="Light sphere" position="5.2,5,0.8" rotation="0,0,0" scale=".5,.5,.15">
         <mesh primitive="sphere"/>

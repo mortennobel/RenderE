@@ -44,14 +44,14 @@ inline void doRenderErrorCheck() {
 void RenderBase::Reshape(int width, int height){
     this->width = width;
     this->height = height;
-    if (doubleSpeedZOnlyRendering){
+   /* if (doubleSpeedZOnlyRendering){
         glDepthFunc(GL_LEQUAL);
         if (zOnlyShader == NULL){
             zOnlyShader = DefaultShaders::Instance()->GetZOnly();
         }
     } else {
         glDepthFunc(GL_LESS);
-    }
+    }*/
 }
 
 void RenderBase::SetupLight(){
@@ -198,6 +198,11 @@ void RenderBase::Init(void (*swapBuffersFunc)()){
 	glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glEnable(GL_DEPTH_TEST);
+
+    glClearDepth(1.0f);                         // 0 is near, 1 is far
+    glDepthFunc(GL_LEQUAL);
 }
 
 void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
