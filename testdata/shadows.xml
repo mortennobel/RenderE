@@ -41,7 +41,7 @@
             <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
             <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
         </object>
-        <object name="Point Light" position="5,5,2" rotate="0,0,0.0">
+        <object name="Point Light" position="5,5,3" rotate="0,0,0.0">
           <light type="spot" diffuse="2,2,2,1" ambient="0.1,0.1,0.5,1" specular="1,1,1,1" spotCutoff="60"/>
           <camera type="projection" fieldOfView="60" aspect="1" nearPlane="0.4" farPlane="10" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="DEPTH_BUFFER"/>
         </object>
@@ -63,7 +63,7 @@
         </object>
         
       
-        <object name="Light sphere" position="5,5,2" rotation="0,0,0" scale=".05,.05,.05">
+        <object name="Light sphere" position="5,5,3" rotation="0,0,0" scale=".05,.05,.05">
             <mesh primitive="sphere"/> 
             <material ref="Yellow"/>
         </object>

@@ -21,7 +21,7 @@
         </material>
 		<material name="Texture2" shader="shadow-dif">
           <parameter name="shadowMap" texture="texture"/>
-            <parameter name="fcolor" vector3="1,0,0"/>
+            <parameter name="fcolor" vector3="0.2,0.7,0.5"/>
             <parameter name="activelights" int="1"/>
           <parameter name="textureMatrix" cameraRef="Point Light"/>
         </material>
@@ -29,17 +29,6 @@
             <parameter name="color" vector4="1,1,0,1"/>
             <parameter name="activelights" int="1"/>
         </material>
-      <material name="Yellow2" shader="diffuse">
-        <parameter name="color" vector4="1,1,0,1"/>
-        <parameter name="activelights" int="1"/>
-      </material>
-        <material name="White" shader="diffuse-tex">
-            <parameter name="texture" texture="texture"/>
-            <parameter name="activelights" int="1"/>
-        </material>
-      <material name="UnlitMat" shader="unlit-tex">
-        <parameter name="texture" texture="texture"/>
-      </material>
     </materials>
     <scenegraph>
         <!-- <object name="Point Light" position="5,5,1">
@@ -61,24 +50,19 @@
         <mesh import="testdata/arhstuff.fbx"/>
         <material ref="Texture2"/>
       </object>
-        <!--<object name="RenderToTextureCamera" position="0,1,30" rotate="0,0,15.0">
-            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="COLOR_BUFFER"/>
-            
-        </object> -->
-        <object name="Texture cube" position="0,0,0" rotation="0,0,0" scale="10,10,10">
+	  
+	   <object name="arhstuff" position="7.2,7.5,1.0" rotation="0,0,23" scale=".008,.008,.008">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="Texture2"/>
+      </object>
+	    <object name="Texture cube" position="0,0,0" rotation="0,0,0" scale="15,15,15">
             <mesh primitive="plane"/> 
             <material ref="Texture"/>
         </object>
-        <object name="Texture " position="-7,-2.5,-1" rotation="0,90,0" scale="10,10,10">
-            <mesh ="plane"/> 
-            <material ref="UnlitMat"/>
-        </object>
-        
       
         <object name="Light sphere" position="5,5,4" rotation="0,0,0" scale=".05,.05,.05">
             <mesh primitive="sphere"/> 
             <material ref="Yellow"/>
         </object>
-        
     </scenegraph>
 </scene>
