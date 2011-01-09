@@ -156,7 +156,7 @@ void ProcessLight(in int i, in vec3 normal, in vec3 eye, in vec3 ecPosition3)
 	}
 }
 
-void flight(in vec3 normal, in vec4 ecPosition, float alphaFade, out vec4 frontColor)
+void flight(in vec3 normal, in vec4 ecPosition, float alphaFade, float invShadow, out vec4 frontColor)
 {
 	vec4 color;
 	vec3 ecPosition3;
@@ -188,10 +188,10 @@ void flight(in vec3 normal, in vec4 ecPosition, float alphaFade, out vec4 frontC
 	//	ProcessLight(3,normal,eye,ecPosition3);
 	//}
 
-   color = gl_FrontLightModelProduct.sceneColor +
-      Ambient  * gl_FrontMaterial.ambient +
-      Diffuse  * gl_FrontMaterial.diffuse;
-    color += Specular * gl_FrontMaterial.specular;
+   color = 
+      Ambient   +
+      Diffuse  * invShadow;
+    color += Specular * invShadow;
     color = clamp( color, 0.0, 1.0 );
     frontColor = color;
     frontColor.a *= alphaFade;

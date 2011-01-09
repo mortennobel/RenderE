@@ -19,13 +19,17 @@
 
 namespace render_e {
 
+class Camera; // forward declaration
+
 enum ShaderParamType{
     SPT_FLOAT,
     SPT_VECTOR2,
     SPT_VECTOR3,
     SPT_VECTOR4,
     SPT_INT,
-    SPT_TEXTURE
+    SPT_TEXTURE,
+	SPT_SHADOW_SETUP,
+	SPT_SHADOW_SETUP_NAME, // will allow setup material without camera is defined yet
 };
 
 struct ShaderParameters{
@@ -34,6 +38,8 @@ struct ShaderParameters{
     union ShaderValue {
         float f[4];
         int integer[2]; // value, bind texturetype
+		Camera *camera;
+		char *cameraName;
     } shaderValue;
 };
 
@@ -49,6 +55,7 @@ public:
     bool SetFloat(std::string name, float f);
     bool SetTexture(std::string name, TextureBase *texture);
     bool SetInt(std::string name, int i);
+	bool SetShadowSetup(std::string name, const char *cameraName);
     
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }

@@ -37,6 +37,8 @@ public:
     void SetBackfaceCulling(bool enabled);
 
     void PrintDebug();
+
+	SceneObject *Find(char *name);
     
     std::vector<SceneObject*> *GetSceneObjects() { return &sceneObjects; }
     std::vector<SceneObject*> *GetCameras() { return &cameras; }

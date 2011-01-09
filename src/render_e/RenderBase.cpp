@@ -126,6 +126,7 @@ void RenderBase::RenderScene(){
 void RenderBase::AddSceneObject(SceneObject *sceneObject){
 	assert(sceneObject != NULL);
     
+	sceneObject->SetRenderBase(this);
     sceneObjects.push_back(sceneObject);
     if (sceneObject->GetCamera() != NULL){
         cameras.push_back(sceneObject);
@@ -143,6 +144,7 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
 }
 
 void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
+	sceneObject->SetRenderBase(NULL);
     std::vector<SceneObject*>::iterator pos = find(sceneObjects.begin(), sceneObjects.end(), sceneObject);
     if (pos!=sceneObjects.end()){
         sceneObjects.erase(pos);
@@ -157,6 +159,15 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     if (pos!=cameras.end()){
         lights.erase(pos);
     }
+}
+
+SceneObject *RenderBase::Find(char *name){
+    for (std::vector<SceneObject*>::iterator iter = sceneObjects.begin();iter != sceneObjects.end();iter++){
+		if ((*iter)->GetName().compare(name)==0){
+			return *iter;
+		}
+    }
+	return NULL;
 }
 
 void RenderBase::SetRenderMode(RenderMode renderMode){
@@ -184,9 +195,9 @@ void RenderBase::Init(void (*swapBuffersFunc)()){
     glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    
 }
 
 void RenderBase::SetDoubleSpeedZOnlyRendering(bool enabled){
@@ -200,7 +211,7 @@ bool RenderBase::GetDoubleSpeedZOnlyRendering(){
 void RenderBase::PrintDebug(){
     using namespace std;
     cout << "Scene objects: "<<sceneObjects.size()<<endl;
-    for (int i=0;i<sceneObjects.size();i++){
+    for (unsigned int i=0;i<sceneObjects.size();i++){
         cout <<sceneObjects[i]->GetName()<<endl;
         Vector3 position = sceneObjects[i]->GetTransform()->GetPosition();
         cout <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
@@ -212,12 +223,12 @@ void RenderBase::PrintDebug(){
     }
     
     cout << "Camera objects: "<<cameras.size()<<endl;
-    for (int i=0;i<cameras.size();i++){
+    for (unsigned int i=0;i<cameras.size();i++){
         cout <<cameras[i]->GetName()<<endl;
     }
     
     cout << "lights objects: "<<lights.size()<<endl;
-    for (int i=0;i<lights.size();i++){
+    for (unsigned int i=0;i<lights.size();i++){
         cout <<lights[i]->GetName()<<endl;
     }
     

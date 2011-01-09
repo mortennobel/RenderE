@@ -43,7 +43,7 @@ Texture2D::~Texture2D() {
 void Texture2D::GetTextureFormat( GLenum &format ) {
     switch (textureFormat) {
         case DEPTH:
-            internalFormat = GL_DEPTH_COMPONENT;
+            internalFormat = GL_DEPTH_COMPONENT24;
             format = GL_DEPTH_COMPONENT;
 			storageType = GL_FLOAT;
             break;

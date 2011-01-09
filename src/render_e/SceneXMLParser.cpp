@@ -143,7 +143,7 @@ public:
         if (stringEqual("shader", message)) {
             string shaderName;
             string file;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
@@ -178,7 +178,7 @@ public:
             int height;
             string type;
             bool clamp = true;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
@@ -228,7 +228,7 @@ public:
         } else if (stringEqual("cubetexture", message)) {
             string textureName;
             string left, right, top, bottom, back, front;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
@@ -272,7 +272,7 @@ public:
         if (stringEqual("material", message)) {
             string matName;
             string shader;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
@@ -297,16 +297,18 @@ public:
         } else if (stringEqual("parameter", message)) {
             assert(material != NULL);
             string parameterName;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
-                if (stringEqual("name", attName)) {
+				if (stringEqual("name", attName)) {
                     parameterName.append(attValue);
                 } else if (stringEqual("vector2", attName)) {
                     material->SetVector2(parameterName, stringToVector2(attValue));
                 } else if (stringEqual("vector3", attName)) {
                     material->SetVector3(parameterName, stringToVector3(attValue));
-                } else if (stringEqual("vector4", attName)) {
+                } else if (stringEqual("cameraRef", attName)) {
+                    material->SetShadowSetup(parameterName, attValue);
+				} else if (stringEqual("vector4", attName)) {
                     material->SetVector4(parameterName, stringToVector4(attValue));
                 } else if (stringEqual("texture", attName)) {
                     map<string, TextureBase*>::iterator iter = textures.find(attValue);
@@ -319,7 +321,7 @@ public:
                     float f = stringToFloat(attValue);
                     material->SetFloat(parameterName, f);
                 } else if (stringEqual("int", attName)) {
-                    int i = stringToFloat(attValue);
+                    int i = stringToInt(attValue);
                     material->SetInt(parameterName, i);
                 } else {
                     cout << "Unknown parameter attribute name "<<attName<<endl;
@@ -339,7 +341,7 @@ public:
             Vector3 rotation;
             Vector3 scale(1,1,1);
             string parent;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("name", attName)) {
@@ -387,7 +389,7 @@ public:
             CameraBuffer cameraBuffer; // used in renderToTexture
             /*renderToTexture="texture" renderBuffer="COLOR_BUFFER"*/
             Vector4 clearColor(0,0,0,1);
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
 
@@ -453,7 +455,7 @@ public:
             sceneObject->AddCompnent(cam);
         } else if (stringEqual("material", message)) {
             string ref;
-            for (int i = 0; i < attributes.getLength(); i++) {
+            for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("ref", attName)) {

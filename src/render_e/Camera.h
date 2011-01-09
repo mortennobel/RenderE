@@ -12,6 +12,7 @@
 
 #include "RenderBase.h"
 #include "math/Vector4.h"
+#include "math/Matrix44.h"
 #include "Component.h"
 
 namespace render_e {
@@ -54,6 +55,7 @@ public:
     void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, TextureBase *texture);
     void BindFrameBufferObject();
     void UnBindFrameBufferObject();
+	float *GetShadowMatrix();
 private:
     CameraMode cameraMode;
     float fieldOfView;
@@ -75,6 +77,7 @@ private:
     unsigned int framebufferTextureType;
     int fboWidth;
     int fboHeight;
+	Matrix44 shadowMatrix;
 };
 }
 #endif	/* CAMERA_H */

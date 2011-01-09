@@ -101,6 +101,51 @@ void Camera::Setup(int viewportWidth, int viewportHeight){
     
     Matrix44 cameraMatrix = GetOwner()->GetTransform()->GetLocalTransformInverse();
     glLoadMatrixf(cameraMatrix.GetReference());
+
+	if (renderToTexture){
+		// Moving from unit cube [-1,1] to [0,1]  
+		const float bias[16] = {	
+			0.5, 0.0, 0.0, 0.0, 
+			0.0, 0.5, 0.0, 0.0,
+			0.0, 0.0, 0.5, 0.0,
+			0.5, 0.5, 0.5, 1.0};
+		float modelView[16];
+		float projection[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, modelView);
+		glGetFloatv(GL_PROJECTION_MATRIX, projection);
+		Matrix44 mat(bias);
+		Matrix44 pj(projection);
+		Matrix44 mv(modelView);
+		shadowMatrix = mat*mv*pj;
+
+		/*
+		static double modelView[16];
+		static double projection[16];
+		
+		// Moving from unit cube [-1,1] to [0,1]  
+		const GLdouble bias[16] = {	
+			0.5, 0.0, 0.0, 0.0, 
+			0.0, 0.5, 0.0, 0.0,
+			0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0};
+		
+		// Grab modelview and transformation matrices
+		glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
+		glGetDoublev(GL_PROJECTION_MATRIX, projection);
+		
+		
+		glMatrixMode(GL_TEXTURE);
+		glActiveTexture(GL_TEXTURE7);
+		
+		glLoadIdentity();	
+		glLoadMatrixd(bias);
+		
+		// concatating all matrices into one.
+		glMultMatrixd (projection);
+		glMultMatrixd (modelView);
+		// Go back to normal matrix mode
+		glMatrixMode(GL_MODELVIEW); */
+	}
 }
 
 void Camera::TearDown(){
@@ -209,5 +254,11 @@ void Camera::BindFrameBufferObject(){
 void Camera::UnBindFrameBufferObject(){
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindFramebuffer( GL_FRAMEBUFFER, 0);
+}
+
+float *Camera::GetShadowMatrix(){
+	std::cout<<"CamMAtrix:"<<std::endl;
+	shadowMatrix.printDebug();
+	return shadowMatrix.GetReference();
 }
 }

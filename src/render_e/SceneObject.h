@@ -13,6 +13,7 @@ namespace render_e {
 
 // forward declaration
 class Camera;
+class RenderBase;
 
 class SceneObject {
 public:
@@ -32,6 +33,10 @@ public:
     
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }
+
+	RenderBase *GetRenderBase() { return renderBase; }
+	void SetRenderBase(RenderBase *renderBase) { this->renderBase = renderBase; }
+
 private:
     SceneObject(const SceneObject& orig); // disallow copy constructor
     SceneObject& operator = (const SceneObject&); // disallow copy constructor
@@ -40,6 +45,7 @@ private:
     Camera *camera;
     MeshComponent *mesh;
     Material *material;
+	RenderBase *renderBase;
     Light *light;
     std::vector<Component*> components;
     

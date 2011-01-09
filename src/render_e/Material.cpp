@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cassert>
 #include <GL/glew.h>
+#include "Camera.h"
 
 using namespace std;
 
@@ -47,6 +48,29 @@ void Material::Bind(){
                 glUniform1i((*iter).id, textureIndex);
                 textureIndex++;
                 break;
+			case SPT_SHADOW_SETUP_NAME:
+				{
+					SceneObject *sceneObj = GetOwner()->GetRenderBase()->Find((*iter).shaderValue.cameraName);
+					if (sceneObj==NULL){
+						cout << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName<<endl;
+						continue;
+					}
+					Camera *cam = sceneObj->GetCamera();
+					if (cam==NULL){
+						cout << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName<<" has no camera attached"<<endl;
+						continue;
+					}
+					// clean up
+					delete [] (*iter).shaderValue.cameraName;
+					// change type
+					(*iter).paramType = SPT_SHADOW_SETUP;
+					(*iter).shaderValue.camera = cam;
+				}
+				break;
+			case SPT_SHADOW_SETUP:
+				float *shadowMatrix = (*iter).shaderValue.camera->GetShadowMatrix();
+				glUniformMatrix4fv((*iter).id,1,false, shadowMatrix);
+				break;
         }
     }
 }
@@ -74,6 +98,22 @@ bool Material::SetVector2(std::string name, Vector2 vec){
     param.paramType = SPT_VECTOR2;
     param.shaderValue.f[0] = vec[0];
     param.shaderValue.f[1] = vec[1];
+    AddParameter(param);
+}
+
+
+bool Material::SetShadowSetup(std::string name, const char *cameraName){
+	int id = shader->GetUniformLocation(name.c_str());
+    if (id==-1){
+        return false;
+    }
+	ShaderParameters param;
+    param.id = id;
+    param.paramType = SPT_SHADOW_SETUP_NAME;
+	int nameLen = strlen(cameraName);
+	char *nameCopy = new char[nameLen+1];
+	strncpy(nameCopy, cameraName, nameLen+1);
+    param.shaderValue.cameraName = nameCopy;
     AddParameter(param);
 }
 
