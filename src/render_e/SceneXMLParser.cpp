@@ -471,7 +471,7 @@ public:
                 if (iter == materials.end()) {
                     cout << "Cannot find material " << ref << endl;
                 } else {
-                    sceneObject->AddCompnent(iter->second);
+					sceneObject->AddCompnent(iter->second->Instance());
                 }
             } else {
                 cout << "Warn material ref not set"<<endl;
@@ -479,14 +479,14 @@ public:
         } else if (stringEqual("mesh", message)) {
             string meshName;
             string primitive;
-            string fbxfile;
+            string import;
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
                 if (stringEqual("primitive", attName)) {
                     primitive.append(attValue);
-                } else if (stringEqual("fbxfile", attName)) {
-                    fbxfile.append(attValue);
+                } else if (stringEqual("import", attName)) {
+                    import.append(attValue);
                 } else {
                     cout << "Unknown attribute name "<<attName<<endl;
                 }
@@ -506,8 +506,14 @@ public:
                 } else {
                     cout << "Unknown mesh.primitive name "<<primitive.c_str()<<endl;
                 }
-            } else if (fbxfile.length() > 0){
-                cout << "Todo : implement fbx import"<<endl;
+            } else if (import.length() > 0){
+				MeshComponent *meshC = fbxLoader.LoadMeshComponent(import.c_str());
+				if (meshC != NULL){
+					meshC->SetOwner(NULL);
+					sceneObject->AddCompnent(meshC);
+				} else {
+					cout << "Cannot find mesh in "<<import<<endl;
+				}
             }
             if (mesh != NULL){
                 MeshComponent *meshComponent = new MeshComponent();

@@ -76,6 +76,25 @@ void Material::Bind(){
     }
 }
 
+Material *Material::Instance(){
+	Material *res = new Material(shader);
+	res->textures = textures;
+	res->name = name;
+	for (int i=0;i<parameters.size();i++){
+		ShaderParameters p = parameters[i];
+		if (p.paramType==SPT_SHADOW_SETUP_NAME){
+			int len = strlen(p.shaderValue.cameraName)+1;
+			char *nameCopy = new char[len];
+			strncpy(nameCopy, p.shaderValue.cameraName,len);
+			p.shaderValue.cameraName = nameCopy;
+		}
+		res->parameters.push_back(p);
+	}
+	res->name.append("_instance");
+
+	return res;
+}
+
 void Material::AddParameter(ShaderParameters &param){
     // replace a existing parameter
     std::vector<ShaderParameters>::iterator iter = parameters.begin();

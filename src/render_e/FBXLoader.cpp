@@ -13,6 +13,7 @@
 #include "math/Vector2.h"
 #include "math/Mathf.h"
 #include "MeshComponent.h"
+#include "SceneObject.h"
 #include "Mesh.h"
 
 
@@ -85,10 +86,8 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 assert(fbxMesh->GetControlPointsCount() <= USHRT_MAX);
                 for (int i=0;i<fbxMesh->GetControlPointsCount();i++){
                     Vector3 v = toVector(controlPoints[i]);
-                    cout<<v[0]<<" "<<v[1]<<" "<<v[2]<<endl;
                     vertices.push_back(v);
                     v = toVector(normalArray->GetAt(i));
-                    cout<<"\t\t"<<v[0]<<" "<<v[1]<<" "<<v[2]<<endl;
                     normals.push_back(v);
                 }
                 
@@ -104,12 +103,9 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                             int last = fbxMesh->GetPolygonVertex(i,j-1);
                             indices.push_back(first);
                             indices.push_back(last);
-                            cout<<first<<endl;
-                            cout<<last<<endl;
                         }
                         int polygonIndex = fbxMesh->GetPolygonVertex(i,j);
                         indices.push_back(polygonIndex);
-                        cout << polygonIndex<<endl;
                         /*KFbxVector4 vectorSrc = controlPoints[polygonIndex];
                         Vector3 vectorDst = toVector(vectorSrc);
                         vertices.push_back(vectorDst);
@@ -173,6 +169,34 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
         }
     }
     return sceneObject;
+}
+
+MeshComponent *getMeshComponent(SceneObject *sceneObject){
+	MeshComponent *mesh = sceneObject->GetMesh(); 
+	if (mesh!= NULL){
+		return mesh;
+	}
+
+	// try search in children
+	vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
+	for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
+		Transform *childTransform = *iter;
+		SceneObject *child = childTransform->GetOwner();
+		if (child != NULL){
+			mesh = getMeshComponent(child);
+			if (mesh!=NULL){
+				return mesh;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+MeshComponent *FBXLoader::LoadMeshComponent(const char *filename){
+	SceneObject *sceneObject = Load(filename);
+	// Here there is a memory leak!!!
+	return getMeshComponent(sceneObject);
 }
 
 SceneObject *FBXLoader::Load(const char *filename){

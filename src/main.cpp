@@ -233,7 +233,7 @@ void setMatrial (Shader *shader, SceneObject *so){
     
     vector<Transform *> *trans = so->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = trans->begin();iter != trans->end();iter++){
-        so = (*iter)->GetSceneObject();
+        so = (*iter)->GetOwner();
         setMatrial(shader, so);
     }
 }

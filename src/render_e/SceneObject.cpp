@@ -17,7 +17,9 @@
 namespace render_e {
 
 SceneObject::SceneObject()
-:camera(NULL),mesh(NULL),material(NULL),transform(new Transform(this)),light(NULL) {
+:camera(NULL),mesh(NULL),material(NULL),light(NULL) {
+	transform = new Transform();
+	transform->SetOwner(this);
 }
 
 SceneObject::~SceneObject() {

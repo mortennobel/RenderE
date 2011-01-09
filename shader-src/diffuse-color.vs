@@ -8,7 +8,7 @@ void main (void)
 
 	// Do fixed functionality vertex transform
 	gl_Position = ftransform();
-	transformedNormal = fnormal();
+	transformedNormal = normalize(fnormal());
 	flight(transformedNormal, ecPosition, alphaFade);
 
 	//Enable texture coordinates

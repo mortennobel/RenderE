@@ -21,7 +21,7 @@ namespace render_e {
     
 class Transform : public Component {
 public:
-    explicit Transform(SceneObject *sceneObject);
+    explicit Transform();
     
     ~Transform(void);
     
@@ -40,9 +40,7 @@ public:
     bool RemoveChild(Transform *transform);
     std::vector<Transform *> *GetChildren(){return &children;}
     
-    SceneObject *GetSceneObject(){return sceneObject;}
 private:
-    SceneObject *sceneObject;
     Transform(const Transform& orig); // disallow copy constructor
     Transform& operator = (const Transform&); // disallow copy constructor
     

@@ -59,6 +59,7 @@ public:
     
     void SetName(std::string name) { this->name = name;}
     std::string GetName() {return name; }
+	Material *Instance(); // create a copy of material
 private:
     Material(const Material& orig); // disallow copy constructor
     Material& operator = (const Material&); // disallow copy constructor

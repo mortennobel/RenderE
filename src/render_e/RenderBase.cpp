@@ -139,7 +139,7 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     using std::vector;
     vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
-        AddSceneObject((*iter)->GetSceneObject());
+        AddSceneObject((*iter)->GetOwner());
     }
 }
 

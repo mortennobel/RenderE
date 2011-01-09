@@ -14,10 +14,11 @@
 
 namespace render_e {
 
-Transform::Transform(SceneObject *sceneObject)
+Transform::Transform()
 :Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false), 
-        scale(1,1,1),parent(NULL),sceneObject(sceneObject)
-{}
+        scale(1,1,1),parent(NULL)
+{
+}
 
 Transform::~Transform(void)
 {}

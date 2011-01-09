@@ -26,6 +26,7 @@ public:
     FBXLoader(const FBXLoader& orig);
     virtual ~FBXLoader();
     SceneObject *Load(const char *filename);
+	MeshComponent *LoadMeshComponent(const char *filename);
 private:
     KFbxSdkManager *manager;
 };

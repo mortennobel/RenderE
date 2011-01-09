@@ -3,7 +3,9 @@
     <shaders>
         <shader name="diffuse" file="diffuse-color"/>
         <shader name="diffuse-tex" file="diffuse-texture"/>
+		
       <shader name="shadow-tex" file="shadow-texture"/>
+	  <shader name="shadow-dif" file="shadow-diffuse"/>
       <shader name="unlit-tex" file="unlit-texture"/>
     </shaders>
     <textures>
@@ -14,6 +16,12 @@
         <material name="Texture" shader="shadow-tex">
           <parameter name="shadowMap" texture="texture"/>
             <parameter name="texture" texture="background"/>
+            <parameter name="activelights" int="1"/>
+          <parameter name="textureMatrix" cameraRef="Point Light"/>
+        </material>
+		<material name="Texture2" shader="shadow-dif">
+          <parameter name="shadowMap" texture="texture"/>
+            <parameter name="fcolor" vector3="1,0,0"/>
             <parameter name="activelights" int="1"/>
           <parameter name="textureMatrix" cameraRef="Point Light"/>
         </material>
@@ -41,13 +49,17 @@
             <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
             <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
         </object>
-        <object name="Point Light" position="5,5,2" rotate="0,0,0.0">
-          <light type="spot" diffuse="2,2,2,1" ambient="0.1,0.1,0.5,1" specular="1,1,1,1" spotCutoff="60"/>
+        <object name="Point Light" position="5,5,4" rotate="0,0,0.0">
+          <light type="spot" diffuse="2,2,2,1" ambient="0.1,0.1,0.1,1" specular="1,1,1,1" spotCutoff="60"/>
           <camera type="projection" fieldOfView="60" aspect="1" nearPlane="0.4" farPlane="10" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="DEPTH_BUFFER"/>
         </object>
-      <object name="Light sphere" position="5.2,5,0.8" rotation="0,0,0" scale=".5,.5,.5">
-        <mesh primitive="sphere"/>
-        <material ref="Yellow2"/>
+      <object name="arhstuff" position="5.2,2.5,1.0" rotation="0,0,0" scale=".005,.005,.005">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="Texture2"/>
+      </object>
+	  <object name="arhstuff" position="3.2,3.5,1.0" rotation="0,0,23" scale=".005,.005,.005">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="Texture2"/>
       </object>
         <!--<object name="RenderToTextureCamera" position="0,1,30" rotate="0,0,15.0">
             <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="COLOR_BUFFER"/>
@@ -58,12 +70,12 @@
             <material ref="Texture"/>
         </object>
         <object name="Texture " position="-7,-2.5,-1" rotation="0,90,0" scale="10,10,10">
-            <mesh primitive="plane"/> 
+            <mesh ="plane"/> 
             <material ref="UnlitMat"/>
         </object>
         
       
-        <object name="Light sphere" position="5,5,2" rotation="0,0,0" scale=".05,.05,.05">
+        <object name="Light sphere" position="5,5,4" rotation="0,0,0" scale=".05,.05,.05">
             <mesh primitive="sphere"/> 
             <material ref="Yellow"/>
         </object>
