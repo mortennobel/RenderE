@@ -122,12 +122,12 @@ Mesh *MeshFactory::CreateCube(){
 
 void drawtri(Vector3 a, Vector3 b, Vector3 c, int div, float r, vector<Vector3> &vertices, vector<Vector3> &normals) {
     if (div<=0) {
-        normals.push_back(a);
-        normals.push_back(b);
+        normals.push_back(a);		
         normals.push_back(c);
+        normals.push_back(b);
         vertices.push_back(a*r);
-        vertices.push_back(b*r);
         vertices.push_back(c*r);
+        vertices.push_back(b*r);
     } else {
         Vector3 ab, ac, bc;
         for (int i=0;i<3;i++) {
