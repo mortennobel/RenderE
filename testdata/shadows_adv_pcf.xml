@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <shaders>
+        <shader name="diffuse" file="diffuse-color"/>
+        <shader name="diffuse-tex" file="diffuse-texture"/>
+		
+      <shader name="shadow-tex" file="shadow-texture"/>
+	  <shader name="shadow-dif" file="shadow-diffuse_pcf"/>
+      <shader name="unlit-tex" file="unlit-texture"/>
+    </shaders>
+    <textures>
+        <texture2d name="background" file="testdata/AncientHopscotch.png"/>
+        <texture2d name="texture" width="1024" height="1024" type="DEPTH" clamp="clamp"/>
+    </textures>
+    <materials>
+	
+       <material name="PCFMat" shader="shadow-dif">
+			<parameter name="pixelOffsetX" float="0.0009765625"/><!-- 1/shadowmap.width -->
+			<parameter name="pixelOffsetY" float="0.0009765625"/><!-- 1/shadowmap.height -->
+          <parameter name="shadowMap" texture="texture"/>
+            <parameter name="fcolor" vector3="0.7,0.2,0.5"/>
+            <parameter name="activelights" int="1"/>
+          <parameter name="textureMatrix" cameraRef="Point Light"/>
+        </material>
+		<material name="PCFMat2" shader="shadow-dif">
+			<parameter name="pixelOffsetX" float="0.0009765625"/><!-- 1/shadowmap.width -->
+			<parameter name="pixelOffsetY" float="0.0009765625"/><!-- 1/shadowmap.height -->
+          <parameter name="shadowMap" texture="texture"/>
+            <parameter name="fcolor" vector3="0.2,0.9,0.9"/>
+            <parameter name="activelights" int="1"/>
+          <parameter name="textureMatrix" cameraRef="Point Light"/>
+        </material>
+        <material name="Yellow" shader="diffuse">
+            <parameter name="color" vector4="1,1,0,1"/>
+            <parameter name="activelights" int="1"/>
+        </material>
+    </materials>
+    <scenegraph>
+        <!-- <object name="Point Light" position="5,5,1">
+            <light type="point" diffuse="1,1,1,1" ambient="0.05,0.05,0.05,1" specular="1,1,1,1"/>
+        </object> -->
+        <object name="MainCamera" position="0,1,15">
+            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor="0,0,0,1"/>
+            <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
+        </object>
+        <object name="Point Light" position="5,5,4" rotate="0,0,0.0">
+          <light type="spot" diffuse="2,2,2,1" ambient="0.1,0.1,0.1,1" specular="1,1,1,1" spotCutoff="60"/>
+          <camera type="projection" fieldOfView="60" aspect="1" nearPlane="0.4" farPlane="10" clearColor="0,0,0,1" renderToTexture="texture" renderBuffer="DEPTH_BUFFER"/>
+        </object>
+      <object name="arhstuff" position="5.2,2.5,1.0" rotation="0,0,0" scale=".005,.005,.005">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="PCFMat"/>
+      </object>
+	  <object name="arhstuff" position="3.2,3.5,1.0" rotation="0,0,23" scale=".005,.005,.005">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="PCFMat"/>
+      </object>
+	  
+	   <object name="arhstuff" position="7.2,7.5,1.0" rotation="0,0,23" scale=".008,.008,.008">
+        <mesh import="testdata/arhstuff.fbx"/>
+        <material ref="PCFMat"/>
+      </object>
+	    <object name="Texture cube" position="-4,-4,0" rotation="0,0,0" scale="15,15,15">
+            <mesh primitive="plane"/> 
+            <material ref="PCFMat2"/>
+        </object>
+      
+        <object name="Light sphere" position="5,5,4" rotation="0,0,0" scale=".05,.05,.05">
+            <mesh primitive="sphere"/> 
+            <material ref="Yellow"/>
+        </object>
+    </scenegraph>
+</scene>
