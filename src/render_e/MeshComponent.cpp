@@ -54,7 +54,7 @@ void  MeshComponent::DebugRendering(){
     }
     cout<<"Print rendering start"<<endl;
 }
-#endif RENDER_E_NO_VBO
+#endif //RENDER_E_NO_VBO
 
 void MeshComponent::Render(){
     if (indicesCount==0){
@@ -114,8 +114,7 @@ void MeshComponent::Render(){
     if (vboName != 0){
         // bind buffer (set active)
         glBindBuffer(GL_ARRAY_BUFFER, vboName);
-        // vertex pointer to buffer
-        glVertexPointer(3, GL_FLOAT, stride,BUFFER_OFFSET(0));
+        
         if (normalOffset != -1){
             // normal pointer to buffer
             glNormalPointer(GL_FLOAT, stride, BUFFER_OFFSET(normalOffset));
@@ -128,6 +127,8 @@ void MeshComponent::Render(){
         if (colorOffset != -1){
             glColorPointer(3, GL_FLOAT, stride, BUFFER_OFFSET(colorOffset));
         }
+        // vertex pointer to buffer
+        glVertexPointer(3, GL_FLOAT, stride,BUFFER_OFFSET(vertexOffset));
         // bind buffer (set active)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements);
         glDrawElements(GL_TRIANGLES, indicesCount, indexType, BUFFER_OFFSET(0) );
@@ -153,7 +154,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // Calculate size of data
     
     int sizePrimitives = sizeof(Vector3);
-    int offset = sizePrimitives; // vertices
+    int offset = 0;
     if (normals != NULL){
         normalOffset = offset;
         offset += sizePrimitives;
@@ -187,74 +188,77 @@ void MeshComponent::SetMesh(Mesh *mesh){
     } else {
         texture2Offset = -1;
     }
+    // vertices
+    vertexOffset = offset;
+    offset += sizePrimitives;
     stride = offset;
     
     // create temp buffer
-    unsigned int buffersize = offset*primitiveCount;
+    unsigned int buffersize = offset*primitiveCount*sizeof(float);
     
     void *indicesDest;
     int indicesSize;
+    
     if (primitiveCount < 0xff){
-        indicesSize = sizeof(char);
-        indexType = GL_UNSIGNED_BYTE;
+        indicesSize = sizeof(unsigned char);
+        this->indexType = GL_UNSIGNED_BYTE;
         GLubyte *byteBuffer = new GLubyte[indicesCount];
         for (int i=0;i<indicesCount;i++){
-            byteBuffer[i] = indices[i];
+            byteBuffer[i] = static_cast<unsigned char>(indices[i]);
         }
         indicesDest = byteBuffer;
     } else if (primitiveCount < 0xffff){
-        indicesSize = sizeof(short);
-        indexType = GL_UNSIGNED_SHORT;
+        indicesSize = sizeof(unsigned short);
+        this->indexType = GL_UNSIGNED_SHORT;
         GLushort *shortBuffer = new GLushort[indicesCount];
         for (int i=0;i<indicesCount;i++){
-            shortBuffer[i] = indices[i];
+            shortBuffer[i] = static_cast<unsigned short>(indices[i]);
         }
         indicesDest = shortBuffer;
     } else {
         indicesSize = sizeof(int);
-        indexType = GL_UNSIGNED_INT;
+        this->indexType = GL_UNSIGNED_INT;
         GLuint *intBuffer = new GLuint[indicesCount];
         memcpy(intBuffer, indices, indicesCount*indicesSize);
         indicesDest = intBuffer;
     }
-        
+         
 #ifndef RENDER_E_NO_VBO    
 	unsigned char *buffer;
 #else
     this->indices = indicesDest;
 #endif
     buffer = new unsigned char[buffersize];
-    float *bufferAsFloat = (float *)buffer;
     
-    // Memory layout: Vertex0, Normal0, ..., Vertex1, Normal1, ...
+    // Memory layout: Normal0, ..., Vertex0,  Normal1, ..., Vertex1, ...
     // This layout gives a better performance, since the data that belongs
     // together are located close to each other
     
     int destIndex = 0;
     for (int i=0;i<primitiveCount;i++){
-        memcpy(&bufferAsFloat[destIndex], vertices[i].Get(), sizePrimitives);
-        
-        destIndex += 3;
         if (normals != NULL){
-            memcpy(&bufferAsFloat[destIndex], normals[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), normals[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (tangents != NULL){
-            memcpy(&bufferAsFloat[destIndex], tangents[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), tangents[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (colors != NULL){
-            memcpy(&bufferAsFloat[destIndex], colors[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), colors[i].Get(), sizePrimitives);
             destIndex += 3;
         }
         if (textureCoords != NULL){
-            memcpy(&bufferAsFloat[destIndex], textureCoords[i].Get(), sizeTexCoords);
+            memcpy(&(buffer[destIndex*sizeof(float)]), textureCoords[i].Get(), sizeTexCoords);
             destIndex += 2;
         }
         if (textureCoords2 != NULL){
-            memcpy(&bufferAsFloat[destIndex], textureCoords2[i].Get(), sizeTexCoords);
+            memcpy(&(buffer[destIndex*sizeof(float)]), textureCoords2[i].Get(), sizeTexCoords);
             destIndex += 2;
         }
+        // vertices
+        memcpy(&(buffer[destIndex*sizeof(float)]), vertices[i].Get(), sizePrimitives);
+        destIndex += 3;
         
     }
         
@@ -273,9 +277,10 @@ void MeshComponent::SetMesh(Mesh *mesh){
     // Bind buffer (set buffer active)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboElements); // bind
     // copy data to buffer
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*indicesSize, indices,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount*indicesSize, indicesDest,GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // bind
     
+    // clean up cpu memory
     switch (indexType){
         case GL_UNSIGNED_BYTE:
             delete []static_cast<GLubyte*>(indicesDest);

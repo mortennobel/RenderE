@@ -525,7 +525,6 @@ public:
             Light *light = new Light();
             
             string lightType;
-            
             for (int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
@@ -556,7 +555,8 @@ public:
                 } else if (stringEqual("quadraticAttenuation", attName)) {
                     light->SetQuadraticAttenuation(stringToFloat(attValue));
                 } else if (stringEqual("spotDirection", attName)) {
-                    light->SetSpotDirection(stringToVector3(attValue));
+                    Vector3 v = stringToVector3(attValue);
+                    light->SetSpotDirection(v);
                 } else if (stringEqual("spotCutoff", attName)) {
 					light->SetSpotCutoff(stringToInt(attValue));
                 } else {

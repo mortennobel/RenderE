@@ -11,6 +11,7 @@
 #include "GL/glew.h"
 #include "math/Mathf.h"
 #include "textures/Texture2D.h"
+#include "OpenGLHelper.h"
 
 namespace render_e {
 
@@ -143,7 +144,6 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
         glGenFramebuffers(1, &framebufferId);
         framebufferTextureId = texture->GetTextureId();
         
-        
         fboWidth = texture->GetWidth();
         fboHeight = texture->GetHeight();
         
@@ -166,11 +166,14 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
 			
 			
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferId);
-			// glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
+            
+            // glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
 			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebufferTextureId, 0);
+            
+            // create color buffer (not used though)
+            
 		} else {
 			// create render buffer
-
 
 			glGenRenderbuffers(1, &renderBufferId);
 			glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
@@ -186,30 +189,11 @@ void Camera::SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebuff
 			glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
 		}
         GLenum frameBufferRes = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
-        using namespace std;
-        switch (frameBufferRes){
-            case GL_FRAMEBUFFER_COMPLETE:
-                cout<<"Framebuffer ok"<<endl;
-                break;
-            case GL_FRAMEBUFFER_UNDEFINED:
-                cout<<"Framebuffer undefined"<<endl;
-                break;
-            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-                cout<<"Framebuffer incomplete attachment"<<endl;
-                break;
-            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-                cout<<"Framebuffer incomplete missing attachment"<<endl;
-                break;
-            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-                cout<<"Framebuffer incomplete read buffer"<<endl;
-                break;
-            case GL_FRAMEBUFFER_UNSUPPORTED:
-                cout<<"Framebuffer unsupported"<<endl;
-                break;
-            case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-                cout<<"Framebuffer incomplete multisample"<<endl;
-                break;
+        
+        if (frameBufferRes != GL_FRAMEBUFFER_COMPLETE){
+            std::cout << OpenGLHelper::GetFrameBufferStatusString(frameBufferRes)<<std::endl;
         }
+        
     } else {
         glDeleteFramebuffers(1, &framebufferId);
         glDeleteRenderbuffers(1, &renderBufferId);
