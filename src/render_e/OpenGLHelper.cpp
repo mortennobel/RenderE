@@ -7,6 +7,8 @@
 
 #include "OpenGLHelper.h"
 
+#include <iostream>
+
 OpenGLHelper::OpenGLHelper() {
 }
 
@@ -39,5 +41,19 @@ std::string OpenGLHelper::GetFrameBufferStatusString(GLenum code){
             return "FRAMEBUFFER_INCOMPLETE_FORMATS";
         default:
             return "Unknown framebuffer status ";
+    }
+}
+
+void OpenGLHelper::PrintErrors(){
+    using namespace std;
+    GLenum errorCode;
+    while ((errorCode = glGetError()) != GL_NO_ERROR) {
+        const GLubyte* errorStr = gluErrorString(errorCode);
+		if (errorStr==NULL){
+			const char *ERR = "Unknown";
+			errorStr=(GLubyte*)ERR;
+		}
+        std::cout << " " << errorCode << " " << errorStr <<
+            std::endl;
     }
 }

@@ -16,6 +16,7 @@
 namespace render_e {
 class Vector3;
 
+
 /* Floating point math */
 class Mathf {
  public:

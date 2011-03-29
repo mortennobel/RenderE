@@ -17,6 +17,8 @@
 class OpenGLHelper {
 public:
     static std::string GetFrameBufferStatusString(GLenum code);
+    /// helper function that prints OpenGL errors (if any)
+    static void PrintErrors();
 private:
     OpenGLHelper();
     OpenGLHelper(const OpenGLHelper& orig);

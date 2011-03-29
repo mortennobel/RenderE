@@ -15,6 +15,7 @@
 #include "RenderBase.h"
 #include "Camera.h"
 #include "shaders/DefaultShaders.h"
+#include "OpenGLHelper.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -26,22 +27,6 @@ Shader *zOnlyShader = NULL;
 
 RenderBase::RenderBase():swapBuffersFunc(NULL),doubleSpeedZOnlyRendering(true){
 }
-
-
-// helper function that prints OpenGL errors (if any)
-inline void doRenderErrorCheck() {
-    GLenum errorCode;
-    while ((errorCode = glGetError()) != GL_NO_ERROR) {
-        const GLubyte* errorStr = gluErrorString(errorCode);
-		if (errorStr==NULL){
-			const char *ERR = "Unknown";
-			errorStr=(GLubyte*)ERR;
-		}
-        std::cout << " " << errorCode << " " << errorStr <<
-            std::endl;
-    }
-}
-
 
 void RenderBase::Reshape(int width, int height){
     this->width = width;
@@ -82,7 +67,7 @@ void RenderBase::Display(){
         camera->TearDown();
     }
     swapBuffersFunc();
-    doRenderErrorCheck();
+    OpenGLHelper::PrintErrors();
 }
 
 void RenderBase::RenderScene(){
