@@ -8,8 +8,6 @@
 #ifndef MESH_COMPONENT_H
 #define	MESH_COMPONENT_H
 
-#include "math/Vector3.h"
-#include "math/Vector2.h"
 #include "Component.h"
 #include "Mesh.h"
 

@@ -18,7 +18,6 @@
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 
-#include "math/Vector3.h"
 #include "math/Mathf.h"
 #include "shaders/ShaderFileDataSource.h"
 #include "textures/Texture2D.h"
@@ -51,11 +50,11 @@ int stringToInt(const char *s1) {
     return atoi(s1);
 }
 
-Vector3 stringToVector3(const char *s1) {
+glm::vec3 stringToVector3(const char *s1) {
     static char tmp[512];
     strncpy (tmp, s1, 512);
     
-    Vector3 f;
+    glm::vec3 f;
     char * pch;
     int index = 0;
     pch = strtok(tmp, ",");
@@ -68,11 +67,11 @@ Vector3 stringToVector3(const char *s1) {
     return f;
 }
 
-Vector4 stringToVector4(const char *s1) {
+glm::vec4 stringToVector4(const char *s1) {
     static char tmp[512];
     strncpy (tmp, s1, 512);
     
-    Vector4 f;
+    glm::vec4 f;
     char * pch;
     int index = 0;
     pch = strtok(tmp, ",");
@@ -85,11 +84,11 @@ Vector4 stringToVector4(const char *s1) {
     return f;
 }
 
-Vector2 stringToVector2(const char *s1) {
+glm::vec2 stringToVector2(const char *s1) {
     static char tmp[512];
     strncpy (tmp, s1, 512);
     
-    Vector2 f;
+    glm::vec2 f;
     char * pch;
     int index = 0;
     pch = strtok(tmp, ",");
@@ -337,9 +336,9 @@ public:
     void parseSceneObjects(const XMLCh * const name, AttributeList& attributes, const char* message) {
         if (stringEqual("object", message)) {
             string objectName;
-            Vector3 position;
-            Vector3 rotation;
-            Vector3 scale(1,1,1);
+            glm::vec3 position;
+            glm::vec3 rotation;
+            glm::vec3 scale(1,1,1);
             string parent;
             for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
@@ -388,7 +387,7 @@ public:
             Texture2D *renderToTexture = NULL;
             CameraBuffer cameraBuffer; // used in renderToTexture
             /*renderToTexture="texture" renderBuffer="COLOR_BUFFER"*/
-            Vector4 clearColor(0,0,0,1);
+            glm::vec4 clearColor(0,0,0,1);
             for (unsigned int i = 0; i < attributes.getLength(); i++) {
                 char *attName = XMLString::transcode(attributes.getName(i));
                 char *attValue = XMLString::transcode(attributes.getValue(i));
@@ -555,7 +554,7 @@ public:
                 } else if (stringEqual("quadraticAttenuation", attName)) {
                     light->SetQuadraticAttenuation(stringToFloat(attValue));
                 } else if (stringEqual("spotDirection", attName)) {
-                    Vector3 v = stringToVector3(attValue);
+                    glm::vec3 v = stringToVector3(attValue);
                     light->SetSpotDirection(v);
                 } else if (stringEqual("spotCutoff", attName)) {
 					light->SetSpotCutoff(stringToInt(attValue));

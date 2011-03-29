@@ -12,10 +12,8 @@
 #include <string>
 #include "shaders/Shader.h"
 #include "textures/TextureBase.h"
-#include "math/Vector2.h"
-#include "math/Vector3.h"
-#include "math/Vector4.h"
 #include "Component.h"
+#include <glm/glm.hpp>
 
 namespace render_e {
 
@@ -49,9 +47,9 @@ public:
     virtual ~Material();
     void Bind();
     
-    bool SetVector2(std::string name, Vector2 vec);
-    bool SetVector3(std::string name, Vector3 vec);
-    bool SetVector4(std::string name, Vector4 vec);
+    bool SetVector2(std::string name, glm::vec2 vec);
+    bool SetVector3(std::string name, glm::vec3 vec);
+    bool SetVector4(std::string name, glm::vec4 vec);
     bool SetFloat(std::string name, float f);
     bool SetTexture(std::string name, TextureBase *texture);
     bool SetInt(std::string name, int i);

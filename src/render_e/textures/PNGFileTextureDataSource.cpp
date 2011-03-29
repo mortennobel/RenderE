@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
-#include <pnginfo.h>
 #include <iostream>
 
 namespace render_e {

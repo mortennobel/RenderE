@@ -16,6 +16,8 @@
 #include "Camera.h"
 #include "shaders/DefaultShaders.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace render_e {
 
 RenderBase *RenderBase::s_instance = NULL;
@@ -32,7 +34,7 @@ inline void doRenderErrorCheck() {
     while ((errorCode = glGetError()) != GL_NO_ERROR) {
         const GLubyte* errorStr = gluErrorString(errorCode);
 		if (errorStr==NULL){
-			char *ERR = "Unknown";
+			const char *ERR = "Unknown";
 			errorStr=(GLubyte*)ERR;
 		}
         std::cout << " " << errorCode << " " << errorStr <<
@@ -116,7 +118,7 @@ void RenderBase::RenderScene(){
         if (mesh!=NULL){
             glPushMatrix();
             Transform *t = (*sIter)->GetTransform();
-            glMultMatrixf(t->GetLocalTransform().GetReference());
+            glMultMatrixf(glm::value_ptr(t->GetLocalTransform()));
             mesh->Render();
             glPopMatrix();
         }
@@ -218,11 +220,11 @@ void RenderBase::PrintDebug(){
     cout << "Scene objects: "<<sceneObjects.size()<<endl;
     for (unsigned int i=0;i<sceneObjects.size();i++){
         cout <<sceneObjects[i]->GetName()<<endl;
-        Vector3 position = sceneObjects[i]->GetTransform()->GetPosition();
+        glm::vec3 position = sceneObjects[i]->GetTransform()->GetPosition();
         cout <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
-        Quaternion q = sceneObjects[i]->GetTransform()->GetRotation();
-        cout <<"Rotation "<<q.x<<" "<<q.y<<" "<<q.z<<" "<<q.w<<endl;
-        Vector3 scale = sceneObjects[i]->GetTransform()->GetScale();
+        glm::quat q = sceneObjects[i]->GetTransform()->GetRotation();
+        cout <<"Rotation "<<q[0]<<" "<<q[1]<<" "<<q[2]<<" "<<q[3]<<endl;
+        glm::vec3 scale = sceneObjects[i]->GetTransform()->GetScale();
         cout <<"Scale "<<(int)scale[0]<<" "<<(int)scale[1]<<" "<<(int)scale[2]<<" "<<endl;
         
     }

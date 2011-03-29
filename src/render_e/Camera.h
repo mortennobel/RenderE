@@ -11,9 +11,8 @@
 #include <cassert>
 
 #include "RenderBase.h"
-#include "math/Vector4.h"
-#include "math/Matrix44.h"
 #include "Component.h"
+#include <glm/glm.hpp>
 
 namespace render_e {
 
@@ -49,13 +48,13 @@ public:
     void Clear();
     void Setup(int viewportWidth, int viewportHeight);
     void TearDown();
-    void SetClearColor(Vector4 clearColor);
-    Vector4 GetClearColor(){ return clearColor; }
+    void SetClearColor(glm::vec4 clearColor);
+    glm::vec4 GetClearColor(){ return clearColor; }
     bool IsRenderToTexture(){ return renderToTexture; }
     void SetRenderToTexture( bool doRenderToTexture , CameraBuffer framebufferTargetType, TextureBase *texture);
     void BindFrameBufferObject();
     void UnBindFrameBufferObject();
-	float *GetShadowMatrix(Matrix44 &modelTransform);
+	float *GetShadowMatrix(glm::mat4 &modelTransform);
 private:
     CameraMode cameraMode;
     float fieldOfView;
@@ -68,7 +67,7 @@ private:
  	float top;
     int clearMask;
     int clearMaskNative;
-    Vector4 clearColor;
+    glm::vec4 clearColor;
     bool renderToTexture;
     unsigned int framebufferId;
     unsigned int renderBufferId;
@@ -77,8 +76,8 @@ private:
     unsigned int framebufferTextureType;
     int fboWidth;
     int fboHeight;
-	Matrix44 shadowMatrix;
-	Matrix44 shadowMatrixMultiplied;
+	glm::mat4 shadowMatrix;
+	glm::mat4 shadowMatrixMultiplied;
 };
 }
 #endif	/* CAMERA_H */

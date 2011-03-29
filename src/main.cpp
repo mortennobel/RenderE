@@ -5,6 +5,8 @@
 #else
 #include <GLUT/glut.h>
 #endif
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include "render_e/RenderBase.h"
 #include "render_e/Camera.h"
 #include "render_e/SceneObject.h"
@@ -13,8 +15,6 @@
 #include "render_e/MeshFactory.h"
 #include "render_e/FBXLoader.h"
 #include "render_e/Mesh.h"
-#include "render_e/math/Vector3.h"
-#include "render_e/math/Quaternion.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
 #include "render_e/shaders/DefaultShaders.h"
 #include "render_e/SceneXMLParser.h"
@@ -35,8 +35,8 @@ SceneObject *cameraContainer = new SceneObject();
     
 bool mouseDown = false;
 int mouseOffsetX, mouseOffsetY;
-Vector3 mouseRotation;
-Vector3 rotation(0,0,0);
+glm::vec3 mouseRotation;
+glm::vec3 rotation(0,0,0);
 int moveForward = 0;
 
 // The main purpose of the main is to created a windows
@@ -70,9 +70,9 @@ void localUpdate(float time){
     totalTime += time;
     if (moveForward!=0){
         float movementSpeed = 2.0;
-        Vector3 forward(0,0,-1);
+        glm::vec3 forward(0,0,-1);
         forward = cameraContainer->GetTransform()->GetRotation()*forward;
-        Vector3 newPos = cameraContainer->GetTransform()->GetPosition()+forward*(movementSpeed*time*moveForward);
+        glm::vec3 newPos = cameraContainer->GetTransform()->GetPosition()+forward*(movementSpeed*time*moveForward);
         cameraContainer->GetTransform()->SetPosition(newPos);
     }
 }
@@ -99,7 +99,7 @@ void initRenderBase();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = meshTeapotContainer->GetTransform();
-    Vector3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
+    glm::vec3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
     switch (key){
         case 'd':
             cameraPosition[0] = cameraPosition[0]+1;
@@ -128,9 +128,9 @@ void mouseMotionFunc(int x, int y){
         rotation[0] = Mathf::Clamp(mouseRotation[0]+(-y+mouseOffsetY)*rotationSpeed,-89.0f,89.0f);
         rotation[1] = mouseRotation[1]+(-x+mouseOffsetX)*rotationSpeed;
 
-        Quaternion newRotation = Quaternion::MakeFromEuler(
+        glm::quat newRotation; /* = glm::(
                 rotation[0]*Mathf::DEGREE_TO_RADIAN, 
-                rotation[1]*Mathf::DEGREE_TO_RADIAN, 0);
+                rotation[1]*Mathf::DEGREE_TO_RADIAN, 0); */
         cameraContainer->GetTransform()->SetRotation(newRotation);
     }
 }

@@ -9,6 +9,9 @@
 #define	MATHF_H
 
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 
 namespace render_e {
 class Vector3;
@@ -30,8 +33,8 @@ class Mathf {
     inline static float Abs(float value) {
        return fabsf(value);
     }
-    static bool IsPointInTriangle( const Vector3& point, const Vector3& P0,
-                        const Vector3& P1, const Vector3& P2 );
+    static bool IsPointInTriangle( const glm::vec3& point, const glm::vec3& P0,
+                        const glm::vec3& P1, const glm::vec3& P2 );
 	/* Return a random value between 0-1 */
     static float Rand();
 	/* fast inverse square root approximation from the Quake3 game engine */
@@ -47,6 +50,8 @@ class Mathf {
         if (value > max) return max;
         return value;
     }
+    
+    static void SetFromEuler(float pitch, float yaw, float roll, glm::quat &rotation);
  private:
      Mathf(void) {}
      static bool IsRandomInitialized;

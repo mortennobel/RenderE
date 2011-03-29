@@ -9,7 +9,6 @@
 
 #include <ctime>
 #include <cstdlib>
-#include "Vector3.h"
 
 namespace render_e {
 
@@ -21,28 +20,32 @@ const float Mathf::RADIAN_TO_DEGREE = 3600.0f/PI*2;
 const float Mathf::EPSILON = 1.0e-5f;
 bool Mathf::IsRandomInitialized = false;
 
+void Mathf::SetFromEuler(float pitch, float yaw, float roll, glm::quat &rotation){
+    // todo implement
+}
+
 // Returns true if point on triangle plane lies inside triangle (3D version)
 // Assumes triangle is not degenerate
-bool Mathf::IsPointInTriangle( const Vector3& point, const Vector3& P0,
-                              const Vector3& P1, const Vector3& P2 ) {
+bool Mathf::IsPointInTriangle( const glm::vec3& point, const glm::vec3& P0,
+                              const glm::vec3& P1, const glm::vec3& P2 ) {
 
-    Vector3 v0 = P1 - P0;
-    Vector3 v1 = P2 - P1;
-    Vector3 n = v0.Cross(v1);
+    glm::vec3 v0 = P1 - P0;
+    glm::vec3 v1 = P2 - P1;
+    glm::vec3 n = glm::cross(v0,v1);
 
-    Vector3 wTest = v0.Cross(point - P0);
-    if ( wTest.Dot(n) < 0.0f ) {
+    glm::vec3 wTest = glm::cross(v0,point - P0);
+    if ( glm::dot(wTest,n) < 0.0f ) {
         return false;
     }
 
-    wTest = v1.Cross(point - P1);
-    if ( wTest.Dot(n) < 0.0f ) {
+    wTest = glm::cross(v1,point - P1);
+    if ( glm::dot(wTest,n) < 0.0f ) {
         return false;
     }
 
-    Vector3 v2 = P0 - P2;
-    wTest = v2.Cross(point - P2);
-    if ( wTest.Dot(n) < 0.0f ) {
+    glm::vec3 v2 = P0 - P2;
+    wTest = glm::cross(v2,point - P2);
+    if ( glm::dot(wTest,n) < 0.0f ) {
         return false;
     }
 

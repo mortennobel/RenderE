@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <limits>
+#include <glm/glm.hpp>
 
 using namespace std;
 
@@ -22,42 +23,42 @@ Mesh::Mesh(const Mesh& orig) {
 Mesh::~Mesh() {
 }
 
-Vector3 *Mesh::GetVertices(){
+glm::vec3 *Mesh::GetVertices(){
     if (vertices.size()==0){
         return NULL;
     }
     return &vertices[0];
 }
 
-Vector3 *Mesh::GetNormals(){
+glm::vec3 *Mesh::GetNormals(){
     if (normals.size()==0){
         return NULL;
     }
     return &normals[0];
 }
 
-Vector3 *Mesh::GetTangents(){
+glm::vec3 *Mesh::GetTangents(){
     if (tangents.size()==0){
         return NULL;
     }
     return &tangents[0];
 }
 
-Vector3 *Mesh::GetColors(){
+glm::vec3 *Mesh::GetColors(){
     if (colors.size()==0){
         return NULL;
     }
     return &colors[0];
 }
 
-Vector2 *Mesh::GetTextureCoords1(){
+glm::vec2 *Mesh::GetTextureCoords1(){
     if (textureCoords1.size()==0){
         return NULL;
     }
     return &textureCoords1[0];
 }
 
-Vector2 *Mesh::GetTextureCoords2(){
+glm::vec2 *Mesh::GetTextureCoords2(){
     if (textureCoords2.size()==0){
         return NULL;
     }
@@ -85,67 +86,67 @@ void Mesh::ComputeNormals(){
     normals.clear();
     // fill normal vector
     while (normals.size()<vertices.size()){
-        normals.push_back(Vector3(0,0,0));
+        normals.push_back(glm::vec3(0,0,0));
     }
     
     for (int i=0;i<indices.size();i=i+3){
         int index1 = indices[i];
         int index2 = indices[i+1];
         int index3 = indices[i+2];
-        Vector3 v1 = vertices[index1];
-        Vector3 v2 = vertices[index2];
-        Vector3 v3 = vertices[index3];
+        glm::vec3 v1 = vertices[index1];
+        glm::vec3 v2 = vertices[index2];
+        glm::vec3 v3 = vertices[index3];
         
-        Vector3 v1v2 = v2-v1;
-        Vector3 v1v3 = v3-v1;
+        glm::vec3 v1v2 = v2-v1;
+        glm::vec3 v1v3 = v3-v1;
         
-        Vector3 normal = v1v2.Cross(v1v3).Normalized();
+        glm::vec3 normal = glm::normalize(glm::cross(v1v2,v1v3));
         
         normals[index1] = normals[index1]+normal;
         normals[index2] = normals[index2]+normal;
         normals[index3] = normals[index3]+normal;
     }
     
-    for (vector<Vector3>::iterator iter = normals.begin();iter != normals.end();iter++){
-        (*iter).Normalize();
+    for (vector<glm::vec3>::iterator iter = normals.begin();iter != normals.end();iter++){
+        (*iter) = glm::normalize(*iter);
     }
 }
 
 
-void Mesh::SetVertices(Vector3 *vertices, int length){
+void Mesh::SetVertices(glm::vec3 *vertices, int length){
     this->vertices.clear();
     for (int i=0;i<length;i++){
         this->vertices.push_back(vertices[i]);
     }
 }
 
-void Mesh::SetNormals(Vector3 *normals, int length){
+void Mesh::SetNormals(glm::vec3 *normals, int length){
     this->normals.clear();
     for (int i=0;i<length;i++){
         this->normals.push_back(normals[i]);
     }
 }
-void Mesh::SetTangents(Vector3 *tangents, int length){
+void Mesh::SetTangents(glm::vec3 *tangents, int length){
     this->tangents.clear();
     for (int i=0;i<length;i++){
         this->tangents.push_back(tangents[i]);
     }
 }
 
-void Mesh::SetColors(Vector3 *colors, int length){
+void Mesh::SetColors(glm::vec3 *colors, int length){
     this->colors.clear();
     for (int i=0;i<length;i++){
         this->colors.push_back(colors[i]);
     }
 
 }
-void Mesh::SetTextureCoords1(Vector2 *textureCoords1, int length){
+void Mesh::SetTextureCoords1(glm::vec2 *textureCoords1, int length){
     this->textureCoords1.clear();
     for (int i=0;i<length;i++){
         this->textureCoords1.push_back(textureCoords1[i]);
     }
 }
-void Mesh::SetTextureCoords2(Vector2 *textureCoords2, int length){
+void Mesh::SetTextureCoords2(glm::vec2 *textureCoords2, int length){
     this->textureCoords2.clear();
     for (int i=0;i<length;i++){
         this->textureCoords2.push_back(textureCoords2[i]);

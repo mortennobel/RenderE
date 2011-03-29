@@ -9,7 +9,7 @@
 #define	LIGHT_H
 
 #include "Component.h"
-#include "math/Vector4.h"
+#include <glm/glm.hpp>
 
 namespace render_e {
 
@@ -24,12 +24,12 @@ public:
     Light();
     Light(LightType lightType);
     virtual ~Light();
-    Vector4 GetAmbient() { return ambient; }
-    void SetAmbient(Vector4 ambient) { this->ambient = ambient; }
-    Vector4 GetDiffuse() { return diffuse; }
-    void SetDiffuse(Vector4 diffuse) { this->diffuse = diffuse; }
-    Vector4 GetSpecular() { return specular; }
-    void SetSpecular(Vector4 specular) { this->specular = specular; }
+    glm::vec4 GetAmbient() { return ambient; }
+    void SetAmbient(glm::vec4 ambient) { this->ambient = ambient; }
+    glm::vec4 GetDiffuse() { return diffuse; }
+    void SetDiffuse(glm::vec4 diffuse) { this->diffuse = diffuse; }
+    glm::vec4 GetSpecular() { return specular; }
+    void SetSpecular(glm::vec4 specular) { this->specular = specular; }
     float GetConstantAttenuation(){ return constantAttenuation; }
     void SetConstantAttenuation(float constantAttenuation) { this->constantAttenuation = constantAttenuation; }
     float GetLinearAttenuation() { return linearAttenuation; }
@@ -39,16 +39,16 @@ public:
     LightType GetLightType() { return lightType; }
     void SetLightType(LightType lightType) { this->lightType = lightType; }
     void SetupLight(int lightIndex);
-	Vector3 GetSpotDirection() { return spotDirection; }
-	void SetSpotDirection(Vector3 &p) { spotDirection = p; }
+	glm::vec3 GetSpotDirection() { return spotDirection; }
+	void SetSpotDirection(glm::vec3 &p) { spotDirection = p; }
 	int GetSpotCutoff(){ return spotCutoff; }
 	void SetSpotCutoff(int s) { spotCutoff = s; }
 private:
     LightType lightType;
-    Vector4 ambient;
-    Vector4 diffuse;
-    Vector4 specular;
-	Vector3 spotDirection;
+    glm::vec4 ambient;
+    glm::vec4 diffuse;
+    glm::vec4 specular;
+	glm::vec3 spotDirection;
 	int spotCutoff;
     float constantAttenuation;
     float linearAttenuation;

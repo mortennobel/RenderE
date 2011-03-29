@@ -10,6 +10,7 @@
 #include <cassert>
 #include <cstring>
 #include <GL/glew.h>
+#include <glm/gtc/type_ptr.hpp>
 
 // todo - remove this - for debugging purpose only 
 #include <iostream>
@@ -44,11 +45,11 @@ void  MeshComponent::DebugRendering(){
     cout<<"Print rendering start"<<endl;
     for (int i=0;i<indicesCount;i++){
         int index = ((unsigned char*)indices)[i];
-        Vector3 *vv = (Vector3*)(&(buffer[index*stride]));
-        Vector3 v = vv[0];
+        glm::vec3 *vv = (glm::vec3*)(&(buffer[index*stride]));
+        glm::vec3 v = vv[0];
         cout<<index<<"  "<<v[0]<<","<<v[1]<<","<<v[2]<<endl;
         if (normalOffset!=-1){
-            Vector3 n = vv[1];
+            glm::vec3 n = vv[1];
             cout<<index<<"      "<<n[0]<<","<<n[1]<<","<<n[2]<<endl;
         }
     }
@@ -80,7 +81,7 @@ void MeshComponent::Render(){
                 break;
         }
         
-        Vector3 *vv = (Vector3*)(&(buffer[index*(stride)]));
+        glm::vec3 *vv = (glm::vec3*)(&(buffer[index*(stride)]));
         
         if (normalOffset!=-1){
             glNormal3fv(vv[1].Get());
@@ -140,12 +141,12 @@ void MeshComponent::Render(){
 void MeshComponent::SetMesh(Mesh *mesh){
     assert (mesh->GetVertices() != NULL);
     assert (mesh->IsValid());
-    Vector3 *vertices = mesh->GetVertices();
-    Vector3 *normals = mesh->GetNormals();
-    Vector3 *tangents = mesh->GetTangents();
-    Vector3 *colors = mesh->GetColors();
-    Vector2 *textureCoords = mesh->GetTextureCoords1();
-    Vector2 *textureCoords2 = mesh->GetTextureCoords2();
+    glm::vec3 *vertices = mesh->GetVertices();
+    glm::vec3 *normals = mesh->GetNormals();
+    glm::vec3 *tangents = mesh->GetTangents();
+    glm::vec3 *colors = mesh->GetColors();
+    glm::vec2 *textureCoords = mesh->GetTextureCoords1();
+    glm::vec2 *textureCoords2 = mesh->GetTextureCoords2();
     int primitiveCount = mesh->GetPrimitiveCount();
     int *indices = mesh->GetIndices(); // todo rename
     indicesCount = mesh->GetIndicesCount();
@@ -153,7 +154,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
     
     // Calculate size of data
     
-    int sizePrimitives = sizeof(Vector3);
+    int sizePrimitives = sizeof(glm::vec3);
     int offset = 0;
     if (normals != NULL){
         normalOffset = offset;
@@ -175,7 +176,7 @@ void MeshComponent::SetMesh(Mesh *mesh){
     } else {
         colorOffset = -1;
     }
-    int sizeTexCoords = sizeof(Vector2);
+    int sizeTexCoords = sizeof(glm::vec2);
     if (textureCoords != NULL) {
         texture1Offset = offset;
         offset += sizeTexCoords;
@@ -237,27 +238,27 @@ void MeshComponent::SetMesh(Mesh *mesh){
     int destIndex = 0;
     for (int i=0;i<primitiveCount;i++){
         if (normals != NULL){
-            memcpy(&(buffer[destIndex*sizeof(float)]), normals[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(normals[i]), sizePrimitives);
             destIndex += 3;
         }
         if (tangents != NULL){
-            memcpy(&(buffer[destIndex*sizeof(float)]), tangents[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(tangents[i]), sizePrimitives);
             destIndex += 3;
         }
         if (colors != NULL){
-            memcpy(&(buffer[destIndex*sizeof(float)]), colors[i].Get(), sizePrimitives);
+            memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(colors[i]), sizePrimitives);
             destIndex += 3;
         }
         if (textureCoords != NULL){
-            memcpy(&(buffer[destIndex*sizeof(float)]), textureCoords[i].Get(), sizeTexCoords);
+            memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(textureCoords[i]), sizeTexCoords);
             destIndex += 2;
         }
         if (textureCoords2 != NULL){
-            memcpy(&(buffer[destIndex*sizeof(float)]), textureCoords2[i].Get(), sizeTexCoords);
+            memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(textureCoords2[i]), sizeTexCoords);
             destIndex += 2;
         }
         // vertices
-        memcpy(&(buffer[destIndex*sizeof(float)]), vertices[i].Get(), sizePrimitives);
+        memcpy(&(buffer[destIndex*sizeof(float)]), glm::value_ptr(vertices[i]), sizePrimitives);
         destIndex += 3;
         
     }

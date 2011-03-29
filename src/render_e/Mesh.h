@@ -9,8 +9,7 @@
 #define	MESH_H
 
 #include <vector>
-#include "math/Vector3.h"
-#include "math/Vector2.h"
+#include <glm/glm.hpp>
 
 
 namespace render_e {
@@ -22,31 +21,31 @@ public:
     
     void ComputeNormals();
 
-    Vector3 *GetVertices();
-    Vector3 *GetNormals();
-    Vector3 *GetTangents();
-    Vector3 *GetColors();
-    Vector2 *GetTextureCoords1();
-    Vector2 *GetTextureCoords2();
+    glm::vec3 *GetVertices();
+    glm::vec3 *GetNormals();
+    glm::vec3 *GetTangents();
+    glm::vec3 *GetColors();
+    glm::vec2 *GetTextureCoords1();
+    glm::vec2 *GetTextureCoords2();
     int GetPrimitiveCount();
     int *GetIndices();
     int GetIndicesCount();
     
-    void SetVertices(std::vector<Vector3> vertices){ this->vertices = vertices;}
-    void SetNormals(std::vector<Vector3> normals){ this->normals = normals;}
-    void SetTangents(std::vector<Vector3> tangents){ this->tangents = tangents;}
-    void SetColors(std::vector<Vector3> colors){ this->colors = colors; }
-    void SetTextureCoords1(std::vector<Vector2> textureCoords1){ this->textureCoords1 = textureCoords1;}
-    void SetTextureCoords2(std::vector<Vector2> textureCoords2){ this->textureCoords2 = textureCoords2;}
+    void SetVertices(std::vector<glm::vec3> vertices){ this->vertices = vertices;}
+    void SetNormals(std::vector<glm::vec3> normals){ this->normals = normals;}
+    void SetTangents(std::vector<glm::vec3> tangents){ this->tangents = tangents;}
+    void SetColors(std::vector<glm::vec3> colors){ this->colors = colors; }
+    void SetTextureCoords1(std::vector<glm::vec2> textureCoords1){ this->textureCoords1 = textureCoords1;}
+    void SetTextureCoords2(std::vector<glm::vec2> textureCoords2){ this->textureCoords2 = textureCoords2;}
     void SetIndices(std::vector<int> indices){this->indices = indices;}
     
     // setters using pointers
-    void SetVertices(Vector3 *vertices, int length);
-    void SetNormals(Vector3 *normals, int length);
-    void SetTangents(Vector3 *tangents, int length);
-    void SetColors(Vector3 *tangents, int length);
-    void SetTextureCoords1(Vector2 *textureCoords1, int length);
-    void SetTextureCoords2(Vector2 *textureCoords2, int length);
+    void SetVertices(glm::vec3 *vertices, int length);
+    void SetNormals(glm::vec3 *normals, int length);
+    void SetTangents(glm::vec3 *tangents, int length);
+    void SetColors(glm::vec3 *tangents, int length);
+    void SetTextureCoords1(glm::vec2 *textureCoords1, int length);
+    void SetTextureCoords2(glm::vec2 *textureCoords2, int length);
     void SetIndices(int *indices, int length);
     
     /**
@@ -57,12 +56,12 @@ public:
      */
     bool IsValid();
 private:
-    std::vector<Vector3> vertices;
-    std::vector<Vector3> normals;
-    std::vector<Vector3> tangents;
-    std::vector<Vector3> colors;
-    std::vector<Vector2> textureCoords1;
-    std::vector<Vector2> textureCoords2;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> tangents;
+    std::vector<glm::vec3> colors;
+    std::vector<glm::vec2> textureCoords1;
+    std::vector<glm::vec2> textureCoords2;
     std::vector<int>     indices;
     
 };

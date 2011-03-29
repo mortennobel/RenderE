@@ -9,8 +9,7 @@
 #include <cassert>
 
 #include <iostream>
-#include "math/Vector3.h"
-#include "math/Vector2.h"
+#include <glm/glm.hpp>
 #include "math/Mathf.h"
 #include "MeshComponent.h"
 #include "SceneObject.h"
@@ -36,12 +35,12 @@ FBXLoader::~FBXLoader() {
     manager->Destroy();
 }
 
-Vector3 toVector(const KFbxVector4 &v){
-    return Vector3(v[0], v[1], v[2]);
+glm::vec3 toVector(const KFbxVector4 &v){
+    return glm::vec3(v[0], v[1], v[2]);
 }
 
-Vector3 toVector(const fbxDouble3 &v){
-    return Vector3(v[0], v[1], v[2]);
+glm::vec3 toVector(const fbxDouble3 &v){
+    return glm::vec3(v[0], v[1], v[2]);
 }
 
 
@@ -71,9 +70,9 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 KFbxMesh *fbxMesh = node->GetMesh();
                 KFbxVector4 *controlPoints = fbxMesh->GetControlPoints();
                 int polygonCount = fbxMesh->GetPolygonCount();
-                vector<Vector3> vertices;
-                vector<Vector3> normals;
-                vector<Vector2> texCords;
+                vector<glm::vec3> vertices;
+                vector<glm::vec3> normals;
+                vector<glm::vec2> texCords;
                 vector<int> polycount;
                 assert(fbxMesh->GetLayerCount(KFbxLayerElement::eNORMAL)==1); // assume only one normal layer
                 KFbxLayer *normalLayer = fbxMesh->GetLayer(0, KFbxLayerElement::eNORMAL);
@@ -85,7 +84,7 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 
                 assert(fbxMesh->GetControlPointsCount() <= USHRT_MAX);
                 for (int i=0;i<fbxMesh->GetControlPointsCount();i++){
-                    Vector3 v = toVector(controlPoints[i]);
+                    glm::vec3 v = toVector(controlPoints[i]);
                     vertices.push_back(v);
                     v = toVector(normalArray->GetAt(i));
                     normals.push_back(v);
@@ -129,17 +128,17 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 
                 // Set translate
                 fbxDouble3 v3 = node->LclTranslation.Get();
-                Vector3 translate = toVector(v3);
+                glm::vec3 translate = toVector(v3);
                 sceneObject->GetTransform()->SetPosition(translate);
                 
                 // Set rotation
                 v3 = node->LclRotation.Get();
-                Vector3 rotation = toVector(v3)*Mathf::DEGREE_TO_RADIAN;
+                glm::vec3 rotation = toVector(v3)*Mathf::DEGREE_TO_RADIAN;
                 sceneObject->GetTransform()->SetRotation(rotation);
 
                 // Set scale
                 v3 = node->LclScaling.Get();
-                Vector3 scale = toVector(v3);
+                glm::vec3 scale = toVector(v3);
                 sceneObject->GetTransform()->SetScale(scale);
                 }
                 break;

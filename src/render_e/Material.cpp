@@ -68,7 +68,7 @@ void Material::Bind(){
 				}
 				break;
 			case SPT_SHADOW_SETUP:
-				Matrix44 m = GetOwner()->GetTransform()->GetLocalTransform();
+				glm::mat4 m = GetOwner()->GetTransform()->GetLocalTransform();
 				float *shadowMatrix = (*iter).shaderValue.camera->GetShadowMatrix(m);
 				glUniformMatrix4fv((*iter).id,1,false, shadowMatrix);
 				break;
@@ -108,7 +108,7 @@ void Material::AddParameter(ShaderParameters &param){
     parameters.push_back(param);
 }
 
-bool Material::SetVector2(std::string name, Vector2 vec){
+bool Material::SetVector2(std::string name, glm::vec2 vec){
     int id = shader->GetUniformLocation(name.c_str());
     if (id==-1){
         return false;
@@ -137,7 +137,7 @@ bool Material::SetShadowSetup(std::string name, const char *cameraName){
     AddParameter(param);
 }
 
-bool Material::SetVector3(std::string name, Vector3 vec){
+bool Material::SetVector3(std::string name, glm::vec3 vec){
     int id = shader->GetUniformLocation(name.c_str());
     if (id==-1){
         return false;
@@ -151,7 +151,7 @@ bool Material::SetVector3(std::string name, Vector3 vec){
     AddParameter(param);
 }
 
-bool Material::SetVector4(std::string name, Vector4 vec){
+bool Material::SetVector4(std::string name, glm::vec4 vec){
     int id = shader->GetUniformLocation(name.c_str());
     if (id==-1){
         return false;

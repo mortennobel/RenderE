@@ -12,9 +12,8 @@
 
 #include <vector>
 
-#include "math/Vector3.h"
-#include "math/Quaternion.h"
-#include "math/Matrix44.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include "Component.h"
 
 namespace render_e {
@@ -25,16 +24,16 @@ public:
     
     ~Transform(void);
     
-    Matrix44 GetLocalTransform();
-    Matrix44 GetLocalTransformInverse();
+    glm::mat4 GetLocalTransform();
+    glm::mat4 GetLocalTransformInverse();
 
-    Vector3 GetPosition() const;
-    Vector3 GetScale() const;
-    Quaternion GetRotation() const;
-    void SetPosition(const Vector3 &newPosition);
-    void SetRotation(const Quaternion &quaternion);
-    void SetRotation(const Vector3 &euler);
-    void SetScale(const Vector3 &scale);
+    glm::vec3 GetPosition() const;
+    glm::vec3 GetScale() const;
+    glm::quat GetRotation() const;
+    void SetPosition(const glm::vec3 &newPosition);
+    void SetRotation(const glm::quat &quaternion);
+    void SetRotation(const glm::vec3 &euler);
+    void SetScale(const glm::vec3 &scale);
     
     void AddChild(Transform *transform);
     bool RemoveChild(Transform *transform);
@@ -48,11 +47,11 @@ private:
     void UpdateInverseIfDirty();
     bool dirtyFlag;
     bool dirtyFlagInverse;
-    Vector3 position;
-    Vector3 scale;
-    Quaternion rotation;
-    Matrix44 localTransform;
-    Matrix44 localTransformInverse;
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::quat rotation;
+    glm::mat4 localTransform;
+    glm::mat4 localTransformInverse;
     
     std::vector<Transform *> children;
     Transform *parent;
