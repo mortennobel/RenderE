@@ -9,6 +9,7 @@
 
 #include <ctime>
 #include <cstdlib>
+#include <glm/gtc/quaternion.hpp>
 
 namespace render_e {
 
@@ -21,6 +22,30 @@ const float Mathf::EPSILON = 1.0e-5f;
 bool Mathf::IsRandomInitialized = false;
 
 void Mathf::SetFromEuler(float pitch, float yaw, float roll, glm::quat &rotation){
+    // todo find glm replacement
+    float cX, cY, cZ, sX, sY, sZ, cYcZ, sYsZ, cYsZ, sYcZ;
+
+    pitch *= 0.5f;
+    yaw *= 0.5f;
+    roll *= 0.5f;
+
+    cX = cos(pitch);
+    cY = cos(yaw);
+    cZ = cos(roll);
+
+    sX = sin(pitch);
+    sY = sin(yaw);
+    sZ = sin(roll);
+
+    cYcZ = cY * cZ;
+    sYsZ = sY * sZ;
+    cYsZ = cY * sZ;
+    sYcZ = sY * cZ;
+
+    rotation.w = cX * cYcZ + sX * sYsZ;
+    rotation.x = sX * cYcZ - cX * sYsZ;
+    rotation.y = cX * sYcZ + sX * cYsZ;
+    rotation.z = cX * cYsZ - sX * sYcZ;
     // todo implement
 }
 

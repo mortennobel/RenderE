@@ -35,7 +35,7 @@ SceneObject *cameraContainer = new SceneObject();
     
 bool mouseDown = false;
 int mouseOffsetX, mouseOffsetY;
-glm::vec3 mouseRotation;
+glm::vec3 mouseRotation(0);
 glm::vec3 rotation(0,0,0);
 int moveForward = 0;
 
@@ -44,7 +44,6 @@ int moveForward = 0;
 // Other purposes include:
 // - Create a timer that keeps a steady framerate
 // - Capture events and delegate them to the RenderEngine singleton
-
 void display() {
     renderBase->Display();
 }
@@ -128,9 +127,10 @@ void mouseMotionFunc(int x, int y){
         rotation[0] = Mathf::Clamp(mouseRotation[0]+(-y+mouseOffsetY)*rotationSpeed,-89.0f,89.0f);
         rotation[1] = mouseRotation[1]+(-x+mouseOffsetX)*rotationSpeed;
 
-        glm::quat newRotation; /* = glm::(
+        glm::quat newRotation;
+        Mathf::SetFromEuler(
                 rotation[0]*Mathf::DEGREE_TO_RADIAN, 
-                rotation[1]*Mathf::DEGREE_TO_RADIAN, 0); */
+                rotation[1]*Mathf::DEGREE_TO_RADIAN, 0,newRotation);
         cameraContainer->GetTransform()->SetRotation(newRotation);
     }
 }
