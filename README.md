@@ -8,6 +8,7 @@ Simple render engine for OpenGL
 The purpose of the render is to create a basic render engine for the OpenGL 3.0.
 
 The goal of the project is:
+
 * Simple code
 * Avoid using any deprecated code for OpenGL
 * Wrap OpenGL calls
@@ -15,14 +16,18 @@ The goal of the project is:
 * Comply with the Google C++ Style Guide
  
 Keep dependencies to a minimum:
+
 * GLEW
 * glm (OpenGL Mathematics)
 * libPNG (optional texture loader)
 * zlib (optional - but required for libPNG)
+* FBX SDK (optional - model loader)
 
 ## Features
+
 * Shader based (GLSL)
 * Scene graph
+* Model loading (FBX, Collada)
 
 ## INSTALLATION
 
