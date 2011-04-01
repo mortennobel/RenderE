@@ -8,6 +8,7 @@
 #include "Mathf.h"
 
 #include <ctime>
+#include <iostream>
 #include <cstdlib>
 #include <glm/gtc/quaternion.hpp>
 
@@ -88,6 +89,22 @@ float Mathf::Rand(){
 float Mathf::Sqrt(float x){
 	return sqrt(x);
     //return 1/InvSqrt(x);
+}
+
+void Mathf::PrintVec4(glm::vec4 v){
+    for (int x = 0; x < 4; x++) {
+        std::cout<<v[x]<<" ";
+    }
+    std::cout<<std::endl;
+}
+
+void Mathf::PrintMat4(glm::mat4 m){
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            std::cout<<m[x][y]<<" ";
+        }
+        std::cout<<std::endl;
+    }
 }
 
 // Quake Fast Inverse Square Root

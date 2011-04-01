@@ -20,7 +20,7 @@ namespace render_e {
 
 Transform::Transform()
 :Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false), 
-        scale(1,1,1),parent(NULL)
+        scale(1,1,1),parent(NULL), rotation(glm::quat(0.0f,0.0f,0.0f,0.0f))
 {
 }
 
@@ -48,25 +48,25 @@ bool Transform::RemoveChild(Transform *transform){
 
 void Transform::UpdateIfDirty(){
     if (dirtyFlag){
-        localTransform = glm::gtc::quaternion::mat4_cast(rotation);
-        glm::mat4 translateMatrix;
-        glm::gtc::matrix_transform::translate(translateMatrix,position);
-        glm::mat4 scaleMatrix;
-        glm::gtc::matrix_transform::scale(translateMatrix,scale);
-        localTransform = translateMatrix * scaleMatrix * localTransform;
+        // update localTransform to translate*scale*rotate
+        localTransform = glm::mat4(
+                glm::vec4(1,0,0,0),
+                glm::vec4(0,1,0,0),
+                glm::vec4(0,0,1,0),
+                glm::vec4(position,1)
+                );
+        localTransform = glm::gtc::matrix_transform::scale(localTransform,scale);
+        localTransform = localTransform * glm::gtc::quaternion::mat4_cast(rotation);
         dirtyFlag = false;
     }
 }
 
 void Transform::UpdateInverseIfDirty(){
     if (dirtyFlagInverse){
-        glm::mat4 inverseRotation = glm::transpose(glm::gtc::quaternion::mat4_cast(rotation));
-        glm::mat4 inverseScaleMatrix;
-        glm::gtc::matrix_transform::scale(inverseScaleMatrix,1.0f / scale);
-        glm::mat4 inverseTranslateMatrix;
-        glm::gtc::matrix_transform::translate(inverseTranslateMatrix,-position);
-        
-        localTransformInverse = inverseRotation * inverseScaleMatrix * inverseTranslateMatrix;
+        // update localTransformInverse to rotate^-1*scale^1*translate^-1
+        localTransformInverse = glm::transpose(glm::gtc::quaternion::mat4_cast(rotation));
+        localTransformInverse = glm::gtc::matrix_transform::scale(localTransformInverse,1.0f / scale);
+        localTransformInverse = glm::gtc::matrix_transform::translate(localTransformInverse,-position);
         dirtyFlagInverse = false;
     }
 }

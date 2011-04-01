@@ -75,10 +75,6 @@ int Camera::GetClearMask() {
     return clearMask;
 }
 
-void Camera::Clear() {
-    glClear(clearMaskNative);
-}
-
 void Camera::Setup(int viewportWidth, int viewportHeight) {
     if (renderToTexture) {
         BindFrameBufferObject();
@@ -103,7 +99,10 @@ void Camera::Setup(int viewportWidth, int viewportHeight) {
     }
     glMatrixMode(GL_MODELVIEW);
 
-    glm::mat4 cameraMatrix = GetOwner()->GetTransform()->GetLocalTransformInverse();
+    SceneObject *sceneObject = GetOwner();
+    assert(sceneObject != NULL); // Cannot setup camera with it being owned by a scene object
+    glm::mat4 cameraMatrix = sceneObject->GetTransform()->GetLocalTransformInverse();
+    
     glLoadMatrixf(glm::value_ptr(cameraMatrix));
 
     if (renderToTexture) {
@@ -115,13 +114,15 @@ void Camera::Setup(int viewportWidth, int viewportHeight) {
         glGetFloatv(GL_PROJECTION_MATRIX, glm::value_ptr(pj));
 
         // Moving from unit cube [-1,1] to [0,1]  
-        glm::mat4 mat = glm::mat4(0.5f, 0.0f, 0.0f, 0.0f,
+        glm::mat4 mat = glm::mat4(
+                0.5f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.5f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.5f, 0.0f,
                 0.5f, 0.5f, 0.5f, 1.0f);
 
         shadowMatrix = mat * pj*mv;
     }
+    glClear(clearMaskNative);
 }
 
 void Camera::TearDown() {
@@ -135,7 +136,6 @@ void Camera::SetClearColor(glm::vec4 clearColor) {
 }
 
 void Camera::SetRenderToTexture(bool doRenderToTexture, CameraBuffer framebufferTargetType, TextureBase *texture) {
-    assert(texture != NULL);
     if (renderToTexture == doRenderToTexture) {
         return;
     }
@@ -175,7 +175,6 @@ void Camera::SetRenderToTexture(bool doRenderToTexture, CameraBuffer framebuffer
 
         } else {
             // create render buffer
-
             glGenRenderbuffers(1, &renderBufferId);
             glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
             glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_DEPTH_COMPONENT24, fboWidth, fboHeight);

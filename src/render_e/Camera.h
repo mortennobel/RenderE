@@ -44,8 +44,7 @@ public:
     float GetTop(){ assert (cameraMode==ORTHOGRAPHIC); return top; }
     void SetClearMask(int clearBitMask);
     int GetClearMask();
-    /// Clear buffers in 
-    void Clear();
+    
     void Setup(int viewportWidth, int viewportHeight);
     void TearDown();
     void SetClearColor(glm::vec4 clearColor);

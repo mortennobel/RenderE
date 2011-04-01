@@ -56,12 +56,10 @@ void RenderBase::SetupLight(){
 void RenderBase::Display(){
     assert(swapBuffersFunc!=NULL);
     
-    
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         SceneObject *sceneObject = *iter;
         Camera *camera = sceneObject->GetCamera();
         camera->Setup(width, height);
-        camera->Clear();
         SetupLight();
         RenderScene();
         camera->TearDown();

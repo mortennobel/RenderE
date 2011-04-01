@@ -53,6 +53,10 @@ class Mathf {
     }
     
     static void SetFromEuler(float pitch, float yaw, float roll, glm::quat &rotation);
+    
+    static void PrintVec4(glm::vec4 v);
+    static void PrintMat4(glm::mat4 m);
+    
  private:
      Mathf(void) {}
      static bool IsRandomInitialized;
