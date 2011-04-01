@@ -1,8 +1,8 @@
-/* 
- * File:   Light.h
- * Author: morten
+/*
+ *  RenderE
  *
- * Created on December 29, 2010, 6:23 PM
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #ifndef LIGHT_H

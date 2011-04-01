@@ -1,8 +1,8 @@
-/* 
- * File:   PNGTextureDataSource.h
- * Author: morten
+/*
+ *  RenderE
  *
- * Created on November 6, 2010, 11:07 AM
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #ifndef RENDER_E_NO_PNG

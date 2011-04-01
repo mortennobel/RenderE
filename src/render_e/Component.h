@@ -1,8 +1,8 @@
-/* 
- * File:   Component.h
- * Author: morten
+/*
+ *  RenderE
  *
- * Created on November 8, 2010, 10:32 PM
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #ifndef COMPONENT_H

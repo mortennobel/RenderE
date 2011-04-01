@@ -1,10 +1,8 @@
 /*
- *  render_base.cpp
  *  RenderE
  *
- *  Created by morten on 10/28/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #include <iostream>

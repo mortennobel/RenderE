@@ -1,8 +1,8 @@
-/* 
- * File:   MeshFactory.cpp
- * Author: morten
- * 
- * Created on December 6, 2010, 12:16 PM
+/*
+ *  RenderE
+ *
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #include "MeshFactory.h"

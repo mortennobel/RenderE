@@ -1,8 +1,8 @@
-/* 
- * File:   TextureBase.cpp
- * Author: morten
- * 
- * Created on November 12, 2010, 11:50 AM
+/*
+ *  RenderE
+ *
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #include "TextureBase.h"

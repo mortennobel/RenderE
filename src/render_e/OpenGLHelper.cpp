@@ -1,8 +1,8 @@
-/* 
- * File:   OpenGLHelper.cpp
- * Author: morten
- * 
- * Created on March 6, 2011, 3:05 PM
+/*
+ *  RenderE
+ *
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #include "OpenGLHelper.h"

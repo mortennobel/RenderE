@@ -1,6 +1,11 @@
 /*
- *  Abstract class for texture builders
+ *  RenderE
+ *
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
+
+
 
 
 #ifndef TEXTURE_DATA_SOURCE_H
@@ -11,7 +16,9 @@
 namespace render_e {
 
 
-
+/*
+ *  Abstract class for texture builders
+ */
 class TextureDataSource {
 public:    
     TextureDataSource();

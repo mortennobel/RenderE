@@ -1,8 +1,8 @@
-/* 
- * File:   TextureBase.h
- * Author: morten
+/*
+ *  RenderE
  *
- * Created on November 12, 2010, 11:50 AM
+ *  Created by Morten Nobel-Jørgensen ( http://www.nobel-joergnesen.com/ ) 
+ *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
 #ifndef TEXTUREBASE_H
