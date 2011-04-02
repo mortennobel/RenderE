@@ -156,7 +156,8 @@ public:
                 XMLString::release(&attName);
             }
             ShaderLoadStatus status;
-            Shader *shader = shaderLoader.LoadLinkShader(file.c_str(), status);
+            
+            Shader *shader = Shader::CreateShader(file, &shaderLoader, status);
             if (status==SHADER_OK){
                 shader->SetName(shaderName);
                 shaders[shaderName] = shader;

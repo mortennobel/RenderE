@@ -15,8 +15,34 @@
 #else
 #include <GLUT/glut.h>
 #endif
+#include "ShaderDataSource.h"
 
 namespace render_e {
+
+Shader *Shader::CreateShader(std::string name, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus){
+    using std::string;
+    static string sharedVertexData;
+    static string sharedFragmentData;
+    if (sharedVertexData.length()==0 || sharedFragmentData.length()==0){
+        shaderDataSource->LoadSharedSource(sharedVertexData,sharedFragmentData);
+    }
+    
+    string vertexData;
+    string fragmentData;
+    outLoadStatus = shaderDataSource->LoadShaderSource(name.c_str(), vertexData, fragmentData);
+    if (outLoadStatus != SHADER_OK){
+        return NULL;
+    }
+    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), 
+            sharedVertexData.c_str(), sharedFragmentData.c_str());
+    outLoadStatus = shader->CompileAndLink();
+    if (outLoadStatus != SHADER_OK){
+        delete shader;
+        return NULL;
+    }
+    return shader;
+}
+
 Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
         const char *sharedVertexShaderLib,
         const char *sharedFragmentShaderLib)
@@ -146,6 +172,10 @@ ShaderLoadStatus Shader::Link(){
     
 void Shader::Bind(){
     glUseProgram(shaderProgramId);
+}
+
+void Shader::Reload(){
+    std::cout << "Reload of shader not implemented" <<std::endl;
 }
 
 int Shader::GetUniformLocation(const char *location){

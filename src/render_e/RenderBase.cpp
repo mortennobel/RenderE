@@ -195,6 +195,13 @@ bool RenderBase::GetDoubleSpeedZOnlyRendering(){
     return doubleSpeedZOnlyRendering;
 }
 
+void RenderBase::ReloadAllShaders(){
+    std::map<std::string,Shader>::iterator shaderIter = shaders.begin();
+    for (;shaderIter != shaders.end();shaderIter){
+        shaderIter->second.Reload();
+    }
+}
+
 void RenderBase::PrintDebug(){
     using namespace std;
     cout << "Scene objects: "<<sceneObjects.size()<<endl;

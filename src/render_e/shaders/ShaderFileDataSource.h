@@ -14,9 +14,7 @@ namespace render_e {
 class ShaderFileDataSource : public ShaderDataSource {
 public:
     ShaderFileDataSource();
-    ShaderFileDataSource(const ShaderFileDataSource& orig);
     virtual ~ShaderFileDataSource();
-protected:
     ShaderLoadStatus LoadSharedSource(std::string &sharedVertexData, std::string &sharedFragmentData);
     ShaderLoadStatus LoadShaderSource(const char* name, 
             std::string &vertexShaderData,

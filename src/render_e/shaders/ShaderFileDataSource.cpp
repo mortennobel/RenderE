@@ -15,9 +15,6 @@ namespace render_e {
 ShaderFileDataSource::ShaderFileDataSource() {
 }
 
-ShaderFileDataSource::ShaderFileDataSource(const ShaderFileDataSource& orig) {
-}
-
 ShaderFileDataSource::~ShaderFileDataSource() {
 }
 

@@ -16,9 +16,11 @@ using namespace std;
 namespace render_e {
 Material::Material(Shader *shader)
 :Component(MaterialType), shader(shader) {
+    shader->IncreaseUsageCount();
 }
 
 Material::~Material() {
+    shader->DecreaseUsageCount();
 }
 
 void Material::Bind(){

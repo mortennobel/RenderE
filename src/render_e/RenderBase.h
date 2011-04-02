@@ -9,7 +9,9 @@
 #define RENDER_E_RENDERBASE_H
 
 #include <vector>
+#include <map>
 #include "SceneObject.h"
+#include "shaders/Shader.h"
 
 namespace render_e {
 
@@ -46,6 +48,10 @@ public:
     std::vector<SceneObject*> *GetSceneObjects() { return &sceneObjects; }
     std::vector<SceneObject*> *GetCameras() { return &cameras; }
     
+    ///
+    /// Reload all shaders from shader sources
+    ///
+    void ReloadAllShaders();
     /**
      * Singleton pattern
      * @return the render base instance
@@ -64,6 +70,7 @@ private:
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;
     std::vector<SceneObject*> lights;
+    std::map<std::string,Shader> shaders; 
     void (*swapBuffersFunc)();
     bool doubleSpeedZOnlyRendering;
     int width;

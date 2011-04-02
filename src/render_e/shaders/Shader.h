@@ -12,6 +12,8 @@
 
 namespace render_e {
 
+class ShaderDataSource; // Forward decl
+
 enum ShaderLoadStatus {
     SHADER_OK,
     SHADER_CANNOT_ALLOCATE,
@@ -23,12 +25,14 @@ enum ShaderLoadStatus {
 
 class Shader {
 public:
-    Shader(const char *vertexShaderSource, const char *fragmentShaderSource,
-        const char *sharedVertexShaderLib,
-        const char *sharedFragmentShaderLib);
+    static Shader *CreateShader(std::string name, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus);
+    
     virtual ~Shader();
-    ShaderLoadStatus CompileAndLink();
+    
     void Bind();
+    /// Reloads the shader from the shader source
+    ///
+    void Reload();
     void SetTexture(unsigned int index, unsigned int textureId);
     void SetVector3(unsigned int index, float *vector);
     void SetVector4(unsigned int index, float *vector);
@@ -37,7 +41,15 @@ public:
     std::string GetName() {return name; }
     /** Returns -1 if not found */
     int GetUniformLocation(const char *location);
+    
+    void IncreaseUsageCount() { usageCount++; }
+    void DecreaseUsageCount() { usageCount--; }
+    int GetUsageCount() { return usageCount;}
 private:
+    Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
+        const char *sharedVertexShaderLib,
+        const char *sharedFragmentShaderLib);
+    ShaderLoadStatus CompileAndLink();
     ShaderLoadStatus Compile();
     ShaderLoadStatus Link();
     Shader(const Shader& orig); // disallow copy constructor
@@ -51,7 +63,9 @@ private:
     const char *fragmentShaderSource;
     const char *sharedVertexShaderLib;
     const char *sharedFragmentShaderLib;
+    int usageCount;
     std::string name;
+    ShaderDataSource *shaderDataSource;
 };
 }
 #endif	/* SHADER_H */
