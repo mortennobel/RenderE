@@ -16,7 +16,6 @@
 #include "render_e/FBXLoader.h"
 #include "render_e/Mesh.h"
 #include "render_e/shaders/ShaderFileDataSource.h"
-#include "render_e/shaders/DefaultShaders.h"
 #include "render_e/SceneXMLParser.h"
 #include "render_e/math/Mathf.h"
 
