@@ -26,8 +26,9 @@ Keep dependencies to a minimum:
 ## Features
 
 * Shader based (GLSL)
-* Scene graph
+* Component based scene graph
 * Model loading (FBX, Collada)
+
 
 ## INSTALLATION
 
