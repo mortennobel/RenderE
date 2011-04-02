@@ -27,8 +27,7 @@ public:
         const char *sharedVertexShaderLib,
         const char *sharedFragmentShaderLib);
     virtual ~Shader();
-    ShaderLoadStatus Compile();
-    ShaderLoadStatus Link();
+    ShaderLoadStatus CompileAndLink();
     void Bind();
     void SetTexture(unsigned int index, unsigned int textureId);
     void SetVector3(unsigned int index, float *vector);
@@ -39,6 +38,8 @@ public:
     /** Returns -1 if not found */
     int GetUniformLocation(const char *location);
 private:
+    ShaderLoadStatus Compile();
+    ShaderLoadStatus Link();
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
     

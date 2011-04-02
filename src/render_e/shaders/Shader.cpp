@@ -52,6 +52,13 @@ void checkInfoLogShader(unsigned int shaderId){
     }
 }
 
+ShaderLoadStatus Shader::CompileAndLink(){
+    ShaderLoadStatus status = Compile();
+    if (status != SHADER_OK) return status;
+    status = Link();
+    return status;
+}
+
 ShaderLoadStatus Shader::Compile(){
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -111,8 +118,6 @@ void checkInfoLogProgram(unsigned int programId){
 		delete [] infoLog;
     }
 }
-
-
 
 ShaderLoadStatus Shader::Link(){
     shaderProgramId = glCreateProgram();

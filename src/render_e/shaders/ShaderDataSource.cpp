@@ -34,12 +34,7 @@ Shader *ShaderDataSource::LoadLinkShader(const char* name, ShaderLoadStatus &out
     }
     Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), 
             sharedVertexData.c_str(), sharedFragmentData.c_str());
-    outStatus = shader->Compile();
-    if (outStatus != SHADER_OK){
-        delete shader;
-        return NULL;
-    }
-    outStatus = shader->Link();
+    outStatus = shader->CompileAndLink();
     if (outStatus != SHADER_OK){
         delete shader;
         return NULL;

@@ -12,7 +12,6 @@
 
 #include "RenderBase.h"
 #include "Camera.h"
-#include "shaders/DefaultShaders.h"
 #include "OpenGLHelper.h"
 
 #include <glm/gtc/type_ptr.hpp>
