@@ -15,7 +15,7 @@ The goal of the project is:
 * Create a simple scenegraph used in the rendering
 * Comply with the Google C++ Style Guide
  
-Keep dependencies to a minimum:
+Dependencies:
 
 * GLEW
 * glm (OpenGL Mathematics)
@@ -28,7 +28,13 @@ Keep dependencies to a minimum:
 * Shader based (GLSL)
 * Component based scene graph
 * Model loading (FBX, Collada)
+* Scene descriptions in XML
 
+## Todo
+
+* Particle system
+* Deferred shading
+* Post processing effects (SSAO, Bloom
 
 ## INSTALLATION
 
