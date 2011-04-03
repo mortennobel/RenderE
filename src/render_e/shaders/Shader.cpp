@@ -19,23 +19,9 @@
 
 namespace render_e {
 
-Shader *Shader::CreateShader(std::string name, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus){
-    using std::string;
-    static string sharedVertexData;
-    static string sharedFragmentData;
-    if (sharedVertexData.length()==0 || sharedFragmentData.length()==0){
-        shaderDataSource->LoadSharedSource(sharedVertexData,sharedFragmentData);
-    }
-    
-    string vertexData;
-    string fragmentData;
-    outLoadStatus = shaderDataSource->LoadShaderSource(name.c_str(), vertexData, fragmentData);
-    if (outLoadStatus != SHADER_OK){
-        return NULL;
-    }
-    Shader* shader = new Shader(vertexData.c_str(), fragmentData.c_str(), 
-            sharedVertexData.c_str(), sharedFragmentData.c_str());
-    outLoadStatus = shader->CompileAndLink();
+Shader *Shader::CreateShader(std::string assetName, std::string shaderName, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus){
+    Shader* shader = new Shader(shaderName, assetName, shaderDataSource);
+    outLoadStatus = shader->Reload();
     if (outLoadStatus != SHADER_OK){
         delete shader;
         return NULL;
@@ -43,26 +29,14 @@ Shader *Shader::CreateShader(std::string name, ShaderDataSource *shaderDataSourc
     return shader;
 }
 
-Shader::Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
-        const char *sharedVertexShaderLib,
-        const char *sharedFragmentShaderLib)
-:vertexShaderSource(vertexShaderSource),
-        fragmentShaderSource(fragmentShaderSource),
-        sharedVertexShaderLib(sharedVertexShaderLib),
-        sharedFragmentShaderLib(sharedFragmentShaderLib),
-        shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0) {
+Shader::Shader(
+        std::string shaderName, std::string assetName, ShaderDataSource *shaderDataSource)
+:shaderProgramId(0),vertexShaderId(0),fragmentShaderId(0), 
+        shaderName(shaderName), assetName(assetName), shaderDataSource(shaderDataSource) {
 }
 
 Shader::~Shader() {
-    if (fragmentShaderId != 0) {
-        glDeleteShader(fragmentShaderId);
-    }
-    if (vertexShaderId != 0) {
-        glDeleteShader(vertexShaderId);
-    }
-    if (shaderProgramId != 0) {
-        glDeleteProgram(shaderProgramId);
-    }
+    Unload();
     // do not delete sharedShaderLib, since that is shared between different 
     // shader instances
 }
@@ -78,14 +52,17 @@ void checkInfoLogShader(unsigned int shaderId){
     }
 }
 
-ShaderLoadStatus Shader::CompileAndLink(){
-    ShaderLoadStatus status = Compile();
+ShaderLoadStatus Shader::CompileAndLink(std::string sharedVertexData,std::string sharedFragmentData,
+        std::string vertexData,std::string fragmentData){
+    ShaderLoadStatus status = Compile(sharedVertexData, sharedFragmentData,
+        vertexData, fragmentData);
     if (status != SHADER_OK) return status;
     status = Link();
     return status;
 }
 
-ShaderLoadStatus Shader::Compile(){
+ShaderLoadStatus Shader::Compile(std::string sharedVertexData,std::string sharedFragmentData,
+        std::string vertexData,std::string fragmentData){
     vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
     
@@ -95,11 +72,11 @@ ShaderLoadStatus Shader::Compile(){
     using namespace std;
     string vShader;
     string fShader;
-    vShader.append(sharedVertexShaderLib);
-    vShader.append(vertexShaderSource);
+    vShader.append(sharedVertexData);
+    vShader.append(vertexData);
     
-    fShader.append(sharedFragmentShaderLib);
-    fShader.append(fragmentShaderSource);
+    fShader.append(sharedFragmentData);
+    fShader.append(fragmentData);
     
     int shaderIds[4] = {
         vertexShaderId,
@@ -174,8 +151,38 @@ void Shader::Bind(){
     glUseProgram(shaderProgramId);
 }
 
-void Shader::Reload(){
-    std::cout << "Reload of shader not implemented" <<std::endl;
+ShaderLoadStatus Shader::Reload(){
+    Unload();
+    std::cout<<"Reloading "<<assetName<<std::endl;
+    std::string sharedVertexData;
+    std::string sharedFragmentData;
+    if (sharedVertexData.length()==0 || sharedFragmentData.length()==0){
+        shaderDataSource->LoadSharedSource(sharedVertexData,sharedFragmentData);
+    }
+    std::string vertexData;
+    std::string fragmentData;
+    ShaderLoadStatus loadStatus = shaderDataSource->LoadShaderSource(assetName.c_str(), vertexData, fragmentData);
+    if (loadStatus != SHADER_OK){
+        return loadStatus;
+    }
+    loadStatus = CompileAndLink(sharedVertexData, sharedFragmentData,
+        vertexData, fragmentData);
+    return loadStatus;
+}
+
+void Shader::Unload(){
+    if (fragmentShaderId != 0) {
+        glDeleteShader(fragmentShaderId);
+        fragmentShaderId = 0;
+    }
+    if (vertexShaderId != 0) {
+        glDeleteShader(vertexShaderId);
+        vertexShaderId = 0;
+    }
+    if (shaderProgramId != 0) {
+        glDeleteProgram(shaderProgramId);
+        shaderProgramId = 0;
+    }
 }
 
 int Shader::GetUniformLocation(const char *location){

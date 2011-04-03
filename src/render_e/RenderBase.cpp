@@ -13,6 +13,7 @@
 #include "RenderBase.h"
 #include "Camera.h"
 #include "OpenGLHelper.h"
+#include "shaders/ShaderFileDataSource.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -23,6 +24,30 @@ RenderBase *RenderBase::s_instance = NULL;
 Shader *zOnlyShader = NULL;
 
 RenderBase::RenderBase():swapBuffersFunc(NULL),doubleSpeedZOnlyRendering(true){
+    shaderDataSource = new ShaderFileDataSource();
+}
+
+Shader *RenderBase::CreateShader(std::string assetName, std::string shaderName, 
+        ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus){
+    Shader *s = Shader::CreateShader(assetName, shaderName, shaderDataSource, outLoadStatus);
+    if (s != NULL){
+        shaders[shaderName] = s;
+    }
+    return s;
+}
+    
+Shader *RenderBase::GetShader(std::string shaderName){
+    std::map<std::string,Shader*>::iterator iter = shaders.find(shaderName);
+    if (iter != shaders.end()){
+        return iter->second;
+    }
+    return NULL;
+}
+
+void RenderBase::SetShaderDataSource(ShaderDataSource *newShaderDataSource){
+    assert(shaders.empty()); // cannot change shaderDataSource after the first shader is loaded
+    delete shaderDataSource;
+    shaderDataSource = newShaderDataSource;
 }
 
 void RenderBase::Reshape(int width, int height){
@@ -196,9 +221,9 @@ bool RenderBase::GetDoubleSpeedZOnlyRendering(){
 }
 
 void RenderBase::ReloadAllShaders(){
-    std::map<std::string,Shader>::iterator shaderIter = shaders.begin();
-    for (;shaderIter != shaders.end();shaderIter){
-        shaderIter->second.Reload();
+    std::map<std::string,Shader*>::iterator shaderIter = shaders.begin();
+    for (;shaderIter != shaders.end();shaderIter++){
+        shaderIter->second->Reload();
     }
 }
 

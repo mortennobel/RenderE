@@ -157,10 +157,8 @@ public:
             }
             ShaderLoadStatus status;
             
-            Shader *shader = Shader::CreateShader(file, &shaderLoader, status);
+            Shader *shader = renderBase->CreateShader(file, shaderName, renderBase->GetShaderDataSource(), status);
             if (status==SHADER_OK){
-                shader->SetName(shaderName);
-                shaders[shaderName] = shader;
                 cout << "Loaded shader "<<shaderName<<endl;
             } else {
                 cout << "Cannot load shader "<<file<<endl;
@@ -286,11 +284,11 @@ public:
                 XMLString::release(&attName);
             }
             
-            map<string, Shader*>::iterator iter = shaders.find(shader);
-            if (iter == shaders.end()) {
+            Shader* shaderObj = renderBase->GetShader(shader);
+            if (shaderObj == NULL) {
                 cout << "Cannot find shader " << shader << endl;
             } else {
-                material = new Material(iter->second);
+                material = new Material(shaderObj);
                 material->SetName(matName);
                 materials[matName] = material;
             }
@@ -634,8 +632,6 @@ public:
     stack<MyParserState> state;
 
     FBXLoader fbxLoader;
-    ShaderFileDataSource shaderLoader;
-    map<string, Shader*> shaders;
     map<string, TextureBase*> textures;
     map<string, Material*> materials;
     map<string, string> parentMap;

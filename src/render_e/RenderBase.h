@@ -12,6 +12,7 @@
 #include <map>
 #include "SceneObject.h"
 #include "shaders/Shader.h"
+#include "shaders/ShaderDataSource.h"
 
 namespace render_e {
 
@@ -49,13 +50,35 @@ public:
     std::vector<SceneObject*> *GetCameras() { return &cameras; }
     
     ///
+    /// Create a shader and store it in the shaders map.
+    /// 
+    Shader *CreateShader(std::string assetName, std::string shaderName, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus);
+//    
+    ///
+    /// Change the shaderDataSource.
+    /// This must be done before any shaders are loaded
+    ///
+    void SetShaderDataSource(ShaderDataSource *shaderDataSource);
+    
+    /// 
+    /// Return the current instance of shader-data-source
+    /// 
+    ShaderDataSource *GetShaderDataSource(){ return shaderDataSource; }
+    
+    ///
     /// Reload all shaders from shader sources
     ///
     void ReloadAllShaders();
-    /**
-     * Singleton pattern
-     * @return the render base instance
-     */
+    
+    ///
+    /// Return the shader associated with a shaderName
+    ///
+    Shader *GetShader(std::string shaderName);
+    
+    ///
+    /// Singleton pattern.
+    /// return the render base instance
+    ///
     static RenderBase* Instance() {
         if (!s_instance) {
             s_instance = new RenderBase();
@@ -70,11 +93,12 @@ private:
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;
     std::vector<SceneObject*> lights;
-    std::map<std::string,Shader> shaders; 
+    std::map<std::string,Shader*> shaders; 
     void (*swapBuffersFunc)();
     bool doubleSpeedZOnlyRendering;
     int width;
     int height;
+    ShaderDataSource *shaderDataSource;
 };
 
 }

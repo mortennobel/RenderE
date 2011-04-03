@@ -25,20 +25,20 @@ enum ShaderLoadStatus {
 
 class Shader {
 public:
-    static Shader *CreateShader(std::string name, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus);
+    static Shader *CreateShader(std::string assetName, std::string shaderName, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus);
     
     virtual ~Shader();
     
     void Bind();
     /// Reloads the shader from the shader source
     ///
-    void Reload();
+    ShaderLoadStatus Reload();
+    void Unload();
     void SetTexture(unsigned int index, unsigned int textureId);
     void SetVector3(unsigned int index, float *vector);
     void SetVector4(unsigned int index, float *vector);
     void SetMatrix44(unsigned int index, float *mat);
-    void SetName(std::string name) { this->name = name;}
-    std::string GetName() {return name; }
+    std::string GetShaderName() {return shaderName; }
     /** Returns -1 if not found */
     int GetUniformLocation(const char *location);
     
@@ -46,11 +46,11 @@ public:
     void DecreaseUsageCount() { usageCount--; }
     int GetUsageCount() { return usageCount;}
 private:
-    Shader(const char *vertexShaderSource, const char *fragmentShaderSource, 
-        const char *sharedVertexShaderLib,
-        const char *sharedFragmentShaderLib);
-    ShaderLoadStatus CompileAndLink();
-    ShaderLoadStatus Compile();
+    Shader(std::string shaderName, std::string assetName, ShaderDataSource *shaderDataSource);
+    ShaderLoadStatus CompileAndLink(std::string sharedVertexData,std::string sharedFragmentData,
+        std::string vertexData,std::string fragmentData);
+    ShaderLoadStatus Compile(std::string sharedVertexData,std::string sharedFragmentData,
+        std::string vertexData,std::string fragmentData);
     ShaderLoadStatus Link();
     Shader(const Shader& orig); // disallow copy constructor
     Shader& operator = (const Shader&); // disallow copy constructor
@@ -59,12 +59,9 @@ private:
     unsigned int vertexShaderId;
     unsigned int fragmentShaderId;
     
-    const char *vertexShaderSource;
-    const char *fragmentShaderSource;
-    const char *sharedVertexShaderLib;
-    const char *sharedFragmentShaderLib;
     int usageCount;
-    std::string name;
+    std::string shaderName;
+    std::string assetName;
     ShaderDataSource *shaderDataSource;
 };
 }
