@@ -38,6 +38,7 @@ glm::vec3 mouseRotation(0);
 glm::vec3 rotation(0,0,0);
 int moveForward = 0;
 
+
 // The main purpose of the main is to created a windows
 // and hook up the opengl to that (using GLUT).
 // Other purposes include:
@@ -110,6 +111,10 @@ void keyPress(unsigned char key, int x, int y){
             break;
         case 'w':
             cameraPosition[2] = cameraPosition[2]-1;
+            break;
+        case 'r':
+            renderBase->ReloadAllShaders();
+            std::cout<<"Reload all shaders"<<std::endl;
             break;
         case 'z':
             static bool renderMode = false;
