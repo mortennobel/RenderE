@@ -19,6 +19,7 @@ Dependencies:
 
 * GLEW
 * glm (OpenGL Mathematics)
+* Xerces-C++
 * libPNG (optional texture loader)
 * zlib (optional - but required for libPNG)
 * FBX SDK (optional - model loader)
