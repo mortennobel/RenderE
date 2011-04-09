@@ -11,9 +11,10 @@
 #include <string>
 #include "GL/glew.h"
 
-/*
- * Helper class that contains OpenGL specific code
- */
+namespace render_e {
+///
+/// Helper class that contains OpenGL specific code
+///
 class OpenGLHelper {
 public:
     static std::string GetFrameBufferStatusString(GLenum code);
@@ -24,6 +25,8 @@ private:
     OpenGLHelper(const OpenGLHelper& orig);
     virtual ~OpenGLHelper();
 };
+
+}
 
 #endif	/* OPENGLHELPER_H */
 

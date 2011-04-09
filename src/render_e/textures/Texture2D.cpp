@@ -10,10 +10,11 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-#include <iostream>
+#include <sstream>
 #include <GL/glew.h>
 
 #include "TextureDataSource.h"
+#include "../Log.h"
 
 using namespace std;
 
@@ -56,7 +57,9 @@ void Texture2D::GetTextureFormat( GLenum &format ) {
 			storageType = GL_UNSIGNED_BYTE;
             break;
         default:
-            cout<<"Unexpected texture format"<<endl;
+            stringstream ss;
+            ss<<"Unexpected texture format: "<<textureFormat<<endl;
+            WARN(ss.str());
 			internalFormat = GL_RGBA8;
             format = GL_RGBA;
 			storageType = GL_UNSIGNED_BYTE;

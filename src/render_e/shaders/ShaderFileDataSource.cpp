@@ -6,10 +6,10 @@
  */
 
 #include "ShaderFileDataSource.h"
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <fstream>
+#include "../Log.h"
 
 namespace render_e {
 ShaderFileDataSource::ShaderFileDataSource() {
@@ -35,7 +35,9 @@ ShaderLoadStatus ShaderFileDataSource::LoadSharedSource(std::string &sharedVerte
         
         if (input.fail()) {
             // file did not exist or error during read
-            std::cout<<"Cannot load "<<filename<<std::endl;
+            std::stringstream ss;
+            ss<<"Cannot load "<<filename;
+            ERROR(ss.str());
             return SHADER_FILE_NOT_FOUND;
         }
     }
@@ -62,7 +64,9 @@ ShaderLoadStatus ShaderFileDataSource::LoadShaderSource(const char* name,
         
         if (input.fail()) {
             // file did not exist or error during read
-            std::cout<<"Cannot load "<<filename<<std::endl;
+            std::stringstream ss;
+            ss<<"Cannot load "<<filename;
+            ERROR(ss.str());
             return SHADER_FILE_NOT_FOUND;
         }
     }

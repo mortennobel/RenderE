@@ -6,10 +6,11 @@
  */
 
 #include "CubeTexture.h"
+#include <sstream>
 #include <cstring>
 #include <cassert>
-#include <iostream>
 #include "GL/glew.h"
+#include "../Log.h"
 
 
 namespace render_e {
@@ -62,8 +63,10 @@ void CubeTexture::Create(int width, int height, TextureFormat textureFormat){
                 width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
         }
     } else {
-        std::cout << "Unsupported texture format in CubeTexture::Create. Was "<<
+        std::stringstream ss;
+        ss << "Unsupported texture format in CubeTexture::Create. Was "<<
                 textureFormat<<std::endl;
+        ERROR(ss.str());
     }
 }
 
@@ -80,7 +83,9 @@ TextureLoadStatus CubeTexture::Load(){
         width = w;
 		height = h;
         if (res != OK){
-            std::cout<<"Error loading "<<resourceNames[i]<<std::endl;
+            std::stringstream ss;
+            ss<<"Error loading "<<resourceNames[i]<<std::endl;
+            ERROR(ss.str());
             return res;
         }
         

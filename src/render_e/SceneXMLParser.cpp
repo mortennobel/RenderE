@@ -7,7 +7,7 @@
 
 #include "SceneXMLParser.h"
 
-#include <iostream>
+#include <sstream>
 #include <stack>
 #include <map>
 
@@ -28,6 +28,7 @@
 #include "MeshFactory.h"
 #include "Light.h"
 #include "RenderBase.h"
+#include "Log.h"
 
 // define xerces namespace
 XERCES_CPP_NAMESPACE_USE
@@ -120,7 +121,9 @@ public:
     }
     
     void error(const char *tagName){
-        cout<<"Unknown tag "<<tagName<<" state "<<state.top()<<endl;
+        stringstream ss;
+        ss<<"Unknown tag "<<tagName<<" state "<<state.top();
+        ERROR(ss.str());
     }
 
     void parseScene(const XMLCh * const name, AttributeList& attributes, const char* message) {
@@ -150,7 +153,9 @@ public:
                 } else if (stringEqual("file", attName)) {
                     file.append(attValue);
                 } else {
-                    cout << "Unknown shader attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown shader attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -159,9 +164,13 @@ public:
             
             Shader *shader = renderBase->CreateShader(file, shaderName, renderBase->GetShaderDataSource(), status);
             if (status==SHADER_OK){
-                cout << "Loaded shader "<<shaderName<<endl;
+                stringstream ss;
+                ss << "Loaded shader "<<shaderName;
+                INFO(ss.str());
             } else {
-                cout << "Cannot load shader "<<file<<endl;
+                stringstream ss;
+                ss << "Cannot load shader "<<file;
+                ERROR(ss.str());
             }
         } else {
             error(message);
@@ -192,13 +201,17 @@ public:
                 } else if (stringEqual("clamp", attName)) {
                     clamp = stringEqual("clamp", attValue);
                 } else {
-                    cout << "Unknown texture2d attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown texture2d attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
             if (file.length()>0){
-                cout << "Loading texture "<<(file.c_str())<<endl;
+                stringstream ss;
+                ss << "Loading texture "<<(file.c_str());
+                INFO(ss.str());
                 Texture2D *texture = new Texture2D(file.c_str());
                 texture->SetName(textureName);
                 texture->SetClamp(clamp);
@@ -206,7 +219,9 @@ public:
                 if (status == OK){
                     textures[textureName] = texture;
                 } else {
-                    cout<<"Error loading texture "<<textureName<<" filename "<<file<<endl;
+                    ss.seekp(0);
+                    ss<<"Error loading texture "<<textureName<<" filename "<<file;
+                    ERROR(ss.str());
                 }
             } else {
                 Texture2D *texture = new Texture2D();
@@ -244,7 +259,9 @@ public:
                 } else if (stringEqual("front", attName)) {
                     front.append(attValue);
                 } else {
-                    cout << "Unknown cubetexture attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown cubetexture attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -258,7 +275,9 @@ public:
             if (status == OK){
                 textures[textureName] = texture;
             } else {
-                cout<<"Error loading cube texture "<<textureName<<" filename "<<left<<endl;
+                stringstream ss;
+                ss<<"Error loading cube texture "<<textureName<<" filename "<<left;
+                ERROR(ss.str());
             }
         } else {
             error(message);
@@ -278,7 +297,9 @@ public:
                 } else if (stringEqual("shader", attName)) {
                     shader.append(attValue);
                 } else {
-                    cout << "Unknown attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -286,7 +307,9 @@ public:
             
             Shader* shaderObj = renderBase->GetShader(shader);
             if (shaderObj == NULL) {
-                cout << "Cannot find shader " << shader << endl;
+                stringstream ss;
+                ss << "Cannot find shader " << shader;
+                ERROR(ss.str());
             } else {
                 material = new Material(shaderObj);
                 material->SetName(matName);
@@ -311,7 +334,9 @@ public:
                 } else if (stringEqual("texture", attName)) {
                     map<string, TextureBase*>::iterator iter = textures.find(attValue);
                     if (iter == textures.end()) {
-                        cout << "Cannot find texture " << attValue << endl;
+                        stringstream ss;
+                        ss << "Cannot find texture " << attValue;
+                        ERROR(ss.str());
                     } else {
                         material->SetTexture(parameterName, iter->second);
                     }
@@ -322,7 +347,9 @@ public:
                     int i = stringToInt(attValue);
                     material->SetInt(parameterName, i);
                 } else {
-                    cout << "Unknown parameter attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown parameter attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -353,7 +380,9 @@ public:
                 } else if (stringEqual("parent", attName)) {
                     parent.append(attValue);
                 } else {
-                    cout << "Unknown object attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown object attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -398,7 +427,9 @@ public:
                 } else if (stringEqual("renderToTexture",attName)){
                     map<string, TextureBase*>::iterator iter = textures.find(attValue);
                     if (iter == textures.end()) {
-                        cout << "Cannot find texture " << attValue << endl;
+                        stringstream ss;
+                        ss << "Cannot find texture " << attValue;
+                        ERROR(ss.str());
                     } else {
                         renderToTexture = static_cast<Texture2D *>( iter->second);
                     }
@@ -411,7 +442,9 @@ public:
                     } else if (stringEqual("STENCIL_BUFFER", attValue)){
                         cameraBuffer = STENCIL_BUFFER;
                     } else {
-                        cout <<"Unknown type for renderBuffer - supported types are: COLOR_BUFFER, DEPTH_BUFFER, STENCIL_BUFFER. Actual value was "<<attValue<<endl;
+                        stringstream ss;
+                        ss <<"Unknown type for renderBuffer - supported types are: COLOR_BUFFER, DEPTH_BUFFER, STENCIL_BUFFER. Actual value was "<<attValue;
+                        ERROR(ss.str());
                     }
                 } else if (stringEqual("fieldOfView",attName)){
                     fieldOfView = stringToFloat(attValue);
@@ -436,7 +469,9 @@ public:
                 } else if (stringEqual("clearColor",attName)){
                     clearColor = stringToVector4(attValue);
                 } else {
-                    cout << "Unknown camera attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown camera attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -459,7 +494,9 @@ public:
                 if (stringEqual("ref", attName)) {
                     ref.append(attValue);
                 } else {
-                    cout << "Unknown material attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown material attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -467,12 +504,14 @@ public:
             if (ref.length()>0){
                 map<string, Material*>::iterator iter = materials.find(ref);
                 if (iter == materials.end()) {
-                    cout << "Cannot find material " << ref << endl;
+                    stringstream ss;
+                    ss << "Cannot find material " << ref;
+                    ERROR(ss.str());
                 } else {
 					sceneObject->AddCompnent(iter->second->Instance());
                 }
             } else {
-                cout << "Warn material ref not set"<<endl;
+                WARN("Warn material ref not set");
             }
         } else if (stringEqual("mesh", message)) {
             string meshName;
@@ -486,7 +525,9 @@ public:
                 } else if (stringEqual("import", attName)) {
                     import.append(attValue);
                 } else {
-                    cout << "Unknown attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown attribute name "<<attName;
+                    ERROR(ss.str());
                 }
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
@@ -502,7 +543,9 @@ public:
                 } else if (stringEqual("plane", primitive.c_str())){
                     mesh = MeshFactory::CreatePlane();
                 } else {
-                    cout << "Unknown mesh.primitive name "<<primitive.c_str()<<endl;
+                    stringstream ss;
+                    ss << "Unknown mesh.primitive name "<<primitive.c_str();
+                    ERROR(ss.str());
                 }
             } else if (import.length() > 0){
 				MeshComponent *meshC = fbxLoader.LoadMeshComponent(import.c_str());
@@ -510,7 +553,9 @@ public:
 					meshC->SetOwner(NULL);
 					sceneObject->AddCompnent(meshC);
 				} else {
-					cout << "Cannot find mesh in "<<import<<endl;
+                    stringstream ss;
+					ss << "Cannot find mesh in "<<import;
+                    ERROR(ss.str());
 				}
             }
             if (mesh != NULL){
@@ -544,7 +589,9 @@ public:
                     } else if (stringEqual("directional", attValue)){
                         light->SetLightType(DirectionalLight);
                     } else {
-                        cout << "Unknown lighttype "<<attValue << endl;
+                        stringstream ss;
+                        ss << "Unknown lighttype "<<attValue;
+                        ERROR(ss.str());
                     }
                 } else if (stringEqual("constantAttenuation", attName)) {
                     light->SetConstantAttenuation(stringToFloat(attValue));
@@ -558,7 +605,9 @@ public:
                 } else if (stringEqual("spotCutoff", attName)) {
 					light->SetSpotCutoff(stringToInt(attValue));
                 } else {
-                    cout << "Unknown light attribute name "<<attName<<endl;
+                    stringstream ss;
+                    ss << "Unknown light attribute name "<<attName;
+                    ERROR(ss.str());
                 }
 
 
@@ -621,9 +670,10 @@ public:
 
     void fatalError(const SAXParseException& exception) {
         char* message = XMLString::transcode(exception.getMessage());
-        cout << "Fatal Error: " << message
-                << " at line: " << exception.getLineNumber()
-                << endl;
+        stringstream ss;
+        ss << "Fatal Error: " << message
+                << " at line: " << exception.getLineNumber();
+        FATAL(ss.str());
         XMLString::release(&message);
     }
 
@@ -642,8 +692,10 @@ SceneXMLParser::SceneXMLParser() {
         XMLPlatformUtils::Initialize();
     } catch (const XMLException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Error during initialization! :\n"
-                << message << "\n";
+        stringstream ss;
+        ss << "Error during initialization! :\n"
+                << message;
+        ERROR(ss.str());
         XMLString::release(&message);
         // Do your failure processing here
         return;
@@ -662,23 +714,29 @@ void SceneXMLParser::LoadScene(const char* filename, RenderBase *renderBase) {
     ErrorHandler* errHandler = (ErrorHandler*) docHandler;
     parser->setDocumentHandler(docHandler);
     parser->setErrorHandler(errHandler);
-    cout<<"Loading scene "<<filename<<endl;
+    stringstream ss;
+    ss<<"Loading scene "<<filename;
+    INFO(ss.str());
     try {
         parser->parse(filename);
     } catch (const XMLException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-                << message << "\n";
+        ss.seekp(0);
+        ss << "Exception message is: "<<endl
+                << message;
+        ERROR(ss.str());
         XMLString::release(&message);
         return;
     } catch (const SAXParseException& toCatch) {
         char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-                << message << "\n";
+        ss.seekp(0);
+        ss << "Exception message is: "<<endl
+                << message;
+        ERROR(ss.str());
         XMLString::release(&message);
         return;
     } catch (...) {
-        cout << "Unexpected Exception \n";
+        ERROR("Unexpected Exception");
         return;
     }
     delete parser;

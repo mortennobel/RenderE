@@ -8,7 +8,7 @@
 #include "Shader.h"
 #include "GL/glew.h"
 
-#include <iostream>
+#include <sstream>
 #include <string>
 #ifdef _WIN32
 #include <GL/glut.h>
@@ -16,6 +16,7 @@
 #include <GLUT/glut.h>
 #endif
 #include "ShaderDataSource.h"
+#include "../Log.h"
 
 namespace render_e {
 
@@ -47,7 +48,7 @@ void checkInfoLogShader(unsigned int shaderId){
     if (infologlength>0){
         char *infoLog = new char[infologlength+1];
         glGetShaderInfoLog(shaderId,infologlength,&infologlength,infoLog);
-        std::cout<<infoLog<<std::endl;
+        INFO(infoLog);
 		delete []infoLog;
     }
 }
@@ -103,7 +104,9 @@ ShaderLoadStatus Shader::Compile(std::string sharedVertexData,std::string shared
         glGetShaderiv(shaderIds[i], GL_COMPILE_STATUS, &compileStatus);
         checkInfoLogShader(shaderIds[i]);
         if (!compileStatus){
-            std::cout<<"Cannot compile shader "<<shaderSourceName[i]<<std::endl;
+            stringstream ss;
+            ss<<"Cannot compile shader "<<shaderSourceName[i];
+            ERROR(ss.str());
             return SHADER_COMPILE_ERROR_VERTEX_SHADER;
         }
     }
@@ -117,7 +120,7 @@ void checkInfoLogProgram(unsigned int programId){
     if (infologlength>0){
         char *infoLog = new char[infologlength+1];
         glGetProgramInfoLog(programId,infologlength,&infologlength,infoLog);
-        std::cout<<infoLog<<std::endl;
+        INFO(infoLog);
 		delete [] infoLog;
     }
 }
@@ -140,7 +143,7 @@ ShaderLoadStatus Shader::Link(){
     glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &linkStatus);
     if (!linkStatus){
         using namespace std;
-        cout<<"Link error"<<endl;
+        ERROR("Link error");
         return SHADER_LINK_ERROR;
     }
     

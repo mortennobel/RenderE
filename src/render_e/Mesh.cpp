@@ -7,9 +7,10 @@
 
 #include "Mesh.h"
 
-#include <iostream>
+#include <sstream>
 #include <limits>
 #include <glm/glm.hpp>
+#include "Log.h"
 
 using namespace std;
 
@@ -165,30 +166,42 @@ bool Mesh::IsValid(){
         return false;
     }
     if (normals.size()>0 && normals.size() != verticesSize){
-        std::cerr<<"Invalid size of normals was "<<normals.size()<<" should be "<<verticesSize<<std::endl;
+        std::stringstream ss;
+        ss<<"Invalid size of normals was "<<normals.size()<<" should be "<<verticesSize;
+        ERROR(ss.str());
         return false;
     }
     if (tangents.size()>0 && tangents.size() != verticesSize){
-        std::cerr<<"Invalid size of tangents was "<<tangents.size()<<" should be "<<verticesSize<<std::endl;
+        std::stringstream ss;
+        ss<<"Invalid size of tangents was "<<tangents.size()<<" should be "<<verticesSize;
+        ERROR(ss.str());
         return false;
     }
     if (colors.size()>0 && colors.size() != verticesSize){
-        std::cerr<<"Invalid size of colors was "<<colors.size()<<" should be "<<verticesSize<<std::endl;
+        std::stringstream ss;
+        ss<<"Invalid size of colors was "<<colors.size()<<" should be "<<verticesSize;
+        ERROR(ss.str());
         return false;
     }
     if (textureCoords1.size()>0 && textureCoords1.size() != verticesSize){
-        std::cerr<<"Invalid size of textureCoords1 was "<<textureCoords1.size()<<" should be "<<verticesSize<<std::endl;
+        std::stringstream ss;
+        ss<<"Invalid size of textureCoords1 was "<<textureCoords1.size()<<" should be "<<verticesSize;
+        ERROR(ss.str());
         return false;
     }
     if (textureCoords2.size()>0 && textureCoords2.size() != verticesSize){
-        std::cerr<<"Invalid size of textureCoords2 was "<<textureCoords2.size()<<" should be "<<verticesSize<<std::endl;
+        std::stringstream ss;
+        ss<<"Invalid size of textureCoords2 was "<<textureCoords2.size()<<" should be "<<verticesSize;
+        ERROR(ss.str());
         return false;
     }
     
     for (vector<int>::iterator iter = indices.begin(); iter != indices.end();iter++){
         int val = *iter;
         if (val>=verticesSize){
-            std::cerr<<"Invalid mesh index "<<val<<". Number of vertices defined: "<<verticesSize<<std::endl;
+            std::stringstream ss;
+            ss<<"Invalid mesh index "<<val<<". Number of vertices defined: "<<verticesSize;
+            ERROR(ss.str());
             return false;
         }
     }

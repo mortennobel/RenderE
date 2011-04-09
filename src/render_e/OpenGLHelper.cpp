@@ -7,8 +7,10 @@
 
 #include "OpenGLHelper.h"
 
-#include <iostream>
+#include <sstream>
+#include "Log.h"
 
+namespace render_e {
 OpenGLHelper::OpenGLHelper() {
 }
 
@@ -53,7 +55,10 @@ void OpenGLHelper::PrintErrors(){
 			const char *ERR = "Unknown";
 			errorStr=(GLubyte*)ERR;
 		}
-        std::cout << " " << errorCode << " " << errorStr <<
-            std::endl;
+        
+        std::stringstream ss;
+        ss << " " << errorCode << " " << errorStr;
+        ERROR(ss.str());
     }
+}
 }

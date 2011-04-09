@@ -6,10 +6,12 @@
  */
 
 #include "Material.h"
-#include <iostream>
+
 #include <cassert>
+#include <sstream>
 #include <GL/glew.h>
 #include "Camera.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -54,12 +56,16 @@ void Material::Bind(){
 				{
 					SceneObject *sceneObj = GetOwner()->GetRenderBase()->Find((*iter).shaderValue.cameraName);
 					if (sceneObj==NULL){
-						cout << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName<<endl;
+                        stringstream ss;
+						ss << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName;
+                        ERROR(ss.str());
 						continue;
 					}
 					Camera *cam = sceneObj->GetCamera();
 					if (cam==NULL){
-						cout << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName<<" has no camera attached"<<endl;
+                        stringstream ss;
+						ss << "Cannot find shadow setup name "<<(*iter).shaderValue.cameraName<<" has no camera attached";
+                        ERROR(ss.str());
 						continue;
 					}
 					// clean up

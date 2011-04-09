@@ -9,12 +9,13 @@
 #include <cassert>
 
 #include <iostream>
+#include <sstream>
 #include <glm/glm.hpp>
 #include "math/Mathf.h"
 #include "MeshComponent.h"
 #include "SceneObject.h"
 #include "Mesh.h"
-
+#include "Log.h"
 
 using namespace std;
 
@@ -25,7 +26,9 @@ FBXLoader::FBXLoader() {
    manager = KFbxSdkManager::Create();
    int major, minor, revision;
    KFbxSdkManager::GetFileFormatVersion(major, minor, revision);
-   cout<<"Created fbx sdk manager "<<major<<"."<<minor<<"."<<revision<<endl;
+   stringstream ss;
+   ss<<"Created fbx sdk manager "<<major<<"."<<minor<<"."<<revision;
+   INFO(ss.str());
 }
 
 FBXLoader::FBXLoader(const FBXLoader& orig) {
@@ -43,27 +46,26 @@ glm::vec3 toVector(const fbxDouble3 &v){
     return glm::vec3(v[0], v[1], v[2]);
 }
 
-
 SceneObject* parseNode(KFbxNode *node, int level = 0) {
     KString s = node->GetName();
     KFbxNodeAttribute::EAttributeType attributeType;
-
+    stringstream ss;
     for (int i=0;i<level;i++){
-        cout<<"   ";
+        ss<<"   ";
     }
     SceneObject* sceneObject = NULL;
     MeshComponent* ga = NULL;
     
     if (node->GetNodeAttribute() == NULL){
-        cout<<"No node attribute"<<endl;
+        ss<<"No node attribute"<<endl;
     } else {
         attributeType = node->GetNodeAttribute()->GetAttributeType();
         switch (attributeType) {
             case KFbxNodeAttribute::eMARKER:
-                cout<<"eMarker"<<endl;
+                ss<<"eMarker"<<endl;
                 break;
             case KFbxNodeAttribute::eSKELETON:
-                cout<<"eSkeleton"<<endl;
+                ss<<"eSkeleton"<<endl;
                 break;
             case KFbxNodeAttribute::eMESH:
                 {
@@ -116,7 +118,7 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 }
                 
                 Mesh mesh;
-                cout<<"Creating mesh: vertices "<<vertices.size()<<" normals "<<normals.size()<<" indices "<<indices.size()<<endl;
+                ss<<"Creating mesh: vertices "<<vertices.size()<<" normals "<<normals.size()<<" indices "<<indices.size()<<endl;
                 mesh.SetVertices(vertices);
                 mesh.SetNormals(normals);
                 mesh.SetIndices(indices);
@@ -143,16 +145,16 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
                 }
                 break;
             case KFbxNodeAttribute::eCAMERA:
-                cout<<"eCAMERA"<<endl;
+                ss<<"eCAMERA"<<endl;
                 break;
             case KFbxNodeAttribute::eLIGHT:
-                cout<<"eLIGHT"<<endl;
+                ss<<"eLIGHT"<<endl;
                 break;
             case KFbxNodeAttribute::eBOUNDARY:
-                cout<<"eBOUNDARY"<<endl;
+                ss<<"eBOUNDARY"<<endl;
                 break;
             default:
-                cout<<s<<endl;
+                ss<<s<<endl;
         }
     }
     
@@ -167,6 +169,7 @@ SceneObject* parseNode(KFbxNode *node, int level = 0) {
             }
         }
     }
+    DEBUG(ss.str());
     return sceneObject;
 }
 
@@ -214,10 +217,14 @@ SceneObject *FBXLoader::Load(const char *filename){
                 KFbxNode *node = scene->GetRootNode();
                 so = parseNode(node);
             } else {
-                cerr<<"ModelLoad import error "<<importer->GetLastErrorString()<<endl;
+                stringstream ss;
+                ss<<"ModelLoad import error "<<importer->GetLastErrorString();
+                ERROR(ss.str());
             }
         } else {
-            cerr<<"ModelLoad init importer error "<<importer->GetLastErrorString()<<endl;
+            stringstream ss;
+            ss<<"ModelLoad init importer error "<<importer->GetLastErrorString();
+            ERROR(ss.str());
         }
     }
     importer->Destroy();

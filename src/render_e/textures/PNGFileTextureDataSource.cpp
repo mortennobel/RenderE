@@ -12,7 +12,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
-#include <iostream>
+#include <sstream>
+#include "../Log.h"
 
 namespace render_e {
 
@@ -33,10 +34,11 @@ TextureLoadStatus PNGFileTextureDataSource::LoadTexture(const char* name, unsign
     int color_type, interlace_type;
 
     FILE *fp = fopen(name, "rb");
-	using std::cout;
 	using std::endl;
 	if (!fp){
-		cout<<"Cannot open png "<<name<<endl;
+        std::stringstream ss;
+		ss<<"Cannot open png "<<name;
+        ERROR(ss.str());
 		return ERROR_READING_FILE;
 	}
 
@@ -129,7 +131,9 @@ TextureLoadStatus PNGFileTextureDataSource::LoadTexture(const char* name, unsign
 			outFormat = RGB;
 			break;
 		default:
-			std::cout << "Color type " << info_ptr->color_type << " not supported" << std::endl;
+            std::stringstream ss;
+			ss << "Color type " << info_ptr->color_type << " not supported";
+            ERROR(ss.str());
 			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 			fclose(fp);
 			return INVALID_FORMAT;

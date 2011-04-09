@@ -5,8 +5,8 @@
  *  License: LGPL 3.0 ( http://www.gnu.org/licenses/lgpl-3.0.txt )
  */
 
-#include <iostream>
 #include <cstring>
+#include <sstream>
 #include <algorithm>
 #include <GL/glew.h>
 
@@ -231,27 +231,28 @@ void RenderBase::ReloadAllShaders(){
 
 void RenderBase::PrintDebug(){
     using namespace std;
-    cout << "Scene objects: "<<sceneObjects.size()<<endl;
+    stringstream ss;
+    ss << "Scene objects: "<<sceneObjects.size()<<endl;
     for (unsigned int i=0;i<sceneObjects.size();i++){
-        cout <<sceneObjects[i]->GetName()<<endl;
+        ss <<sceneObjects[i]->GetName()<<endl;
         glm::vec3 position = sceneObjects[i]->GetTransform()->GetPosition();
-        cout <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
+        ss <<"Position "<<(int)position[0]<<" "<<(int)position[1]<<" "<<(int)position[2]<<" "<<endl;
         glm::quat q = sceneObjects[i]->GetTransform()->GetRotation();
-        cout <<"Rotation "<<q[0]<<" "<<q[1]<<" "<<q[2]<<" "<<q[3]<<endl;
+        ss <<"Rotation "<<q[0]<<" "<<q[1]<<" "<<q[2]<<" "<<q[3]<<endl;
         glm::vec3 scale = sceneObjects[i]->GetTransform()->GetScale();
-        cout <<"Scale "<<(int)scale[0]<<" "<<(int)scale[1]<<" "<<(int)scale[2]<<" "<<endl;
+        ss <<"Scale "<<(int)scale[0]<<" "<<(int)scale[1]<<" "<<(int)scale[2]<<" "<<endl;
         
     }
     
-    cout << "Camera objects: "<<cameras.size()<<endl;
+    ss << "Camera objects: "<<cameras.size()<<endl;
     for (unsigned int i=0;i<cameras.size();i++){
-        cout <<cameras[i]->GetName()<<endl;
+        ss <<cameras[i]->GetName()<<endl;
     }
     
-    cout << "lights objects: "<<lights.size()<<endl;
+    ss << "lights objects: "<<lights.size()<<endl;
     for (unsigned int i=0;i<lights.size();i++){
-        cout <<lights[i]->GetName()<<endl;
+        ss <<lights[i]->GetName()<<endl;
     }
-    
+    DEBUG(ss.str());
 }
 }

@@ -16,6 +16,8 @@ namespace render_e {
 #define FATAL(message) Log::LogMessage(__FILE__,__LINE__,message,Fatal)
 /// Macro that logs a error message
 #define ERROR(message) Log::LogMessage(__FILE__,__LINE__,message,Error)
+/// Macro that logs a error message
+#define WARN(message) Log::LogMessage(__FILE__,__LINE__,message,Warning)
 /// Macro that logs a debug message
 #define DEBUG(message) Log::LogMessage(__FILE__,__LINE__,message,Debug)
 /// Macro that logs an info message
@@ -26,6 +28,8 @@ enum LogType{
     Info,
     /// Debug messages
     Debug,
+    /// Warning - error but engine is in a defined state
+    Warning,
     /// Error - engine is in a undefined state
     Error,
     /// Crash of system

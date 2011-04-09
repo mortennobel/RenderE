@@ -7,12 +7,12 @@
 
 #include "Camera.h"
 
-#include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 #include "GL/glew.h"
 #include "math/Mathf.h"
 #include "textures/Texture2D.h"
 #include "OpenGLHelper.h"
+#include "Log.h"
 
 namespace render_e {
 
@@ -191,7 +191,7 @@ void Camera::SetRenderToTexture(bool doRenderToTexture, CameraBuffer framebuffer
         GLenum frameBufferRes = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
 
         if (frameBufferRes != GL_FRAMEBUFFER_COMPLETE) {
-            std::cout << OpenGLHelper::GetFrameBufferStatusString(frameBufferRes) << std::endl;
+            ERROR(OpenGLHelper::GetFrameBufferStatusString(frameBufferRes));
         }
 
     } else {
