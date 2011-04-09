@@ -16,7 +16,6 @@ namespace render_e {
     TextureDataSource *TextureDataSource::textureDataSource = new PNGFileTextureDataSource();
 #else
     TextureDataSource *TextureDataSource::textureDataSource = NULL;
-
 #endif        
     
 TextureDataSource::TextureDataSource(){

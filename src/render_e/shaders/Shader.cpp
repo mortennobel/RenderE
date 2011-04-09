@@ -153,7 +153,6 @@ void Shader::Bind(){
 
 ShaderLoadStatus Shader::Reload(){
     Unload();
-    std::cout<<"Reloading "<<assetName<<std::endl;
     std::string sharedVertexData;
     std::string sharedFragmentData;
     if (sharedVertexData.length()==0 || sharedFragmentData.length()==0){

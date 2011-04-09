@@ -15,7 +15,6 @@
 
 namespace render_e {
 
-
 /*
  *  Abstract class for texture builders
  */

@@ -24,9 +24,11 @@ TextureBase::~TextureBase() {
 void TextureBase::Bind(){
     glBindTexture(textureType, textureId );
 }
+
 void TextureBase::Unbind(){
     glBindTexture(textureType , 0 );
 }
+
 void TextureBase::Unload(){
     if (textureId!=0){
         Unbind();

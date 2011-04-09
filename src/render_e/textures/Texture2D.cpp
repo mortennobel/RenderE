@@ -96,6 +96,7 @@ TextureLoadStatus Texture2D::Load() {
         if (mipmapping) {
             gluBuild2DMipmaps(GL_TEXTURE_2D, internalFormat, width, height,
                     format, GL_UNSIGNED_BYTE, data);
+            //glGenerateMipmap();// todo - use genMipmap if supported(?)
         } else {
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height,
                     0, format, GL_UNSIGNED_BYTE, data);
@@ -141,15 +142,8 @@ void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp?GL_CLAMP:GL_REPEAT);
 
 	}
-    
-
-    
-	// glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	
-	
     
     GLenum format;
     GetTextureFormat(format);
@@ -160,4 +154,3 @@ void Texture2D::Create(int width, int height, TextureFormat textureFormat) {
 }
 
 }
-
