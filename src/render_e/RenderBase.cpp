@@ -17,6 +17,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Log.h"
+
 namespace render_e {
 
 RenderBase *RenderBase::s_instance = NULL;

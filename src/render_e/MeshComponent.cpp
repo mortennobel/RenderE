@@ -17,6 +17,7 @@
 #else
 #include <GLUT/glut.h>
 #endif
+#include "Log.h"
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
 
@@ -33,7 +34,7 @@ MeshComponent::~MeshComponent() {
 void MeshComponent::Render(){
     if (indicesCount==0){
         return;
-        // std::cout << "Mesh not initialized" << std::endl;
+        ERROR("Mesh not initialized");
     }
     assert(vboName != 0);
     
