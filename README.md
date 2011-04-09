@@ -36,6 +36,7 @@ Dependencies:
 * Particle system
 * Deferred shading
 * Post processing effects (SSAO, Bloom
+* Replace Xerces with TinyXml (http://www.grinninglizard.com/tinyxml/)
 
 ## INSTALLATION
 
