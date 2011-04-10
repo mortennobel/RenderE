@@ -33,6 +33,7 @@ Dependencies:
 
 ## Todo
 
+* View frustum culling
 * Particle system
 * Deferred shading
 * Post processing effects (SSAO, Bloom
