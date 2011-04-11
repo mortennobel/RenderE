@@ -15,12 +15,14 @@ namespace render_e {
 // forward declaration
 class SceneObject;
 
+// Todo should be a bit-vector indicating the type instead
 enum ComponentType{
     TransformType,
     MeshType,
     CameraType,
     MaterialType,
     LightComponentType,
+    ParticleSystemType,
     CustomType
 };
 
@@ -31,12 +33,21 @@ public:
     SceneObject *GetOwner();
     void SetOwner(SceneObject *owner);
     ComponentType GetComponentType (){ return componentType; }
+    /// Only enabled components receive events and is rendered
+    bool IsEnabled(){ return enabled; }
+    /// Only enabled components receive events and is rendered
+    void SetEnabled(bool enabledNew){ enabled = enabledNew; }
+    
+    // Updates each component before every frame
+    virtual void Update() {}
 private:
     Component(const Component& orig); // disallow copy constructor
     Component& operator = (const Component&); // disallow copy constructor
     
     SceneObject *owner;
     ComponentType componentType;
+    
+    bool enabled;
 };
 
 }

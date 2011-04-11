@@ -92,6 +92,17 @@ void RenderBase::Display(){
     OpenGLHelper::PrintErrors();
 }
 
+
+void RenderBase::UpdateScene(){
+    std::vector<SceneObject*> sceneObjects;
+    for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
+        const std::vector<Component*> *comps = (*iter)->GetComponents();
+        for (std::vector<Component*>::const_iterator componentIter = comps->begin();componentIter != comps->end(); componentIter++){
+            (*componentIter)->Update();
+        }
+    }
+}
+    
 void RenderBase::RenderScene(){
     // Main idea here is to <-- currently disabled
     /*if (doubleSpeedZOnlyRendering){

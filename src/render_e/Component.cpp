@@ -12,7 +12,7 @@
 namespace render_e {
 
 Component::Component(ComponentType componentType)
-:componentType(componentType),owner(NULL) {
+:componentType(componentType),owner(NULL),enabled(true) {
 }
 
 Component::~Component() {

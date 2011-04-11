@@ -53,7 +53,7 @@ public:
     /// Create a shader and store it in the shaders map.
     /// 
     Shader *CreateShader(std::string assetName, std::string shaderName, ShaderDataSource *shaderDataSource, ShaderLoadStatus &outLoadStatus);
-//    
+
     ///
     /// Change the shaderDataSource.
     /// This must be done before any shaders are loaded
@@ -88,7 +88,10 @@ public:
 private:
     inline void SetupLight();
     RenderBase();
+    /// Render all objects in scene
     void RenderScene();
+    /// Update all objects in scene
+    void UpdateScene();
     static RenderBase *s_instance;
     std::vector<SceneObject*> sceneObjects;
     std::vector<SceneObject*> cameras;
