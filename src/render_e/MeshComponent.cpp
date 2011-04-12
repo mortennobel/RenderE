@@ -12,11 +12,6 @@
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#ifdef _WIN32
-#include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
 #include "Log.h"
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))

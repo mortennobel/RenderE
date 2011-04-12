@@ -10,11 +10,7 @@
 
 #include <sstream>
 #include <string>
-#ifdef _WIN32
-#include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
+
 #include "ShaderDataSource.h"
 #include "../Log.h"
 
