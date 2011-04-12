@@ -25,9 +25,16 @@ enum RenderMode {
     RENDER_MODE_POINT
 };
 
+///
+/// The render base is the main class responsible updating and rendering
+/// each component in the scene.
+/// Note that the class is a singleton and a reference is received using the 
+/// function Instance()
+///
 class RenderBase {
 public:
-    void Display();
+    /// Should be invoked repeatedly from a render loop
+    void Update(float timeSeconds = 0.1667f);
 
     void AddSceneObject(SceneObject *sceneObject);
     void DeleteSceneObject(SceneObject *sceneObject);

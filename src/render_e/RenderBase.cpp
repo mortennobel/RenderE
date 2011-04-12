@@ -18,6 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Log.h"
+#include "FrameTime.h"
 
 namespace render_e {
 
@@ -77,8 +78,11 @@ void RenderBase::SetupLight(){
     }
 }
 
-void RenderBase::Display(){
+void RenderBase::Update(float timeSeconds){
     assert(swapBuffersFunc!=NULL);
+    
+    FrameTime::updateTime(timeSeconds);
+    UpdateScene();
     
     for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
         SceneObject *sceneObject = *iter;
