@@ -559,6 +559,7 @@ public:
 				}
             }
             if (mesh != NULL){
+                assert(mesh->IsValid());
                 MeshComponent *meshComponent = new MeshComponent();
                 meshComponent->SetMesh(mesh);
                 sceneObject->AddCompnent(meshComponent);
@@ -610,8 +611,6 @@ public:
                     ERROR(ss.str());
                 }
 
-
-
                 XMLString::release(&attValue);
                 XMLString::release(&attName);
             }
@@ -621,6 +620,27 @@ public:
             error(message);
         }
     }
+    
+    void applyTransformHiarchy(){
+        map<string, string>::iterator iter = parentMap.begin();
+        for (;iter!=parentMap.end();iter++){
+            string child = (iter)->first;
+            string parent = (iter)->second;
+            SceneObject *childO = renderBase->Find(child.c_str());
+            SceneObject *parentO = renderBase->Find(parent.c_str());
+            if (childO != NULL && parentO != NULL){
+                parentO->AddChild(childO);
+            } else {
+                assert(childO != NULL); //Child should always be there
+                stringstream ss;
+                ss<<"Cannot find parent " <<
+                    parent <<
+                    " to child " <<
+                    child;
+                ERROR(ss.str());
+            }
+        }
+    }
 
     void endElement(const XMLCh * const name) {
         assert(!state.empty());
@@ -628,6 +648,8 @@ public:
         state.pop();
         if (prevState == SCENEOBJECT){
             renderBase->AddSceneObject(sceneObject);
+        } else if (prevState == SCENEOBJECTS){
+            applyTransformHiarchy();
         }
     }
 

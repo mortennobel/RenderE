@@ -17,13 +17,28 @@
 namespace render_e {
 
 Transform::Transform()
-:Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false), 
+:Component(TransformType),dirtyFlag(false), dirtyFlagInverse(false),
+        dirtyFlagGlobal(false),dirtyFlagGlobalInverse(false),
         scale(1,1,1),parent(NULL), rotation(glm::quat(0.0f,0.0f,0.0f,0.0f))
 {
 }
 
 Transform::~Transform(void)
 {}
+
+Transform *Transform::GetParent(){
+    return parent;
+}
+
+void Transform::SetParent(Transform *parent){
+    // remove current parent
+    if (this->parent != NULL){
+        bool res = this->parent->RemoveChild(this);
+        assert(res); // if not true, then something serious is wrong with parent-child relationship
+    }
+    // delegate to parent
+    parent->AddChild(this);
+}
 
 void Transform::AddChild(Transform *transform){
     assert (transform->parent == NULL);
@@ -36,12 +51,15 @@ bool Transform::RemoveChild(Transform *transform){
     assert(transform->parent == this);
     vector<Transform *>::iterator index = find (children.begin(), children.end(), transform);
     if (index != children.end()){
-        // erase the 6th element
         children.erase (index);
         transform->parent = NULL;
 		return true;
     }
 	return false;
+}
+
+const std::vector<Transform *> *Transform::GetChildren() const {
+    return &children;
 }
 
 void Transform::UpdateIfDirty(){
@@ -69,6 +87,22 @@ void Transform::UpdateInverseIfDirty(){
     }
 }
 
+void Transform::UpdateGlobalIfDirty(){
+    if (dirtyFlagGlobal){
+        if (parent != NULL) parent->UpdateGlobalIfDirty();
+        globalTransform = GetLocalTransform()*parent->GetGlobalTransform();
+        dirtyFlagGlobal = false;
+    }
+}
+
+void Transform::UpdateGlobalInverseIfDirty(){
+    if (dirtyFlagGlobalInverse){
+        if (parent != NULL) parent->UpdateGlobalInverseIfDirty();
+        globalTransformInverse = GetLocalTransformInverse()*parent->GetGlobalTransformInverse();
+        dirtyFlagGlobalInverse = false;
+    }
+}
+
 glm::mat4 Transform::GetLocalTransform(){
     UpdateIfDirty();
     return localTransform;
@@ -78,6 +112,23 @@ glm::mat4 Transform::GetLocalTransformInverse(){
     UpdateInverseIfDirty();
     return localTransformInverse;
 }
+
+glm::mat4 Transform::GetGlobalTransform(){
+    if (parent==NULL){
+        return GetLocalTransform();
+    }
+    UpdateGlobalIfDirty();
+    return globalTransform;
+}
+
+glm::mat4 Transform::GetGlobalTransformInverse(){
+    if (parent==NULL){
+        return GetLocalTransformInverse();
+    }
+    UpdateGlobalInverseIfDirty();
+    return globalTransformInverse;
+}
+    
 
 glm::vec3 Transform::GetPosition() const {
     return position;
@@ -91,27 +142,41 @@ glm::vec3  Transform::GetScale() const{
     return scale;
 }
 
-void Transform::SetPosition(const glm::vec3 &newPosition) {
-    position = newPosition;
+void Transform::SetGlobalDirtyFlag(){
+    dirtyFlagGlobal = true;
+    dirtyFlagGlobalInverse = true;
+    std::vector<Transform *>::iterator iter = children.begin();
+    for (;iter != children.end();iter++){
+        (*iter)->SetGlobalDirtyFlag();
+    }
+}
+
+void Transform::SetLocalDirty(){
     dirtyFlag = true;
     dirtyFlagInverse = true;
+    std::vector<Transform *>::iterator iter = children.begin();
+    for (;iter != children.end();iter++){
+        (*iter)->SetGlobalDirtyFlag();
+    }
+}
+
+void Transform::SetPosition(const glm::vec3 &newPosition) {
+    position = newPosition;
+    SetLocalDirty();
 }
 
 void Transform::SetRotation(const glm::quat &quaternion) {
     this->rotation = quaternion;
-    dirtyFlag = true;
-    dirtyFlagInverse = true;
+    SetLocalDirty();
 }
 
 void Transform::SetRotation(const glm::vec3 &euler){
     Mathf::SetFromEuler(euler[0], euler[1], euler[2], this->rotation);
-    dirtyFlag = true;
-    dirtyFlagInverse = true;
+    SetLocalDirty();
 }
 
 void Transform::SetScale(const glm::vec3 &scale){
     this->scale = scale;
-    dirtyFlag = true;
-    dirtyFlagInverse = true;
+    SetLocalDirty();
 }
 }

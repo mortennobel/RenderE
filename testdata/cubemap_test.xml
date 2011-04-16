@@ -71,6 +71,5 @@
             <mesh primitive="sphere"/> 
             <material ref="CubeMat"/>
         </object>
-        
     </scenegraph>
 </scene>

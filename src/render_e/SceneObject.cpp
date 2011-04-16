@@ -73,7 +73,6 @@ void SceneObject::RemoveComponent(Component* component){
                 break;
         }
     }
-    
 }
 
 void SceneObject::AddCompnent(Component* component){

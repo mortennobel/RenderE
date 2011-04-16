@@ -1,3 +1,7 @@
+
+/// The purpose of this test is simply to test that the update function is called
+/// on every Component each frame and that the FrameTime is updated each frame.
+
 #include <iostream>
 #include <GL/glew.h>
 #ifdef _WIN32
@@ -5,11 +9,14 @@
 #else
 #include <GLUT/glut.h>
 #endif
+#include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "render_e/RenderBase.h"
 #include "render_e/Camera.h"
 #include "render_e/SceneObject.h"
+#include "render_e/Component.h"
+#include "render_e/FrameTime.h"
 #include "render_e/Material.h"
 #include "render_e/MeshComponent.h"
 #include "render_e/MeshFactory.h"
@@ -30,13 +37,16 @@ RenderBase *renderBase = RenderBase::Instance();
 MeshComponent *meshTeapot = new MeshComponent();
 SceneObject *meshTeapotContainer = new SceneObject();
 SceneObject *cameraContainer = new SceneObject();
-    
+SceneObject *selectedSceneObject = new SceneObject();
+int selectedObjectIndex;
+
 bool mouseDown = false;
 int mouseOffsetX, mouseOffsetY;
 glm::vec3 mouseRotation(0);
 glm::vec3 rotation(0,0,0);
 int moveForward = 0;
 float timeSec;
+
 
 // The main purpose of the main is to created a windows
 // and hook up the opengl to that (using GLUT).
@@ -48,7 +58,6 @@ void display() {
 }
 
 void printMatrix(float *m){
-    
     for (int i=0;i<16;i++){
         cout << m[i]<<"f, ";
     }
@@ -97,19 +106,19 @@ void initRenderBase();
 
 void keyPress(unsigned char key, int x, int y){
     Transform *t = meshTeapotContainer->GetTransform();
-    glm::vec3 cameraPosition = cameraContainer->GetTransform()->GetPosition();
+    glm::vec3 translate = glm::vec3(0);
     switch (key){
         case 'd':
-            cameraPosition[0] = cameraPosition[0]+1;
+            translate[0] = +1;
             break;
         case 'a':
-            cameraPosition[0] = cameraPosition[0]-1;
+            translate[0] = -1;
             break;
         case 's':
-            cameraPosition[2] = cameraPosition[2]+1;
+            translate[2] = +1;
             break;
         case 'w':
-            cameraPosition[2] = cameraPosition[2]-1;
+            translate[2] = -1;
             break;
         case 'r':
             renderBase->ReloadAllShaders();
@@ -119,9 +128,30 @@ void keyPress(unsigned char key, int x, int y){
             static bool renderMode = false;
             renderMode = !renderMode;
             renderBase->SetRenderMode(renderMode?RENDER_MODE_LINE:RENDER_MODE_FILL);
+            break;
+        case 9: // tab
+            selectedObjectIndex ++;
+            if (selectedObjectIndex>5){
+                selectedObjectIndex=1;
+            }
+            static char cubeName[] = "Cube1";
+            cubeName[4] = selectedObjectIndex+'0';
+            selectedSceneObject = renderBase->Find(cubeName);
+            if (selectedSceneObject==NULL){
+                std::cout << "Didn't find anything"<<std::endl;
+            } else {
+                std::cout << "Found "<<selectedSceneObject->GetName()<<std::endl;
+                Transform *parent = selectedSceneObject->GetTransform()->GetParent();
+                if (parent == NULL){
+                    std::cout << "Has no parent"<<std::endl;
+                } else {
+                    std::cout << "Has parent "<<parent->GetOwner()->GetName()<<std::endl;
+                }
+            }
+            break;
             
     }
-    cameraContainer->GetTransform()->SetPosition(cameraPosition);
+    selectedSceneObject->GetTransform()->SetPosition(translate+selectedSceneObject->GetTransform()->GetPosition());
 }
 
 void mouseMotionFunc(int x, int y){
@@ -189,7 +219,7 @@ int main(int argc, char **argv) {
     
     const char *filename;
     if (argc<2){
-        filename = "testdata/render_to_texture.xml";
+        filename = "testdata/parent_child.xml";
         cout<<"Using scene not found - using default: "<<filename<<endl;  
     } else {
         filename = argv[1];
@@ -225,7 +255,7 @@ void initRenderBase(){
 void initWorld(const char *filename) {
     SceneXMLParser parser;
     parser.LoadScene(filename, renderBase);
-    cameraContainer = (*(renderBase->GetCameras()))[0]; 
+    cameraContainer = (*(renderBase->GetCameras()))[0];
 }
 
 void setMatrial (Shader *shader, SceneObject *so){

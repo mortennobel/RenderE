@@ -51,7 +51,7 @@ public:
 
     void PrintDebug();
 
-	SceneObject *Find(char *name);
+	SceneObject *Find(const char *name) const;
     
     std::vector<SceneObject*> *GetSceneObjects() { return &sceneObjects; }
     std::vector<SceneObject*> *GetCameras() { return &cameras; }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <shaders>
+        <shader name="diffuse" file="diffuse-color"/>
+    </shaders>
+    <materials>
+        <material name="Blue" shader="diffuse">
+            <parameter name="color" vector4="0,0,1,1"/>
+            <parameter name="lightCount" int="1"/>
+        </material>
+        <material name="Red" shader="diffuse">
+            <parameter name="color" vector4="1,0,0,1"/>
+        </material>
+    </materials>
+    <scenegraph>
+        <object name="Point Light" position="10,10,10">
+            <light type="directional" diffuse="1,1,1,1" ambient="0.15,0.15,0.15,1" specular="1,1,1,1"/>
+        </object>
+        <object name="MainCamera" position="0,0,15">
+            <camera type="projection" fieldOfView="40" aspect="1" nearPlane="0.1" farPlane="1000" clearColor=".3,0,0,1"/>
+            <!-- <camera type="orthographic" left="" right="" bottom="" top="" nearPlane="" farPlane=""/>-->
+        </object>
+        <object name="Cube1" position="0,0,0" rotation="0,0,0" scale="1,1,1">
+            <mesh primitive="cube"/> 
+            <material ref="Blue"/>
+        </object>
+       
+        <object name="Cube2" position="0,0,-10" rotation="0,0,0" scale="1,1,1" parent="Cube1">
+            <mesh primitive="cube"/> 
+            <material ref="Blue"/>
+        </object>
+        
+        <object name="Cube3" position="-10,0,-10" rotation="0,0,0" scale="1,1,1"  parent="Cube2">
+            <mesh primitive="cube"/> 
+            <material ref="Blue"/>
+        </object>
+        <object name="Cube4" position="-10,0,0" rotation="0,0,0" scale="1,1,1" parent="Cube3">
+            <mesh primitive="cube"/> 
+            <material ref="Blue"/>
+        </object>
+        <object name="Cube5" position="2,2,2" rotation="0,45,0" scale="1.5,1.5,1.5" parent="Sphere"> <!-- tests forward reference -->
+            <mesh primitive="cube"/>
+            <material ref="Red"/>
+        </object>  
+        <object name="Sphere" position="-5,0,0" rotation="0,0,0" scale="2,2,2">
+            <mesh primitive="sphere"/> 
+            <material ref="Blue"/>
+        </object>
+    </scenegraph>
+</scene>

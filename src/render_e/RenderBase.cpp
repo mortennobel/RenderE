@@ -140,7 +140,7 @@ void RenderBase::RenderScene(){
         if (mesh!=NULL){
             glPushMatrix();
             Transform *t = (*sIter)->GetTransform();
-            glMultMatrixf(glm::value_ptr(t->GetLocalTransform()));
+            glMultMatrixf(glm::value_ptr(t->GetGlobalTransform()));
             mesh->Render();
             glPopMatrix();
         }
@@ -162,8 +162,8 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
     
     // add child components to the scene as well
     using std::vector;
-    vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
-    for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
+    const vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
+    for (vector<Transform*>::const_iterator iter = children->begin();iter != children->end();iter++){
         AddSceneObject((*iter)->GetOwner());
     }
 }
@@ -186,8 +186,8 @@ void RenderBase::DeleteSceneObject(SceneObject *sceneObject){
     }
 }
 
-SceneObject *RenderBase::Find(char *name){
-    for (std::vector<SceneObject*>::iterator iter = sceneObjects.begin();iter != sceneObjects.end();iter++){
+SceneObject *RenderBase::Find(const char *name) const{
+    for (std::vector<SceneObject*>::const_iterator iter = sceneObjects.begin();iter != sceneObjects.end();iter++){
 		if ((*iter)->GetName().compare(name)==0){
 			return *iter;
 		}

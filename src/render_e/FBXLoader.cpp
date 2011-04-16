@@ -179,9 +179,9 @@ MeshComponent *getMeshComponent(SceneObject *sceneObject){
 		return mesh;
 	}
 
-	// try search in children
-	vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
-	for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
+	// search in children
+	const vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
+	for (vector<Transform*>::const_iterator iter = children->begin();iter != children->end();iter++){
 		Transform *childTransform = *iter;
 		SceneObject *child = childTransform->GetOwner();
 		if (child != NULL){
