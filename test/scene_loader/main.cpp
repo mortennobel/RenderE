@@ -19,7 +19,6 @@
 #include "render_e/SceneXMLParser.h"
 #include "render_e/math/Mathf.h"
 
-
 #ifndef RENDER_FPS
 #define RENDER_FPS (1000/60)
 #endif
@@ -37,7 +36,7 @@ int mouseOffsetX, mouseOffsetY;
 glm::vec3 mouseRotation(0);
 glm::vec3 rotation(0,0,0);
 int moveForward = 0;
-
+float timeSec;
 
 // The main purpose of the main is to created a windows
 // and hook up the opengl to that (using GLUT).
@@ -45,7 +44,7 @@ int moveForward = 0;
 // - Create a timer that keeps a steady framerate
 // - Capture events and delegate them to the RenderEngine singleton
 void display() {
-    renderBase->Display();
+    renderBase->Update(timeSec);
 }
 
 void printMatrix(float *m){
@@ -79,7 +78,7 @@ void localUpdate(float time){
 void timerFunc(int value) {
     static int lastUpdate = 0;
     int time = glutGet(GLUT_ELAPSED_TIME);
-    float timeSec = (time-lastUpdate)/1000.0f;
+    timeSec = (time-lastUpdate)/1000.0f;
     localUpdate(timeSec);
     lastUpdate = time;
     glutPostRedisplay();
