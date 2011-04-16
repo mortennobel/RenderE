@@ -7,6 +7,7 @@
 
 #include "Component.h"
 #include <cstring>
+#include <typeinfo>
 
 
 namespace render_e {
@@ -26,4 +27,8 @@ void Component::SetOwner(SceneObject *owner){
     this->owner = owner;
 }
 
+
+const char* Component::GetComponentName() const{
+    return typeid(this).name();
+}
 }

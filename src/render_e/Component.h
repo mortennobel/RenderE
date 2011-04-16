@@ -40,6 +40,9 @@ public:
     
     // Updates each component before every frame
     virtual void Update() {}
+    
+    /// Get the component class name
+    virtual const char* GetComponentName() const;
 private:
     Component(const Component& orig); // disallow copy constructor
     Component& operator = (const Component&); // disallow copy constructor

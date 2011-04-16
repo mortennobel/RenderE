@@ -98,8 +98,8 @@ void RenderBase::Update(float timeSeconds){
 
 
 void RenderBase::UpdateScene(){
-    std::vector<SceneObject*> sceneObjects;
-    for (std::vector<SceneObject *>::iterator iter = cameras.begin();iter!=cameras.end();iter++){
+    // iterate all objects in scene and call their update function
+    for (std::vector<SceneObject *>::iterator iter = sceneObjects.begin();iter!=sceneObjects.end();iter++){
         const std::vector<Component*> *comps = (*iter)->GetComponents();
         for (std::vector<Component*>::const_iterator componentIter = comps->begin();componentIter != comps->end(); componentIter++){
             (*componentIter)->Update();
@@ -160,6 +160,7 @@ void RenderBase::AddSceneObject(SceneObject *sceneObject){
         lights.push_back(sceneObject);
     }
     
+    // add child components to the scene as well
     using std::vector;
     vector<Transform*> *children = sceneObject->GetTransform()->GetChildren();
     for (vector<Transform*>::iterator iter = children->begin();iter != children->end();iter++){
