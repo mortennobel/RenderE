@@ -89,6 +89,13 @@ Mesh *MeshFactory::CreateCube(){
                         vec3(0,0,0),  vec3(0,0,1),  vec3(1,0,1),  vec3(1,0,0),              // v7-v4-v3-v2
                         vec3(0,0,1),  vec3(0,0,0),  vec3(0,1,0),  vec3(0,1,1)};             // v4-v7-v6-v5
 
+    vec2 uvs[] = {vec2(1,1),  vec2(1,1),  vec2(1,0),  vec2(1,0),                    // v0-v1-v2-v3
+                        vec2(1,1),  vec2(1,0),  vec2(0,0),  vec2(0,1),              // v0-v3-v4-v5
+                        vec2(1,1),  vec2(0,1),  vec2(0,1),  vec2(1,1),              // v0-v5-v6-v1
+                        vec2(1,1),  vec2(0,1),  vec2(0,0),  vec2(1,0),              // v1-v6-v7-v2
+                        vec2(0,0),  vec2(0,0),  vec2(1,0),  vec2(1,0),              // v7-v4-v3-v2
+                        vec2(0,0),  vec2(0,0),  vec2(0,1),  vec2(0,1)};             // v4-v7-v6-v5
+    
     // index array of vertex array for glDrawElements()
     // Notice the indices are listed straight from beginning to end as exactly
     // same order of vertex array without hopping, because of different normals at
@@ -113,13 +120,16 @@ Mesh *MeshFactory::CreateCube(){
     m->SetVertices(vertices,4*6);
     m->SetNormals(normals,4*6);
     m->SetColors(colors,4*6);
+    m->SetTextureCoords1(uvs, 4*6);
     m->SetIndices(indices,3*2*6);
     return m;
 }
 
 // based on the code in the OpenGL red book (chapter 2, the example at the end)
 
-void drawtri(glm::vec3 a, glm::vec3 b, glm::vec3 c, int div, float r, vector<glm::vec3> &vertices, vector<glm::vec3> &normals) {
+void drawtri(glm::vec3 a, glm::vec3 b, glm::vec3 c, int div, float r, 
+        vector<glm::vec3> &vertices, vector<glm::vec3> &normals, 
+        vector<glm::vec2> &uvs) {
     if (div<=0) {
         normals.push_back(a);		
         normals.push_back(c);
@@ -127,6 +137,9 @@ void drawtri(glm::vec3 a, glm::vec3 b, glm::vec3 c, int div, float r, vector<glm
         vertices.push_back(a*r);
         vertices.push_back(c*r);
         vertices.push_back(b*r);
+        uvs.push_back(glm::vec2(0,0)); // todo - use sphere mapping
+        uvs.push_back(glm::vec2(0,0));
+        uvs.push_back(glm::vec2(0,0));
     } else {
         glm::vec3 ab, ac, bc;
         for (int i=0;i<3;i++) {
@@ -137,10 +150,10 @@ void drawtri(glm::vec3 a, glm::vec3 b, glm::vec3 c, int div, float r, vector<glm
         ab = glm::normalize(ab);
         ac = glm::normalize(ac);
         bc = glm::normalize(bc);
-        drawtri(a, ab, ac, div-1, r,vertices, normals);
-        drawtri(b, bc, ab, div-1, r,vertices, normals);
-        drawtri(c, ac, bc, div-1, r,vertices, normals);
-        drawtri(ab, bc, ac, div-1, r,vertices, normals);   
+        drawtri(a, ab, ac, div-1, r,vertices, normals, uvs);
+        drawtri(b, bc, ab, div-1, r,vertices, normals, uvs);
+        drawtri(c, ac, bc, div-1, r,vertices, normals, uvs);
+        drawtri(ab, bc, ac, div-1, r,vertices, normals, uvs);   
     }  
 }
 
@@ -161,9 +174,10 @@ Mesh *MeshFactory::CreateICOSphere(int subdivisions, float radius){
 
     vector<glm::vec3> vertices;
     vector<glm::vec3> normals;
+    vector<glm::vec2> uvs;
     
     for (int i=0;i<20;i++)
-        drawtri(vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], subdivisions, radius, vertices, normals);
+        drawtri(vdata[tindices[i][0]], vdata[tindices[i][1]], vdata[tindices[i][2]], subdivisions, radius, vertices, normals, uvs);
 
     vector<int> indices;
     for (int i=0;i<vertices.size();i++){
@@ -172,6 +186,7 @@ Mesh *MeshFactory::CreateICOSphere(int subdivisions, float radius){
     Mesh *m = new Mesh();
     m->SetVertices(vertices);
     m->SetNormals(normals);
+    m->SetTextureCoords1(uvs);
     m->SetIndices(indices);
     return m;
 }
