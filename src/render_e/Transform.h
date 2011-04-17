@@ -70,6 +70,8 @@ private:
     /// Set the global dirty flag on children and set local dirty
     void SetLocalDirty();
     
+    /// The reason to use dirty flags is to postpone the matrix calculations as 
+    /// long as possible. This way a few calculations should be avoided
     bool dirtyFlag;
     bool dirtyFlagInverse;
     bool dirtyFlagGlobal;

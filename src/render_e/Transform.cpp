@@ -88,17 +88,21 @@ void Transform::UpdateInverseIfDirty(){
 }
 
 void Transform::UpdateGlobalIfDirty(){
-    if (dirtyFlagGlobal && parent != NULL){
-        parent->UpdateGlobalIfDirty();
-        globalTransform = GetLocalTransform()*parent->GetGlobalTransform();
+    if (dirtyFlagGlobal){
+        if (parent != NULL) {
+            parent->UpdateGlobalIfDirty();
+            globalTransform = GetLocalTransform()*parent->GetGlobalTransform();
+        }
         dirtyFlagGlobal = false;
     }
 }
 
 void Transform::UpdateGlobalInverseIfDirty(){
-    if (dirtyFlagGlobalInverse && parent != NULL){
-        parent->UpdateGlobalInverseIfDirty();
-        globalTransformInverse = GetLocalTransformInverse()*parent->GetGlobalTransformInverse();
+    if (dirtyFlagGlobalInverse){
+        if (parent != NULL){
+            parent->UpdateGlobalInverseIfDirty();
+            globalTransformInverse = GetLocalTransformInverse()*parent->GetGlobalTransformInverse();
+        }
         dirtyFlagGlobalInverse = false;
     }
 }
