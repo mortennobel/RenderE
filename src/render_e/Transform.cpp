@@ -88,16 +88,16 @@ void Transform::UpdateInverseIfDirty(){
 }
 
 void Transform::UpdateGlobalIfDirty(){
-    if (dirtyFlagGlobal){
-        if (parent != NULL) parent->UpdateGlobalIfDirty();
+    if (dirtyFlagGlobal && parent != NULL){
+        parent->UpdateGlobalIfDirty();
         globalTransform = GetLocalTransform()*parent->GetGlobalTransform();
         dirtyFlagGlobal = false;
     }
 }
 
 void Transform::UpdateGlobalInverseIfDirty(){
-    if (dirtyFlagGlobalInverse){
-        if (parent != NULL) parent->UpdateGlobalInverseIfDirty();
+    if (dirtyFlagGlobalInverse && parent != NULL){
+        parent->UpdateGlobalInverseIfDirty();
         globalTransformInverse = GetLocalTransformInverse()*parent->GetGlobalTransformInverse();
         dirtyFlagGlobalInverse = false;
     }
@@ -154,10 +154,7 @@ void Transform::SetGlobalDirtyFlag(){
 void Transform::SetLocalDirty(){
     dirtyFlag = true;
     dirtyFlagInverse = true;
-    std::vector<Transform *>::iterator iter = children.begin();
-    for (;iter != children.end();iter++){
-        (*iter)->SetGlobalDirtyFlag();
-    }
+    SetGlobalDirtyFlag();
 }
 
 void Transform::SetPosition(const glm::vec3 &newPosition) {
