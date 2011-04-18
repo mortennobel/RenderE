@@ -38,14 +38,7 @@ class Mathf {
                         const glm::vec3& P1, const glm::vec3& P2 );
 	/* Return a random value between 0-1 */
     static float Rand();
-	/* fast inverse square root approximation from the Quake3 game engine */
-	/* http://beyond3d.com/content/articles/8                     */
-    static float InvSqrt(float x);
-
-	/* fast square root approximation from the Quake3 game engine */
-	/* http://beyond3d.com/content/articles/8                     */
-    static float Sqrt(float x);
-    
+	
     static float Clamp(float value, float min, float max){
         if (value < min) return min;
         if (value > max) return max;

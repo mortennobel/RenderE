@@ -86,11 +86,6 @@ float Mathf::Rand(){
     return rand()/(float)RAND_MAX;
 }
 
-float Mathf::Sqrt(float x){
-	return sqrt(x);
-    //return 1/InvSqrt(x);
-}
-
 void Mathf::PrintVec4(glm::vec4 v){
     for (int x = 0; x < 4; x++) {
         std::cout<<v[x]<<" ";
@@ -105,17 +100,5 @@ void Mathf::PrintMat4(glm::mat4 m){
         }
         std::cout<<std::endl;
     }
-}
-
-// Quake Fast Inverse Square Root
-// http://www.beyond3d.com/content/articles/8/
-float Mathf::InvSqrt( float x ) {
-    float xhalf = 0.5f*x;
-    int i = *(int*)&x;
-    i = 0x5f3759df - (i>>1);
-    x = *(float*)&i;
-    x = x*(1.5f - xhalf*x*x);
-	x = x*(1.5f - xhalf*x*x); // add extra precition
-    return x;
 }
 }

@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include "math/Mathf.h"
+#include <glm/gtx/fast_square_root.hpp>
 
 using std::vector;
 
@@ -18,8 +19,8 @@ namespace render_e {
 Mesh *MeshFactory::CreateTetrahedron(){
     glm::vec3 p0(0.,0.,0.);
 	glm::vec3 p1(1.,0.,0.);
-	glm::vec3 p2(0.5f,0.,Mathf::Sqrt(0.75f));
-	glm::vec3 p3(0.5f,Mathf::Sqrt(0.75f),Mathf::Sqrt(0.75f)/3.0f);
+	glm::vec3 p2(0.5f,0.,glm::gtx::fast_square_root::fastSqrt(0.75f));
+	glm::vec3 p3(0.5f,glm::gtx::fast_square_root::fastSqrt	(0.75f),glm::gtx::fast_square_root::fastSqrt(0.75f)/3.0f);
 
     glm::vec3 vertices [] = {
         p0,p1,p2,
