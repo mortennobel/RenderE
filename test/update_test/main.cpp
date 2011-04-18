@@ -253,8 +253,8 @@ void setMatrial (Shader *shader, SceneObject *so){
     Material *mat = new Material(shader);
     so->AddCompnent(mat);   
     
-    vector<Transform *> *trans = so->GetTransform()->GetChildren();
-    for (vector<Transform*>::iterator iter = trans->begin();iter != trans->end();iter++){
+    const vector<Transform *> *trans = so->GetTransform()->GetChildren();
+    for (vector<Transform*>::const_iterator iter = trans->begin();iter != trans->end();iter++){
         so = (*iter)->GetOwner();
         setMatrial(shader, so);
     }
