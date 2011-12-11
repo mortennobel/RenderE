@@ -106,7 +106,7 @@ void Camera::Setup(int viewportWidth, int viewportHeight) {
     glLoadMatrixf(glm::value_ptr(cameraMatrix));
 
     if (renderToTexture) {
-        //		float modelView[16];
+        //    	float modelView[16];
         //		float projection[16];
         glm::mat4 pj;
         glm::mat4 mv;
@@ -171,8 +171,11 @@ void Camera::SetRenderToTexture(bool doRenderToTexture, CameraBuffer framebuffer
             // glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framebufferTextureId, 0);
 
-            // create color buffer (not used though)
-
+            // create color buffer
+            glGenRenderbuffers(1, &renderBufferId);
+            glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+            glRenderbufferStorage(GL_RENDERBUFFER, /* internalformat */GL_RGBA4, fboWidth, fboHeight);
+            glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBufferId);
         } else {
             // create render buffer
             glGenRenderbuffers(1, &renderBufferId);
