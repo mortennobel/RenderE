@@ -3,6 +3,8 @@ RenderE
 
 Simple render engine for OpenGL
 
+Note: RenderE is no longer maintained. Instead checkout http://www.github.com/mortennobel/kick
+
 ## DESCRIPTION
 
 The purpose of the render is to create a basic render engine for the OpenGL 3.0.
