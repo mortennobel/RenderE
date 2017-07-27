@@ -6,7 +6,7 @@ Simple render engine for OpenGL
 Note: RenderE is no longer maintained. Instead checkout :
 
 * https://github.com/mortennobel/SimpleRenderEngine
-* http://www.github.com/mortennobel/kick
+* https://github.com/mortennobel/kick
 
 ## DESCRIPTION
 
